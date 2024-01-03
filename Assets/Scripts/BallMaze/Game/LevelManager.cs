@@ -1,4 +1,5 @@
-using System;
+using System.IO;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 
@@ -18,9 +19,19 @@ namespace BallMaze
     }
 
 
+    public enum LevelType
+    {
+        Default,
+        DailyLevel,
+        UserCreated
+    }
+
+
     public class LevelManager : MonoBehaviour
     {
-        public static int levelToLoad = 0;
+        public static string levelToLoad = "";
+        public static LevelType levelType = LevelType.Default;
+        public static string LEVELS_PATH = "";
 
         private GameState _gameState;
 
@@ -34,9 +45,16 @@ namespace BallMaze
             _gameState = GameState.Loading;
             _controls = GetComponent<Controls>();
 
+            LEVELS_PATH = Path.Combine(Application.persistentDataPath, "levels");
+
+            if (!Directory.Exists(LEVELS_PATH))
+            {
+                Directory.CreateDirectory(LEVELS_PATH);
+            }
+
             if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
             {
-                //TODO: show error message saying the level could not be loaded, please try again and a button to go back to the main menu?
+                ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Please try again", ExceptionManager.ExceptionAction.BackToLevels);
             }
 
             _maze = GameObject.Find("Maze").GetComponent<Maze>();
@@ -55,17 +73,17 @@ namespace BallMaze
                     if (SettingsManager.Instance.StartOnTouch() &&
                         (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
                     {
-                        Debug.Log("started");
-
-                        StartGame();
+                        StartLevel();
                     }
 
                     break;
 
                 case GameState.Playing:
+                    _maze.UpdateMazeOrientation(_controls.GetControlsOrientation());
+                    _ball.AddForce(_controls.GetRawControlsDirection());
+
                     break;
             }
-
         }
 
 
@@ -73,11 +91,13 @@ namespace BallMaze
         /// Loads the the given level.
         /// </summary>
         /// <param name="level">The level to load</param>
-        private void LoadLevel(int level)
+        private void LoadLevel(string levelId)
         {
             //TODO: Read the file from the server to get information about the level and load it.
-
-            _maze.BuildMaze(level);
+            if (levelToLoad != "")
+            {
+                _maze.BuildMaze(levelType, levelId);
+            }
 
             ResetLevel();
 
@@ -86,28 +106,30 @@ namespace BallMaze
         }
 
 
-        private void StartGame()
-        {
-            _gameState = GameState.Playing;
-
-            ResumeLevel();
-        }
-
-
         private void ResumeLevel()
         {
+            // Unfreeze the ball
             _ball.FreezeBall(false);
+
+            // Enable and show the controls
+            _controls.EnableAndShowControls();
         }
 
 
         private void PauseLevel()
         {
+            // Freeze the ball
             _ball.FreezeBall(true);
+
+            // Disable and hide the controls
+            _controls.DisableAndHideControls();
         }
 
 
         private void StartLevel()
         {
+            _gameState = GameState.Playing;
+
             ResumeLevel();
         }
 

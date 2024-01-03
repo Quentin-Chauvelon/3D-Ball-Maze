@@ -1,18 +1,160 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Controls : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+namespace BallMaze
+{
+    public class Controls : MonoBehaviour
     {
-        
+        private FloatingJoystick _joystick;
+        private Vector3 _lastJoystickPosition = Vector3.zero;
+
+        private const float MAX_ORIENTATION_CHANGE_PER_FRAME = 0.05f;
+
+        private bool _areControlsEnabled = false;
+        private bool _areControlsVisible = false;
+
+        private const short MAX_MAZE_ORIENTATION = 10;
+
+
+        void Awake()
+        {
+            _joystick = FindObjectOfType<FloatingJoystick>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+
+        /// <summary>
+        /// Get the orientation based on the selected controls method (accelerometer or joystick).
+        /// </summary>
+        /// <returns></returns>
+        public Quaternion GetControlsOrientation()
+        {
+            // If the controls are not enabled, the player can't rotate the maze
+            if (!_areControlsEnabled)
+            {
+                return Quaternion.identity;
+            }
+
+            if (SettingsManager.Instance.UsesJoystick())
+            {
+                return GetJoystickOrientation();
+            }
+            else if (SettingsManager.Instance.UsesAccelerometer())
+            {
+                return GetAccelerometerOrientation();
+            }
+            else
+            {
+                return Quaternion.identity;
+            }
+        }
+
+
+        public Vector2 GetRawControlsDirection()
+        {
+            // If the controls are not enabled, the player can't rotate the maze
+            if (!_areControlsEnabled)
+            {
+                return Vector2.zero;
+            }
+
+            if (SettingsManager.Instance.UsesJoystick())
+            {
+                return Vector2.zero - _joystick.Direction;
+            }
+            else if (SettingsManager.Instance.UsesAccelerometer())
+            {
+                return Vector2.zero;
+            }
+            else
+            {
+                return Vector2.zero;
+            }
+        }
+
+
+        private Quaternion GetJoystickOrientation()
+        {
+            // Get the joystick position. Clamp the vector so that it doesn't rotate too much at once
+            Vector3 currentJoystickPosition = new Vector3(
+                Math.Clamp(-_joystick.Vertical, _lastJoystickPosition.x - MAX_ORIENTATION_CHANGE_PER_FRAME, _lastJoystickPosition.x + MAX_ORIENTATION_CHANGE_PER_FRAME), 
+                0f,
+                Math.Clamp(_joystick.Horizontal, _lastJoystickPosition.z - MAX_ORIENTATION_CHANGE_PER_FRAME, _lastJoystickPosition.z + MAX_ORIENTATION_CHANGE_PER_FRAME)
+            );
+
+            // Save the last joystick position
+            _lastJoystickPosition = currentJoystickPosition;
+
+            currentJoystickPosition *= MAX_MAZE_ORIENTATION;
+
+            return Quaternion.Euler(currentJoystickPosition);
+        }
+
+
+        private Quaternion GetAccelerometerOrientation()
+        {
+            return Quaternion.identity;
+        }
+
+
+        private void EnableControls(bool enabled)
+        {
+            _areControlsEnabled = enabled;
+        }
+
+
+        private void ShowControls(bool visible)
+        {
+            _areControlsVisible = visible;
+
+            // Enable or disable the joystick
+            _joystick.gameObject.SetActive(enabled);
+        }
+
+
+        /// <summary>
+        /// Enables and shows the controls.
+        /// </summary>
+        public void EnableAndShowControls()
+        {
+            EnableControls(true);
+            ShowControls(true);
+        }
+
+
+        /// <summary>
+        /// Enables and shows the controls.
+        /// </summary>
+        public void EnableAndHideControls()
+        {
+            EnableControls(true);
+            ShowControls(false);
+        }
+
+
+        /// <summary>
+        /// Enables and shows the controls.
+        /// </summary>
+        public void DisableAndShowControls()
+        {
+            EnableControls(false);
+            ShowControls(true);
+        }
+
+
+        /// <summary>
+        /// Enables and shows the controls.
+        /// </summary>
+        public void DisableAndHideControls()
+        {
+            EnableControls(false);
+            ShowControls(false);
+        }
     }
 }
