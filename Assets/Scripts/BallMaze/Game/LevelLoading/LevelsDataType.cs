@@ -51,6 +51,7 @@ namespace BallMaze
 
         public FloorTile[] floorTiles;
         public Wall[] walls;
+        public Corner[] corners;
 
         public float[] times;
     }
@@ -79,6 +80,14 @@ namespace BallMaze
 
 
     [Serializable]
+    public class Corner
+    {
+        public int id; // Id of the floor tile the corner is on
+        public Direction d; // The direction the corner is facing relative to the floor tile (north-east = z- x-, south-east = z+ x-, south-west = z+ x+, north-west = z+ x+)
+    }
+
+
+    [Serializable]
     public class Target
     {
         public int id;
@@ -100,8 +109,12 @@ namespace BallMaze
     public enum Direction
     {
         North,
+        NorthEast,
         East,
+        SouthEast,
         South,
-        West
+        SouthWest,
+        West,
+        NorthWest
     }
 }

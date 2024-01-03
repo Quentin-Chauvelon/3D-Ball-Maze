@@ -64,10 +64,12 @@ public class LoadMazeFromFile : EditorWindow
         GameObject targetsContainer = new GameObject("Targets");
         GameObject floorTilesContainer = new GameObject("FloorTiles");
         GameObject wallsContainer = new GameObject("Walls");
+        GameObject cornersContainer = new GameObject("Corners");
         GameObject obstaclesContainer = new GameObject("Obstacles");
         targetsContainer.transform.SetParent(maze.transform);
         floorTilesContainer.transform.SetParent(maze.transform);
         wallsContainer.transform.SetParent(maze.transform);
+        cornersContainer.transform.SetParent(maze.transform);
         obstaclesContainer.transform.SetParent(maze.transform);
 
         GameObject start = new GameObject("Start");
@@ -140,6 +142,43 @@ public class LoadMazeFromFile : EditorWindow
             }
 
             wallObject.transform.SetParent(wallsContainer.transform);
+        }
+
+        // Create all the corners
+        foreach (Corner corner in level.corners)
+        {
+            GameObject cornerObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cornerObject.name = "Corner";
+            cornerObject.transform.localScale = new Vector3(0.1f, 0.5f, 0.1f);
+
+            // Find the floor tile the corner is on
+            foreach (FloorTile floorTile in level.floorTiles)
+            {
+                if (corner.id == floorTile.id)
+                {
+                    cornerObject.transform.position = floorTile.p;
+                    break;
+                }
+            }
+
+            // Move the corner to the correct position based on the direction it's facing
+            switch (corner.d)
+            {
+                case Direction.NorthEast:
+                    cornerObject.transform.position -= new Vector3(0.45f, 0, 0.45f);
+                    break;
+                case Direction.SouthEast:
+                    cornerObject.transform.position += new Vector3(-0.45f, 0, 0.45f);
+                    break;
+                case Direction.SouthWest:
+                    cornerObject.transform.position += new Vector3(0.45f, 0, 0.45f);
+                    break;
+                case Direction.NorthWest:
+                    cornerObject.transform.position += new Vector3(0.45f, 0, -0.45f);
+                    break;
+            }
+
+            cornerObject.transform.SetParent(cornersContainer.transform);
         }
 
         stopwatch.Stop();

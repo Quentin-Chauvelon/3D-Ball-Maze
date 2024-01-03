@@ -130,16 +130,60 @@ namespace AssetsEditor
                     // If the x position is 0.45 less than the rounded value (position of the floor), the wall is facing east, otherwise it is facing west (+0.45)
                     if ((Math.Round(wallObject.position.x) - wallObject.position.x).DoubleEquals(0.45, 0.05))
                     {
-                        wall.d = Direction.West;
+                        wall.d = Direction.East;
                     }
                     else
                     {
-                        wall.d = Direction.East;
+                        wall.d = Direction.West;
                     }
 
                 }
 
                 level.walls[wallObject.GetSiblingIndex()] = wall;
+            }
+
+            level.corners = new Corner[_maze.transform.Find("Corners").childCount];
+            foreach (Transform cornerObject in _maze.transform.Find("Corners"))
+            {
+                Corner corner = new Corner();
+                Vector3 cornerRoundedPosition = cornerObject.position.Round();
+
+                foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
+                {
+                    if (cornerRoundedPosition == floorTileObject.position)
+                    {
+                        corner.id = floorTileObject.GetSiblingIndex();
+                        break;
+                    }
+                }
+
+                // If the z position is 0.45 less than the rounded value (position of the floor), the corner is facing north, otherwise it is facing south (+0.45)
+                if ((Math.Round(cornerObject.position.z) - cornerObject.position.z).DoubleEquals(0.45, 0.05))
+                {
+                    // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing north-east, otherwise it is facing north-west (+0.45)
+                    if ((Math.Round(cornerObject.position.x) - cornerObject.position.x).DoubleEquals(0.45, 0.05))
+                    {
+                        corner.d = Direction.NorthEast;
+                    }
+                    else
+                    {
+                        corner.d = Direction.NorthWest;
+                    }
+                }
+                else
+                {
+                    // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing south-east, otherwise it is facing south-west (+0.45)
+                    if ((Math.Round(cornerObject.position.x) - cornerObject.position.x).DoubleEquals(0.45, 0.05))
+                    {
+                        corner.d = Direction.SouthEast;
+                    }
+                    else
+                    {
+                        corner.d = Direction.SouthWest;
+                    }
+                }
+
+                level.corners[cornerObject.GetSiblingIndex()] = corner;
             }
 
             level.times = new float[3];
