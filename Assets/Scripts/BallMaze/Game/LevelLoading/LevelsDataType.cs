@@ -69,11 +69,12 @@ namespace BallMaze
     // which increases the file size (about 800 bytes more for 30 walls). Although it's not a lot, if we do this for every wall in every level, it starts to add up.
     // Moreover, if we wanted to modify the wall model, we would have to modify the position of every wall, while this way, we only have to change the wall creation code.
     // But this method is slower, because we have to loop through all the walls and floor tiles (O(n^2)).
+    // If we want to change this later, an idea to overcome floating point precision would be to stringify the vector (Vector3.ToString("F4"))
     [Serializable]
     public class Wall
     {
-        public int p; // Id of the floor tile the wall is on
-        public Direction d;
+        public int id; // Id of the floor tile the wall is on
+        public Direction d; // The direction the wall is facing relative to the floor tile (north = z-, east = x-, south = z+, west = x+) 
     }
 
 

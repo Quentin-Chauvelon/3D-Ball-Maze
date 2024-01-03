@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace UnityExtensionMethods
 {
@@ -49,6 +50,21 @@ namespace UnityExtensionMethods
         public static bool DoubleEquals(this double a, double b, double epsilon = 0.0001)
         {
             return Math.Abs(a - b) < epsilon;
+        }
+
+
+        /// <summary>
+        /// Rounds each component of the given vector.
+        /// </summary>
+        /// <param name="vector3"></param>
+        /// <returns></returns>
+        public static Vector3 Round(this Vector3 vector3)
+        {
+            return new Vector3(
+                (float)Math.Round(vector3.x),
+                (float)Math.Round(vector3.y),
+                (float)Math.Round(vector3.z)
+            );
         }
     }
 }

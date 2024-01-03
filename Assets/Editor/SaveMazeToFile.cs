@@ -26,11 +26,8 @@ namespace AssetsEditor
 
         private GameObject _maze;
 
-
-        /// <summary>
-        /// Saves the current maze to a file.
-        /// </summary>
-        [MenuItem("Utilities/Save Maze To File")]
+        
+        [MenuItem("Utilities/Save Maze To File", false, 20)]
         public static void OpenSaveMazeWindow()
         {
             SaveMazeToFile saveMazeWindow = GetWindow<SaveMazeToFile>();
@@ -60,6 +57,10 @@ namespace AssetsEditor
             _saveButton.clicked += SaveMaze;
         }
 
+
+        /// <summary>
+        /// Saves the current maze to a file.
+        /// </summary>
         private void SaveMaze()
         {
             Debug.Log("Saving: Started for file: " + _fileName.value);
@@ -89,6 +90,7 @@ namespace AssetsEditor
             foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
             {
                 FloorTile floorTile = new FloorTile();
+                floorTile.id = floorTileObject.GetSiblingIndex();
                 floorTile.p = floorTileObject.position;
 
                 level.floorTiles[floorTileObject.GetSiblingIndex()] = floorTile;
@@ -98,37 +100,46 @@ namespace AssetsEditor
             foreach (Transform wallObject in _maze.transform.Find("Walls"))
             {
                 Wall wall = new Wall();
-                wall.p = wallObject.position.ToString("F2");
+                Vector3 wallRoundedPosition = wallObject.position.Round();
 
-                // If the x position is 0, the wall is either facing north or south
+                foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
+                {
+                    if (wallRoundedPosition == floorTileObject.position)
+                    {
+                        wall.id = floorTileObject.GetSiblingIndex();
+                        break;
+                    }
+                }
+
+                // If the x position doesn't have a decimal part, the wall is either facing north or south
                 if ((wallObject.position.x - Math.Truncate(wallObject.position.x)).DoubleEquals(0, 0.05))
                 {
-                    // If the z position is 0.55, the wall is facing north, otherwise it is facing south (0.45)
-                    if ((wallObject.position.z - Math.Truncate(wallObject.position.z)).DoubleEquals(0.55, 0.05))
+                    // If the z position is 0.45 less than the rounded value (position of the floor), the wall is facing south, otherwise it is facing north (+0.45)
+                    if ((Math.Round(wallObject.position.z) - wallObject.position.z).DoubleEquals(0.45, 0.05))
                     {
-                        wall.direction = Direction.North;
+                        wall.d = Direction.North;
                     }
                     else
                     {
-                        wall.direction = Direction.South;
+                        wall.d = Direction.South;
                     }
                 }
-                // If the z position is 0, the wall is either facing east or west
+                // If the x position doesn't have a decimal part, the wall is either facing west or east
                 else
                 {
-                    // If the x position is 0.55, the wall is facing east, otherwise it is facing west (0.45)
-                    if ((wallObject.position.x - Math.Truncate(wallObject.position.x)).DoubleEquals(0.55, 0.05))
+                    // If the x position is 0.45 less than the rounded value (position of the floor), the wall is facing east, otherwise it is facing west (+0.45)
+                    if ((Math.Round(wallObject.position.x) - wallObject.position.x).DoubleEquals(0.45, 0.05))
                     {
-                        wall.direction = Direction.East;
+                        wall.d = Direction.West;
                     }
                     else
                     {
-                        wall.direction = Direction.West;
+                        wall.d = Direction.East;
                     }
 
                 }
 
-                    level.walls[wallObject.GetSiblingIndex()] = wall;
+                level.walls[wallObject.GetSiblingIndex()] = wall;
             }
 
             level.times = new float[3];
