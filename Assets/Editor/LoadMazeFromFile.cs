@@ -119,7 +119,7 @@ public class LoadMazeFromFile : EditorWindow
             {
                 if (wall.id == floorTile.id)
                 {
-                    wallObject.transform.position = floorTile.p;
+                    wallObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
                     break;
                 }
             }
@@ -156,7 +156,7 @@ public class LoadMazeFromFile : EditorWindow
             {
                 if (corner.id == floorTile.id)
                 {
-                    cornerObject.transform.position = floorTile.p;
+                    cornerObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
                     break;
                 }
             }

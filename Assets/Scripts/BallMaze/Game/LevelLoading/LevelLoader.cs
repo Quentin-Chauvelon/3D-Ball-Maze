@@ -22,7 +22,7 @@ namespace BallMaze
                 string jsonData = GetLevelJsonAsString(levelType, levelId);
 
                 // Deserialize the json data
-                Level deserializedLevel = JsonUtility.FromJson<Level>(jsonData);
+                return JsonUtility.FromJson<Level>(jsonData);
             }
             catch (CouldNotLoadLevelException e)
             {
@@ -58,7 +58,7 @@ namespace BallMaze
                     break;
 
                 default:
-                    throw new CouldNotLoadLevelException();
+                    throw new CouldNotLoadLevelException("Unknowned LevelType" + levelType);
             }
 
             // Read the json data from the file
@@ -69,7 +69,7 @@ namespace BallMaze
 
             if (jsonData == "")
             {
-                throw new CouldNotLoadLevelException();
+                throw new CouldNotLoadLevelException("Couldn't read json data");
             }
 
             return jsonData;
@@ -100,7 +100,7 @@ namespace BallMaze
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)) || !File.Exists(path))
             {
-                throw new CouldNotLoadLevelException();
+                throw new CouldNotLoadLevelException("Directoy or file doesn't exist at path " + path);
             }
 
             string jsonData = "";
@@ -120,20 +120,11 @@ namespace BallMaze
         /// <summary>
         /// Prints the given exception to the console and displays the exception UI with the default level loading error message.
         /// </summary>
-        private void DisplayDefaultLevelLoadingException()
-        {
-            ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Try checking your internet connection...", ExceptionManager.ExceptionAction.BackToLevels);
-        }
-
-
-        /// <summary>
-        /// Prints the given exception to the console and displays the exception UI with the default level loading error message.
-        /// </summary>
         /// <param name="exception"></param>
         private void DisplayDefaultLevelLoadingException(Exception exception)
         {
             Debug.LogException(exception, this);
-            DisplayDefaultLevelLoadingException();
+            ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Try checking your internet connection...", ExceptionManager.ExceptionAction.BackToLevels);
         }
     }
 }

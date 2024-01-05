@@ -15,7 +15,8 @@ namespace BallMaze
         Playing,
         Paused,
         Won,
-        Lost
+        Lost,
+        Error
     }
 
 
@@ -29,7 +30,7 @@ namespace BallMaze
 
     public class LevelManager : MonoBehaviour
     {
-        public static string levelToLoad = "";
+        public static string levelToLoad = "1";
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";
 
@@ -45,16 +46,21 @@ namespace BallMaze
             _gameState = GameState.Loading;
             _controls = GetComponent<Controls>();
 
+            // Get the path to the levels folder
             LEVELS_PATH = Path.Combine(Application.persistentDataPath, "levels");
 
+            // If the levels folder doesn't exist, create it
             if (!Directory.Exists(LEVELS_PATH))
             {
                 Directory.CreateDirectory(LEVELS_PATH);
             }
 
+            // If the maze or ball gameobjects don't exist, there is an error
             if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
             {
+                _gameState = GameState.Error;
                 ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Please try again", ExceptionManager.ExceptionAction.BackToLevels);
+                return;
             }
 
             _maze = GameObject.Find("Maze").GetComponent<Maze>();
@@ -93,16 +99,43 @@ namespace BallMaze
         /// <param name="level">The level to load</param>
         private void LoadLevel(string levelId)
         {
-            //TODO: Read the file from the server to get information about the level and load it.
             if (levelToLoad != "")
             {
-                _maze.BuildMaze(levelType, levelId);
+                // If a maze is already loaded, clear it
+                if (_maze.IsMazeLoaded())
+                {
+                    ClearMaze();
+                }
+
+                bool result = _maze.BuildMaze(levelType, levelId);
+                if (!result)
+                {
+                    // No need to display the error message as it is already handled in the LevelLoader class
+                    _gameState = GameState.Error;
+                    return;
+                }
+
+                ListenToTargetTrigger();
             }
 
             ResetLevel();
 
             // Game loaded, waiting to start
             _gameState = GameState.WaitingToStart;
+        }
+
+
+        /// <summary>
+        /// Listen to all triggers actions
+        /// </summary>
+        private void ListenToTargetTrigger()
+        {
+            // Bind the target's triggerAction to the TargetReached method
+            foreach (GameObject target in _maze.targets)
+            {
+                // Observer pattern
+                target.transform.Find("Trigger").GetComponent<Obstacles.Target>().triggerAction += TargetReached;
+            }
         }
 
 
@@ -137,6 +170,39 @@ namespace BallMaze
         private void ResetLevel()
         {
             PauseLevel();
+        }
+
+
+        /// <summary>
+        /// Player reached the target and won the level.
+        /// Binded to the target's triggerAction, and so called when the ball enters a target's trigger.
+        /// </summary>
+        private void TargetReached()
+        {
+            if (_gameState == GameState.Playing)
+            {
+                _gameState = GameState.Won;
+                ResetLevel();
+            }
+        }
+
+
+        private void ClearMaze()
+        {
+            // Unbind the target's triggerAction to the TargetReached method
+            foreach (GameObject target in _maze.targets)
+            {
+                target.transform.Find("Trigger").GetComponent<Obstacles.Target>().triggerAction -= TargetReached;
+            }
+
+            _maze.ClearMaze();
+        }
+
+
+        private void OnDestroy()
+        {
+            _gameState = GameState.Paused;
+            ClearMaze();
         }
     }
 }
