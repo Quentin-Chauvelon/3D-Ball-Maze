@@ -114,7 +114,7 @@ namespace BallMaze
             _areControlsVisible = visible;
 
             // Enable or disable the joystick
-            _joystick.gameObject.SetActive(enabled);
+            _joystick.Enable(visible);
         }
 
 

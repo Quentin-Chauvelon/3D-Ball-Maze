@@ -122,6 +122,11 @@ namespace BallMaze
 
             // Game loaded, waiting to start
             _gameState = GameState.WaitingToStart;
+
+            // Have to show the controls here because otherwise if the player uses TouchToStart
+            // The first touch will both start the game and register as a touch on the joystick
+            // And so the joystick will work but be invisible until the player releases and touches the screen again
+            _controls.DisableAndShowControls();
         }
 
 
