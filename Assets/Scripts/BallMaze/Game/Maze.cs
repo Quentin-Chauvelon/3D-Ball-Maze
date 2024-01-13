@@ -13,6 +13,7 @@ namespace BallMaze
         private GameObject _maze;
         private LevelLoader _levelLoader;
 
+        public GameObject start;
         public List<GameObject> targets;
         public List<GameObject> floorTiles;
         public List<GameObject> walls;
@@ -55,7 +56,7 @@ namespace BallMaze
             obstaclesContainer.transform.SetParent(_maze.transform);
 
             // Create the start object
-            GameObject start = new GameObject("Start");
+            start = new GameObject("Start");
             start.transform.position = level.startPosition;
             start.transform.SetParent(_maze.transform);
 
@@ -195,6 +196,8 @@ namespace BallMaze
             {
                 Destroy(transform.gameObject);
             }
+
+            ResetMazeOrientation();
         }
 
 
@@ -205,6 +208,15 @@ namespace BallMaze
         public void UpdateMazeOrientation(Quaternion rotation)
         {
             _maze.transform.rotation = rotation;
+        }
+
+
+        /// <summary>
+        /// Resets the maze orientation to the default one.
+        /// </summary>
+        public void ResetMazeOrientation()
+        {
+            UpdateMazeOrientation(Quaternion.identity);
         }
     }
 }

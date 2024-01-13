@@ -154,35 +154,43 @@ namespace BallMaze
 
         private void ResumeLevel()
         {
-            // Unfreeze the ball
+            _controls.EnableAndShowControls();
+
+            _ball.SetBallVisible(true);
             _ball.FreezeBall(false);
 
-            // Enable and show the controls
-            _controls.EnableAndShowControls();
+            _gameState = GameState.Playing;
         }
 
 
         private void PauseLevel()
         {
-            // Freeze the ball
+            _controls.DisableAndHideControls();
+
             _ball.FreezeBall(true);
 
-            // Disable and hide the controls
-            _controls.DisableAndHideControls();
+            _gameState = GameState.Paused;
         }
 
 
         private void StartLevel()
         {
-            _gameState = GameState.Playing;
-
             ResumeLevel();
         }
 
-
+        
         private void ResetLevel()
         {
-            PauseLevel();
+            _gameState = GameState.WaitingToStart;
+
+            _controls.DisableAndShowControls();
+
+            _ball.SetBallVisible(true);
+            _ball.FreezeBall(true);
+            // Move the ball to the start position
+            _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(transform.position));
+
+            _maze.ResetMazeOrientation();
         }
 
 
@@ -194,12 +202,30 @@ namespace BallMaze
         {
             if (_gameState == GameState.Playing)
             {
+                PauseLevel();
+
                 _gameState = GameState.Won;
-                ResetLevel();
             }
         }
 
 
+        /// <summary>
+        /// Player lost the level. Either by falling off the maze or by hitting a killing obstacle.
+        /// </summary>
+        private void Lost()
+        {
+            if (_gameState == GameState.Playing)
+            {
+                PauseLevel();
+
+                _gameState = GameState.Lost;
+            }
+        }
+
+
+        /// <summary>
+        /// Destroys all the maze's children and unbinds all actions (targets triggers...).
+        /// </summary>
         private void ClearMaze()
         {
             // Unbind the target's triggerAction to the TargetReached method
@@ -212,10 +238,25 @@ namespace BallMaze
         }
 
 
+        /// <summary>
+        /// Quit the level and resets everything.
+        /// </summary>
+        private void QuitLevel()
+        {
+            PauseLevel();
+
+            _ball.SetBallVisible(false);
+            _ball.FreezeBall(true);
+
+            _maze.ResetMazeOrientation();
+
+            ClearMaze();
+        }
+
+
         private void OnDestroy()
         {
-            _gameState = GameState.Paused;
-            ClearMaze();
+            QuitLevel();
         }
     }
 }
