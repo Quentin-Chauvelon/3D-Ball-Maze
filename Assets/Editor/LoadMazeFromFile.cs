@@ -60,7 +60,12 @@ public class LoadMazeFromFile : EditorWindow
 
         Level level = JsonUtility.FromJson<Level>(jsonData);
 
-        GameObject maze = new GameObject("Maze");
+        GameObject maze = GameObject.Find("Maze");
+        if (!maze)
+        {
+            maze = new GameObject("Maze");
+        }
+
         GameObject targetsContainer = new GameObject("Targets");
         GameObject floorTilesContainer = new GameObject("FloorTiles");
         GameObject wallsContainer = new GameObject("Walls");

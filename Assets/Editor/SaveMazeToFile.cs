@@ -15,6 +15,8 @@ namespace AssetsEditor
         private VisualTreeAsset _visualTreeAsset = default;
         private TextField _fileName;
         private TextField _id;
+        private TextField _name;
+        private TextField _description;
         private EnumField _difficulty;
         private EnumField _levelType;
 
@@ -23,6 +25,8 @@ namespace AssetsEditor
         private TextField _star3Time;
 
         private Button _saveButton;
+
+        private Button _instantiateMazeObjectButton;
 
         private GameObject _maze;
 
@@ -46,6 +50,8 @@ namespace AssetsEditor
 
             _fileName = saveMazeToFileUXML.Query<TextField>("FileName");
             _id = saveMazeToFileUXML.Query<TextField>("Id");
+            _name = saveMazeToFileUXML.Query<TextField>("Name");
+            _description = saveMazeToFileUXML.Query<TextField>("Description");
             _difficulty = saveMazeToFileUXML.Query<EnumField>("Difficulty");
             _levelType = saveMazeToFileUXML.Query<EnumField>("LevelType");
 
@@ -55,6 +61,9 @@ namespace AssetsEditor
 
             _saveButton = saveMazeToFileUXML.Query<Button>("SaveButton");
             _saveButton.clicked += SaveMaze;
+
+            _instantiateMazeObjectButton = saveMazeToFileUXML.Query<Button>("InstantiateMazeObjectButton");
+            _instantiateMazeObjectButton.clicked += InstantiateMazeObject;
         }
 
 
@@ -70,6 +79,8 @@ namespace AssetsEditor
             Level level = new Level();
 
             level.id = _id.value;
+            level.name = _name.value;
+            level.description = _description.value;
             level.difficulty = (Difficulty)_difficulty.value;
             level.levelType = (LevelType)_levelType.value;
 
@@ -199,6 +210,47 @@ namespace AssetsEditor
 
             stopwatch.Stop();
             Debug.Log("Saving: Done (" + stopwatch.ElapsedMilliseconds.ToString() + "ms)");
+        }
+
+
+        private void InstantiateMazeObject()
+        {
+            _maze = GameObject.Find("Maze");
+            if (!_maze)
+            {
+                _maze = new GameObject("Maze");
+            }
+
+            if (!_maze.transform.Find("Start"))
+            {
+                
+                new GameObject("Start").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("Targets"))
+            {
+                new GameObject("Targets").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("FloorTiles"))
+            {
+                new GameObject("FloorTiles").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("Walls"))
+            {
+                new GameObject("Walls").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("Corners"))
+            {
+                new GameObject("Corners").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("Obstacles"))
+            {
+                new GameObject("Obstacles").transform.SetParent(_maze.transform);
+            }
         }
     }
 }
