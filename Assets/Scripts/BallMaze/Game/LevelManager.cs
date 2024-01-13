@@ -30,7 +30,7 @@ namespace BallMaze
 
     public class LevelManager : MonoBehaviour
     {
-        public static string levelToLoad = "1";
+        public static string levelToLoad = "";
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";
 
@@ -39,6 +39,9 @@ namespace BallMaze
         private Controls _controls;
         private Maze _maze;
         private Ball _ball;
+
+        [SerializeField]
+        private Config _config;
 
         // Start is called before the first frame update
         void Start()
@@ -65,6 +68,11 @@ namespace BallMaze
 
             _maze = GameObject.Find("Maze").GetComponent<Maze>();
             _ball = GameObject.Find("Ball").GetComponent<Ball>();
+
+            if (_config.setLevelToLoad)
+            {
+                levelToLoad = _config.levelToLoad;
+            }
 
             LoadLevel(levelToLoad);
         }
