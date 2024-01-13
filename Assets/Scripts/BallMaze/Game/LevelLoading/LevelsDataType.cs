@@ -43,6 +43,8 @@ namespace BallMaze
     public class Level
     {
         public string id;
+        public string name;
+        public string description;
         public Difficulty difficulty;
         public LevelType levelType;
 
