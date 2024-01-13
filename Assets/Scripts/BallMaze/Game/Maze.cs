@@ -187,6 +187,24 @@ namespace BallMaze
 
 
         /// <summary>
+        /// Returns the bounds of the maze (total size of all its descendants).
+        /// </summary>
+        /// <returns></returns>
+        public Bounds GetMazeBounds()
+        {
+            Renderer[] renderers = _maze.GetComponentsInChildren<Renderer>();
+            Bounds bounds = renderers[0].bounds;
+            
+            for (int i = 1; i < renderers.Length; ++i)
+            {
+                bounds.Encapsulate(renderers[i].bounds);
+            }
+
+            return bounds;
+        }
+
+
+        /// <summary>
         /// Deletes all descendants of the maze object.
         /// </summary>
         public void ClearMaze()

@@ -39,6 +39,7 @@ namespace BallMaze
         private Controls _controls;
         private Maze _maze;
         private Ball _ball;
+        private CameraManager _camera;
 
         [SerializeField]
         private Config _config;
@@ -68,6 +69,7 @@ namespace BallMaze
 
             _maze = GameObject.Find("Maze").GetComponent<Maze>();
             _ball = GameObject.Find("Ball").GetComponent<Ball>();
+            _camera = Camera.main.GetComponent<CameraManager>();
 
             if (_config.setLevelToLoad)
             {
@@ -122,6 +124,9 @@ namespace BallMaze
                     _gameState = GameState.Error;
                     return;
                 }
+
+                // Fit the maze in the camera's perspective
+                _camera.FitMazeInPerspective(_maze.GetMazeBounds());
 
                 ListenToTargetTrigger();
             }
