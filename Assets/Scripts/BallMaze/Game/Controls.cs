@@ -9,7 +9,7 @@ namespace BallMaze
         private FloatingJoystick _joystick;
         private Vector3 _lastJoystickPosition = Vector3.zero;
 
-        private const float MAX_ORIENTATION_CHANGE_PER_FRAME = 0.05f;
+        private const float MAX_ORIENTATION_CHANGE_PER_SECOND = 12f;
 
         private bool _areControlsEnabled = false;
         private bool _areControlsVisible = false;
@@ -81,11 +81,13 @@ namespace BallMaze
 
         private Quaternion GetJoystickOrientation()
         {
+            float orientationChange = MAX_ORIENTATION_CHANGE_PER_SECOND * Time.deltaTime;
+
             // Get the joystick position. Clamp the vector so that it doesn't rotate too much at once
             Vector3 currentJoystickPosition = new Vector3(
-                Math.Clamp(-_joystick.Vertical, _lastJoystickPosition.x - MAX_ORIENTATION_CHANGE_PER_FRAME, _lastJoystickPosition.x + MAX_ORIENTATION_CHANGE_PER_FRAME), 
+                Math.Clamp(-_joystick.Vertical, _lastJoystickPosition.x - orientationChange, _lastJoystickPosition.x + orientationChange), 
                 0f,
-                Math.Clamp(_joystick.Horizontal, _lastJoystickPosition.z - MAX_ORIENTATION_CHANGE_PER_FRAME, _lastJoystickPosition.z + MAX_ORIENTATION_CHANGE_PER_FRAME)
+                Math.Clamp(_joystick.Horizontal, _lastJoystickPosition.z - orientationChange, _lastJoystickPosition.z + orientationChange)
             );
 
             // Save the last joystick position
