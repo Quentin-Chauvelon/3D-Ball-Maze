@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="PermanentUI" src="project://database/Assets/UI/UXML/PermanentUI.uxml?fileID=9197481963319205126&amp;guid=704deb86a25e9b945bbda29724dca6cd&amp;type=3#PermanentUI" />
+    <ui:Template name="PopUpBackground" src="project://database/Assets/UI/UXML/ModalBackground.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackground" />
+    <ui:Template name="SettingsUI" src="project://database/Assets/UI/UXML/SettingsUI.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsUI" />
+    <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
+    <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
+        <ui:VisualElement name="main__screen-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
+            <ui:Instance template="PermanentUI" name="permanent" focusable="false" picking-mode="Ignore" class="screen__anchor--center" style="display: none;">
+                <AttributeOverrides element-name="permanent" picking-mode="Ignore" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:Instance template="PopUpBackground" name="modal-background" class="screen__anchor--center" style="display: none;" />
+        <ui:VisualElement name="main__modal-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
+            <ui:Instance template="SettingsUI" name="settings" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

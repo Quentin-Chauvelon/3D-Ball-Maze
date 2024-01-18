@@ -71,6 +71,14 @@ namespace BallMaze.UI
         private void SetupViews()
         {
             VisualElement root = _mainUIDocument.rootVisualElement;
+
+            // Add all UIs to the uiViews dictionary
+            _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
+            _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
+            _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+
+            // Show the UIs that should be shown at the start
+            _uiViews[UIViews.Permanent].Show();
         }
 
 
@@ -244,6 +252,12 @@ namespace BallMaze.UI
         {
             _isModalOpened = false;
             _uiViews[UIViews.ModalBackground].Hide();
+        }
+
+
+        public void UpdateSettings()
+        {
+            (_uiViews[UIViews.Settings] as SettingsView).Update();
         }
     }
 }

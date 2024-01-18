@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="permanent" style="flex-grow: 1; display: flex; width: 100%; height: 100%; min-width: auto; min-height: auto;">
+        <ui:Button text="S" parse-escape-sequences="true" display-tooltip-when-elided="true" name="permanent__settings-button" enable-rich-text="false" style="position: absolute; top: 0; right: 0; font-size: 50px; -unity-font-style: bold; width: 80px; height: 80px;" />
+    </ui:VisualElement>
+</ui:UXML>

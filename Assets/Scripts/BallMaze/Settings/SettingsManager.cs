@@ -141,9 +141,9 @@ namespace BallMaze
         }
 
 
-        public bool StartAfterCooldown()
+        private void Start()
         {
-            return _startAfterCooldown;
+            UIManager.Instance.UpdateSettings();
         }
 
 
