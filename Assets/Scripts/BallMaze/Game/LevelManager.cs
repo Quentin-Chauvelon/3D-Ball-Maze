@@ -86,7 +86,7 @@ namespace BallMaze
             {
                 case GameState.WaitingToStart:
                     // If the player has start on touch enabled and the player clicks or touches the screen, start the game
-                    if (SettingsManager.Instance.StartOnTouch() &&
+                    if (SettingsManager.Instance.startOn == StartOnSettings.Touch &&
                         (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
                     {
                         StartLevel();

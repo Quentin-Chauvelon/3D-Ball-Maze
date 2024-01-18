@@ -3,6 +3,26 @@ using UnityEngine;
 
 namespace BallMaze
 {
+    public enum ControlsSettings
+    {
+        Joystick,
+        Accelerometer
+    }
+
+
+    public enum StartOnSettings
+    {
+        Cooldown,
+        Touch
+    }
+
+
+    public enum JoystickPosition
+    {
+        Left,
+        Right
+    }
+
     public class SettingsManager : MonoBehaviour
     {
         // Singleton pattern

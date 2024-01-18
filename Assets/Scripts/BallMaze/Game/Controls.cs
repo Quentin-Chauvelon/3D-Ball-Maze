@@ -41,7 +41,7 @@ namespace BallMaze
                 return Quaternion.identity;
             }
 
-            if (SettingsManager.Instance.UsesJoystick())
+            if (SettingsManager.Instance.controls == ControlsSettings.Joystick)
             {
                 return GetJoystickOrientation();
             }
@@ -64,11 +64,11 @@ namespace BallMaze
                 return Vector2.zero;
             }
 
-            if (SettingsManager.Instance.UsesJoystick())
+            if (SettingsManager.Instance.controls == ControlsSettings.Joystick)
             {
                 return Vector2.zero - _joystick.Direction;
             }
-            else if (SettingsManager.Instance.UsesAccelerometer())
+            else if (SettingsManager.Instance.controls == ControlsSettings.Accelerometer)
             {
                 return Vector2.zero;
             }
