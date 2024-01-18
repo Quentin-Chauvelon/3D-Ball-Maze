@@ -85,9 +85,9 @@ namespace BallMaze
 
             // Get the joystick position. Clamp the vector so that it doesn't rotate too much at once
             Vector3 currentJoystickPosition = new Vector3(
-                Math.Clamp(-_joystick.Vertical, _lastJoystickPosition.x - orientationChange, _lastJoystickPosition.x + orientationChange), 
+                Mathf.Clamp(-_joystick.Vertical, _lastJoystickPosition.x - orientationChange, _lastJoystickPosition.x + orientationChange), 
                 0f,
-                Math.Clamp(_joystick.Horizontal, _lastJoystickPosition.z - orientationChange, _lastJoystickPosition.z + orientationChange)
+                Mathf.Clamp(_joystick.Horizontal, _lastJoystickPosition.z - orientationChange, _lastJoystickPosition.z + orientationChange)
             );
 
             // Save the last joystick position

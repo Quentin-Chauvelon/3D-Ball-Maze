@@ -123,10 +123,10 @@ namespace AssetsEditor
                 }
 
                 // If the x position doesn't have a decimal part, the wall is either facing north or south
-                if ((wallObject.position.x - Math.Truncate(wallObject.position.x)).DoubleEquals(0, 0.05))
+                if ((wallObject.position.x - Math.Truncate(wallObject.position.x)).AlmostEquals(0, 0.05))
                 {
                     // If the z position is 0.45 less than the rounded value (position of the floor), the wall is facing south, otherwise it is facing north (+0.45)
-                    if ((Math.Round(wallObject.position.z) - wallObject.position.z).DoubleEquals(0.45, 0.05))
+                    if ((Mathf.Round(wallObject.position.z) - wallObject.position.z).AlmostEquals(0.45f))
                     {
                         wall.d = Direction.North;
                     }
@@ -139,7 +139,7 @@ namespace AssetsEditor
                 else
                 {
                     // If the x position is 0.45 less than the rounded value (position of the floor), the wall is facing east, otherwise it is facing west (+0.45)
-                    if ((Math.Round(wallObject.position.x) - wallObject.position.x).DoubleEquals(0.45, 0.05))
+                    if ((Mathf.Round(wallObject.position.x) - wallObject.position.x).AlmostEquals(0.45f))
                     {
                         wall.d = Direction.East;
                     }
@@ -169,10 +169,10 @@ namespace AssetsEditor
                 }
 
                 // If the z position is 0.45 less than the rounded value (position of the floor), the corner is facing north, otherwise it is facing south (+0.45)
-                if ((Math.Round(cornerObject.position.z) - cornerObject.position.z).DoubleEquals(0.45, 0.05))
+                if ((Mathf.Round(cornerObject.position.z) - cornerObject.position.z).AlmostEquals(0.45f))
                 {
                     // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing north-east, otherwise it is facing north-west (+0.45)
-                    if ((Math.Round(cornerObject.position.x) - cornerObject.position.x).DoubleEquals(0.45, 0.05))
+                    if ((Mathf.Round(cornerObject.position.x) - cornerObject.position.x).AlmostEquals(0.45f))
                     {
                         corner.d = Direction.NorthEast;
                     }
@@ -184,7 +184,7 @@ namespace AssetsEditor
                 else
                 {
                     // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing south-east, otherwise it is facing south-west (+0.45)
-                    if ((Math.Round(cornerObject.position.x) - cornerObject.position.x).DoubleEquals(0.45, 0.05))
+                    if ((Mathf.Round(cornerObject.position.x) - cornerObject.position.x).AlmostEquals(0.45f))
                     {
                         corner.d = Direction.SouthEast;
                     }

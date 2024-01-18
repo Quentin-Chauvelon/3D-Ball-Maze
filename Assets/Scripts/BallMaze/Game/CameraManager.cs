@@ -24,7 +24,7 @@ namespace BallMaze
         public void FitMazeInPerspective(Bounds bounds)
         {
             // We can represent the maze by a sphere and use its radius to determine the distance between the center of the maze and its farthest point
-            float radius = (float)Math.Sqrt(Math.Pow(bounds.extents.x, 2) + Math.Pow(bounds.extents.z, 2));
+            float radius = Mathf.Sqrt(Mathf.Pow(bounds.extents.x, 2) + Mathf.Pow(bounds.extents.z, 2));
 
             // We need to place the camera above the maze because the following calculations will move the camera along a line going from the center of the maze to the camera's position
             _camera.transform.position = bounds.center + new Vector3(0, 10, 0);

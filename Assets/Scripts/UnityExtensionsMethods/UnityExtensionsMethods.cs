@@ -32,11 +32,10 @@ namespace UnityExtensionMethods
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        /// <param name="epsilon"></param>
         /// <returns></returns>
-        public static bool FloatEquals(this float a, float b, float epsilon = 0.0001f)
+        public static bool AlmostEquals(this float a, float b)
         {
-            return Math.Abs(a - b) < epsilon;
+            return Mathf.Approximately(a, b);
         }
 
         
@@ -47,7 +46,7 @@ namespace UnityExtensionMethods
         /// <param name="b"></param>
         /// <param name="epsilon"></param>
         /// <returns></returns>
-        public static bool DoubleEquals(this double a, double b, double epsilon = 0.0001)
+        public static bool AlmostEquals(this double a, double b, double epsilon = 0.0001)
         {
             return Math.Abs(a - b) < epsilon;
         }
@@ -61,9 +60,9 @@ namespace UnityExtensionMethods
         public static Vector3 Round(this Vector3 vector3)
         {
             return new Vector3(
-                (float)Math.Round(vector3.x),
-                (float)Math.Round(vector3.y),
-                (float)Math.Round(vector3.z)
+                Mathf.Round(vector3.x),
+                Mathf.Round(vector3.y),
+                Mathf.Round(vector3.z)
             );
         }
     }
