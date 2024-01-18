@@ -1,3 +1,4 @@
+using BallMaze.Events;
 using System.IO;
 using TMPro.EditorUtilities;
 using UnityEngine;
@@ -77,6 +78,9 @@ namespace BallMaze
             }
 
             LoadLevel(levelToLoad);
+
+            // Restart the level if the player updates a setting linked to the start method (start on, cooldown duration...)
+            SettingsEvents.UpdatedStartMethod += ResetLevel;
         }
 
         // Update is called once per frame

@@ -1,3 +1,4 @@
+using BallMaze.Events;
 using System;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ namespace BallMaze
         void Awake()
         {
             _joystick = FindObjectOfType<FloatingJoystick>();
+
+            SettingsEvents.UpdatedControls += () => { UpdateJoystickVisibility(_areControlsVisible); };
         }
 
         // Update is called once per frame
@@ -45,7 +48,7 @@ namespace BallMaze
             {
                 return GetJoystickOrientation();
             }
-            else if (SettingsManager.Instance.UsesAccelerometer())
+            else if (SettingsManager.Instance.controls == ControlsSettings.Accelerometer)
             {
                 return GetAccelerometerOrientation();
             }
@@ -105,6 +108,24 @@ namespace BallMaze
         }
 
 
+        /// <summary>
+        /// Updates the joystick visibility according to the given parameter and the selected controls method.
+        /// </summary>
+        /// <param name="visible"></param>
+        private void UpdateJoystickVisibility(bool visible)
+        {
+            // If the joystick should be visible and the controls are set to joystick, show the joystick, otherwise hide it
+            if (SettingsManager.Instance.controls == ControlsSettings.Joystick && visible)
+            {
+                _joystick.Enable(true);
+            }
+            else
+            {
+                _joystick.Enable(false);
+            }
+        }
+
+
         private void EnableControls(bool enabled)
         {
             _areControlsEnabled = enabled;
@@ -115,8 +136,7 @@ namespace BallMaze
         {
             _areControlsVisible = visible;
 
-            // Enable or disable the joystick
-            _joystick.Enable(visible);
+            UpdateJoystickVisibility(visible);
         }
 
 
