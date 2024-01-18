@@ -1,3 +1,5 @@
+using BallMaze.UI;
+using Unity.Profiling;
 using UnityEngine;
 
 
@@ -39,73 +41,103 @@ namespace BallMaze
             }
         }
 
-        // Controls
-        private static bool _useJoystick = true;
-        private static bool _useAccelerometer = false;
-        private static bool _hasAccelerometer = false;
+        // Joystick UI elements
+        private RectTransform _joystickRectTransform; // Container
+        private RectTransform _joystickBackgroundRectTransform; // Background
 
+        // Controls
+        private ControlsSettings _controls;
+        public ControlsSettings controls
+        {
+            get { return _controls; }
+            set
+            {
+                // If the device doesn't have an accelerometer, enable the joystick
+                if (!hasAccelerometer)
+                {
+                    _controls = ControlsSettings.Joystick;
+                }
+
+                _controls = value;
+
+                PlayerPrefs.SetInt("controls", (int)_controls);
+            }
+        }
+
+        private JoystickPosition _joystickPosition;
+        public JoystickPosition joystickPosition
+        {
+            get { return _joystickPosition; }
+            set
+            {
+                _joystickPosition = value;
+
+                if (_joystickPosition == JoystickPosition.Left)
+                {
+                    _joystickRectTransform.anchorMin = new Vector2(0, 0);
+                    _joystickRectTransform.anchorMax = new Vector2(JOYSTICK_WIDTH, JOYSTICK_HEIGHT);
+
+                    _joystickBackgroundRectTransform.anchorMin = new Vector2(0, 0);
+                    _joystickBackgroundRectTransform.anchorMax = new Vector2(0, 0);
+                    _joystickBackgroundRectTransform.position = new Vector3(DISTANCE_FROM_EDGE, DISTANCE_FROM_EDGE, 0);
+                }
+                else if (_joystickPosition == JoystickPosition.Right)
+                {
+                    _joystickRectTransform.anchorMin = new Vector2(0, 0);
+                    _joystickRectTransform.anchorMax = new Vector2(1 - JOYSTICK_WIDTH, JOYSTICK_HEIGHT);
+
+                    _joystickBackgroundRectTransform.anchorMin = new Vector2(1, 0);
+                    _joystickBackgroundRectTransform.anchorMax = new Vector2(1, 0);
+                    _joystickBackgroundRectTransform.position = new Vector3(-DISTANCE_FROM_EDGE, DISTANCE_FROM_EDGE, 0);
+                }
+
+                PlayerPrefs.SetInt("joystickPosition", (int)_joystickPosition);
+            }
+        }
+
+        public bool hasAccelerometer => SystemInfo.supportsAccelerometer;
 
         // Start level methods
-        private static bool _startAfterCooldown = true;
-        private static bool _startOnTouch = false;
-        private static int _cooldownDuration = 3;
+        private StartOnSettings _startOn;
+        public StartOnSettings startOn
+        {
+            get { return _startOn; }
+            set
+            {
+                _startOn = value;
+
+                PlayerPrefs.SetInt("startOn", (int)_startOn);
+            }
+        }
+
+        private int _cooldownDuration = 3;
+        public int cooldownDuration
+        {
+            get { return _cooldownDuration; }
+            set
+            {
+                // The duration must be between 1 and 10 seconds
+                _cooldownDuration = Mathf.Clamp(value, 1, 10);
+
+                PlayerPrefs.SetInt("cooldownDuration", _cooldownDuration);
+            }
+        }
+
+        // Constants
+        private const int DISTANCE_FROM_EDGE = 300;
+        private const float JOYSTICK_WIDTH = 0.4f;
+        private const float JOYSTICK_HEIGHT = 0.65f;
 
 
         private void Awake()
         {
             _instance = this;
-            DontDestroyOnLoad(this.gameObject);
-            SetStartMethod("touch"); // TODO: remove this line
-        }
+            DontDestroyOnLoad(gameObject);
 
+            _joystickRectTransform = FindObjectOfType<FloatingJoystick>().GetComponent<RectTransform>();
+            _joystickBackgroundRectTransform = _joystickRectTransform.Find("Background").GetComponent<RectTransform>();
 
-        /// <summary>
-        /// Sets the controls to use and disables the others.
-        /// </summary>
-        /// <param name="controls">A string representing the controls to use. Can be "joystick" or "accelerometer"</param>
-        private void SetControls(string controls)
-        {
-            if (controls == "joystick")
-            {
-                _useJoystick = true;
-                _useAccelerometer = false;
-            }
-            else if (_hasAccelerometer && controls == "accelerometer")
-            {
-                _useJoystick = false;
-                _useAccelerometer = true;
-            }
-        }
-
-
-        /// <summary>
-        /// Sets the start method to use and disables the others.
-        /// </summary>
-        /// <param name="method">A string representing the method to use. Can be "cooldown" or "touch"</param>
-        private void SetStartMethod(string method)
-        {
-            if (method == "cooldown")
-            {
-                _startAfterCooldown = true;
-                _startOnTouch = false;
-            }
-            else if (method == "touch")
-            {
-                _startAfterCooldown = false;
-                _startOnTouch = true;
-            }
-        }
-
-
-        public bool UsesJoystick()
-        {
-            return _useJoystick;
-        }
-
-
-        public bool UsesAccelerometer()
-        {
-            return _useAccelerometer;
+            LoadSettings();
         }
 
 
@@ -115,9 +147,31 @@ namespace BallMaze
         }
 
 
-        public bool StartOnTouch()
+        /// <summary>
+        /// Loads the settings from the PlayerPrefs.
+        /// If no settings are found, the default settings are used.
+        /// </summary>
+        private void LoadSettings()
         {
-            return _startOnTouch;
+            // Load the controls. Defaults to Joystick
+            _controls = PlayerPrefs.HasKey("controls")
+                ? (ControlsSettings)PlayerPrefs.GetInt("controls")
+                : ControlsSettings.Joystick;
+
+            // Load the joystick joystickPosition. Defaults to Left
+            _joystickPosition = PlayerPrefs.HasKey("joystickPosition")
+                ? (JoystickPosition)PlayerPrefs.GetInt("joystickPosition")
+                : JoystickPosition.Left;
+
+            // Load the start method. Defaults to Touch
+            _startOn = PlayerPrefs.HasKey("startOn")
+                ? (StartOnSettings)PlayerPrefs.GetInt("startOn")
+                : StartOnSettings.Touch;
+
+            // Load the cooldown duration. Defaults to 3 seconds
+            _cooldownDuration = PlayerPrefs.HasKey("cooldownDuration")
+                ? PlayerPrefs.GetInt("cooldownDuration")
+                : 3;
         }
     }
 }
