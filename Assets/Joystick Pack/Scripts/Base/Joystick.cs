@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BallMaze;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -140,6 +141,17 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         Vector2 localPoint = Vector2.zero;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, screenPosition, cam, out localPoint))
         {
+            // if the joystick is on the right side, it is anchored to the right and so we need to modify the x value otherwise the joystick will be outside the screen
+            if (SettingsManager.Instance.joystickPosition == JoystickPosition.Right)
+            {
+                // Eg: if the screen width is 1920 and the JOYSTICK_WIDTH is 0.4, then the width of the rectangle is 768.
+                // So if the player clicks at 300, localPoint.x will be 300 but this is relative to the left side of the rectangle.
+                // Hence, we need to subtract 300 from 768 to get the position relative to the right side.
+                // And then invert it because the joystick is anchored to the right side and a positive value will make it be outside the screen.
+                localPoint.x = ((Screen.width * SettingsManager.JOYSTICK_WIDTH) - localPoint.x) * -1;
+                Debug.Log(localPoint.x);
+            }
+
             Vector2 pivotOffset = baseRect.pivot * baseRect.sizeDelta;
             return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;
         }

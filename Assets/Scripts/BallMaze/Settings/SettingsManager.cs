@@ -83,8 +83,8 @@ namespace BallMaze
                 }
                 else if (_joystickPosition == JoystickPosition.Right)
                 {
-                    _joystickRectTransform.anchorMin = new Vector2(0, 0);
-                    _joystickRectTransform.anchorMax = new Vector2(1 - JOYSTICK_WIDTH, JOYSTICK_HEIGHT);
+                    _joystickRectTransform.anchorMin = new Vector2(1 - JOYSTICK_WIDTH, 0);
+                    _joystickRectTransform.anchorMax = new Vector2(1, JOYSTICK_HEIGHT);
 
                     _joystickBackgroundRectTransform.anchorMin = new Vector2(1, 0);
                     _joystickBackgroundRectTransform.anchorMax = new Vector2(1, 0);
@@ -125,7 +125,7 @@ namespace BallMaze
 
         // Constants
         private const int DISTANCE_FROM_EDGE = 300;
-        private const float JOYSTICK_WIDTH = 0.4f;
+        public const float JOYSTICK_WIDTH = 0.4f;
         private const float JOYSTICK_HEIGHT = 0.65f;
 
 
@@ -154,22 +154,22 @@ namespace BallMaze
         private void LoadSettings()
         {
             // Load the controls. Defaults to Joystick
-            _controls = PlayerPrefs.HasKey("controls")
+            controls = PlayerPrefs.HasKey("controls")
                 ? (ControlsSettings)PlayerPrefs.GetInt("controls")
                 : ControlsSettings.Joystick;
 
             // Load the joystick joystickPosition. Defaults to Left
-            _joystickPosition = PlayerPrefs.HasKey("joystickPosition")
+            joystickPosition = PlayerPrefs.HasKey("joystickPosition")
                 ? (JoystickPosition)PlayerPrefs.GetInt("joystickPosition")
                 : JoystickPosition.Left;
 
             // Load the start method. Defaults to Touch
-            _startOn = PlayerPrefs.HasKey("startOn")
+            startOn = PlayerPrefs.HasKey("startOn")
                 ? (StartOnSettings)PlayerPrefs.GetInt("startOn")
                 : StartOnSettings.Touch;
 
             // Load the cooldown duration. Defaults to 3 seconds
-            _cooldownDuration = PlayerPrefs.HasKey("cooldownDuration")
+            cooldownDuration = PlayerPrefs.HasKey("cooldownDuration")
                 ? PlayerPrefs.GetInt("cooldownDuration")
                 : 3;
         }
