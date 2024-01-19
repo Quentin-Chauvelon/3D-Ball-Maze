@@ -154,12 +154,7 @@ namespace BallMaze
         /// </summary>
         private void ListenToTargetTrigger()
         {
-            // Bind the target's triggerAction to the TargetReached method
-            foreach (GameObject target in _maze.targets)
-            {
-                // Observer pattern
-                target.transform.Find("Trigger").GetComponent<Obstacles.Target>().triggerAction += TargetReached;
-            }
+            MazeEvents.targetReached += TargetReached;
         }
 
 
@@ -239,11 +234,7 @@ namespace BallMaze
         /// </summary>
         private void ClearMaze()
         {
-            // Unbind the target's triggerAction to the TargetReached method
-            foreach (GameObject target in _maze.targets)
-            {
-                target.transform.Find("Trigger").GetComponent<Obstacles.Target>().triggerAction -= TargetReached;
-            }
+            MazeEvents.targetReached -= TargetReached;
 
             _maze.ClearMaze();
         }

@@ -1,3 +1,4 @@
+using BallMaze.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +10,10 @@ namespace BallMaze.Obstacles
     public class Target : MonoBehaviour, ITrigerrable
     {
         public GameObject targetParent;
-        public Action triggerAction { get; set; }
 
         public void TriggerEntered()
         {
-            triggerAction?.Invoke();
+            MazeEvents.targetReached?.Invoke();
         }
 
         private void OnTriggerEnter(Collider other)
