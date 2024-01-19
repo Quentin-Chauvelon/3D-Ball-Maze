@@ -2,6 +2,7 @@ using BallMaze.Events;
 using System.IO;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 namespace BallMaze
@@ -89,8 +90,9 @@ namespace BallMaze
             switch (_gameState)
             {
                 case GameState.WaitingToStart:
-                    // If the player has start on touch enabled and the player clicks or touches the screen, start the game
+                    // If the player has start on touch enabled, is not over a UI element and clicks or touches the screen, start the game
                     if (SettingsManager.Instance.startOn == StartOnSettings.Touch &&
+                        !EventSystem.current.currentSelectedGameObject &&
                         (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
                     {
                         StartLevel();
