@@ -158,6 +158,12 @@ namespace BallMaze
                 ? (ControlsSettings)PlayerPrefs.GetInt("controls")
                 : ControlsSettings.Joystick;
 
+            // If the device doesn't support an accelerometer anymore, switch to joystick
+            if (controls == ControlsSettings.Accelerometer && !hasAccelerometer)
+            {
+                controls = ControlsSettings.Joystick;
+            }
+
             // Load the joystick joystickPosition. Defaults to Left
             joystickPosition = PlayerPrefs.HasKey("joystickPosition")
                 ? (JoystickPosition)PlayerPrefs.GetInt("joystickPosition")
