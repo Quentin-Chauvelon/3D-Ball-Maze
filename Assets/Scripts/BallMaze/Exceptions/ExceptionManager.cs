@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze

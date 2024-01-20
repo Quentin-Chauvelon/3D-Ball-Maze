@@ -3,6 +3,7 @@ using System.IO;
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze
@@ -65,7 +66,7 @@ namespace BallMaze
             if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
             {
                 _gameState = GameState.Error;
-                ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Please try again", ExceptionManager.ExceptionAction.BackToLevels);
+                ExceptionManager.Instance.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingTryAgainGenericError"), ExceptionManager.ExceptionAction.BackToLevels);
                 return;
             }
 

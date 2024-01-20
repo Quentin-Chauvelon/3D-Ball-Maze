@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze
@@ -58,7 +60,7 @@ namespace BallMaze
                     break;
 
                 default:
-                    throw new CouldNotLoadLevelException("Unknowned LevelType" + levelType);
+                    throw new CouldNotLoadLevelException("Unknown LevelType" + levelType);
             }
 
             // Read the json data from the file
@@ -124,7 +126,7 @@ namespace BallMaze
         private void DisplayDefaultLevelLoadingException(Exception exception)
         {
             Debug.LogException(exception, this);
-            ExceptionManager.Instance.ShowExceptionMessage("Sorry, there seems to have been a problem loading the level. Try checking your internet connection...", ExceptionManager.ExceptionAction.BackToLevels);
+            ExceptionManager.Instance.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingCheckInternetGenericError"), ExceptionManager.ExceptionAction.BackToLevels);
         }
     }
 }
