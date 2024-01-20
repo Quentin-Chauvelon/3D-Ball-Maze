@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 
@@ -21,6 +23,7 @@ namespace BallMaze.UI
         private RadioButtonGroup _startOnRadioButtonGroup;
         private SliderInt _cooldownDurationSlider;
         private Label _accelerometerUnavailableLabel;
+        private DropdownField _languageDropdown;
 
         public SettingsView(VisualElement root) : base(root)
         {
@@ -37,8 +40,12 @@ namespace BallMaze.UI
             _startOnRadioButtonGroup = _root.Q<RadioButtonGroup>("settings__start-on-radio-button-group");
             _cooldownDurationSlider = _root.Q<SliderInt>("settings__cooldown-duration-slider");
             _accelerometerUnavailableLabel = _root.Q<Label>("settings__controls-accelerometer-unavailable-label");
+            _languageDropdown = _root.Q<DropdownField>("settings__language-dropdown");
 
             _startOnRadioButtonGroup.choices = Enum.GetNames(typeof(StartOnSettings));
+
+            // Add the available languages to the dropdown and select the current language
+            AddLanguagesToDropdown();
         }
 
 
@@ -85,6 +92,11 @@ namespace BallMaze.UI
                 SettingsManager.Instance.cooldownDuration = evt.newValue;
                 SettingsEvents.UpdatedStartMethod?.Invoke();
             });
+
+            _languageDropdown.RegisterCallback<ChangeEvent<string>>((evt) =>
+            {
+                SettingsManager.Instance.language = evt.newValue;
+            }); 
         }
 
 
@@ -110,6 +122,13 @@ namespace BallMaze.UI
 
             // Update the cooldown duration
             _cooldownDurationSlider.value = SettingsManager.Instance.cooldownDuration;
+
+            // Update the language
+            int index = SettingsManager.Instance.language.IndexOf("(");
+            if (index >= 0)
+            {
+                _languageDropdown.value = SettingsManager.Instance.language.Substring(0, index - 1);
+            }
         }
 
 
@@ -137,6 +156,40 @@ namespace BallMaze.UI
             base.Show();
 
             UpdateAccelerometerAvailability();
+        }
+
+
+        /// <summary>
+        /// Adds the available languages to the language dropdown and selects the current language.
+        /// </summary>
+        private void AddLanguagesToDropdown()
+        {
+            List<string> availableLanguages = new List<string>();
+            string currentLocale = "";
+
+            for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; i++)
+            {
+                Locale locale = LocalizationSettings.AvailableLocales.Locales[i];
+                string localeName = locale.name;
+
+                // Remove the country code from the locale name. Eg: "English (en)" -> "English"
+                int index = localeName.IndexOf("(");
+                if (index >= 0)
+                {
+                    localeName = localeName.Substring(0, index - 1);
+                }
+
+                availableLanguages.Add(localeName);
+
+                // If the locale is the selected locale, set it as the current locale
+                if (locale == LocalizationSettings.SelectedLocale)
+                {
+                    currentLocale = localeName;
+                }
+            }
+
+            _languageDropdown.choices = availableLanguages;
+            _languageDropdown.value = currentLocale;
         }
     }
 }

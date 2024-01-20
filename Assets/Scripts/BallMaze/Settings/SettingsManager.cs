@@ -1,6 +1,8 @@
 using BallMaze.UI;
 using Unity.Profiling;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze
@@ -123,6 +125,31 @@ namespace BallMaze
             }
         }
 
+        private string _language;
+        public string language
+        {
+            get { return _language; }
+            set
+            {
+                // Find the locale that matches the language (eg: "English" -> "English (en)")
+                // We can't just use the name of the language used in the dropdown because
+                // it is a custom name and may not reflect the actual locale name
+                foreach (Locale locale in LocalizationSettings.AvailableLocales.Locales)
+                {
+                    if (locale.LocaleName.Contains(value))
+                    {
+                        LocalizationSettings.SelectedLocale = locale;
+                        _language = locale.LocaleName;
+
+                        break;
+                    }
+                }
+
+
+                PlayerPrefs.SetString("language", _language);
+            }
+        }
+
         // Constants
         private const int DISTANCE_FROM_EDGE = 300;
         public const float JOYSTICK_WIDTH = 0.4f;
@@ -178,6 +205,10 @@ namespace BallMaze
             cooldownDuration = PlayerPrefs.HasKey("cooldownDuration")
                 ? PlayerPrefs.GetInt("cooldownDuration")
                 : 3;
+
+            language = PlayerPrefs.HasKey("language")
+                ? PlayerPrefs.GetString("language")
+                : LocalizationSettings.AvailableLocales.Locales[0].LocaleName;
         }
     }
 }
