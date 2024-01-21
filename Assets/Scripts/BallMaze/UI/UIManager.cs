@@ -221,13 +221,24 @@ namespace BallMaze.UI
         /// </summary>
         public void Back()
         {
-            if (_navigationHistory.Count > 0)
+            if (_navigationHistory.Count == 0)
             {
+                ShowScreenView(_previousScreenView);
+                return;
+            }
+
+            // If the top UI is a screen view, hide it and show the previous screen view, otherwise hide the top UI
+            if (!_navigationHistory.Peek().isModal)
+            {
+                // We have to keep a reference to the previous screen view because calling Hide() will change the value of _previousScreenView (it will be _currentScreenView)
+                ScreenView previousScreenView = _previousScreenView;
+
                 Hide(_navigationHistory.Peek());
+                ShowScreenView(previousScreenView);
             }
             else
             {
-                ShowScreenView(_previousScreenView);
+                Hide(_navigationHistory.Peek());
             }
         }
 
