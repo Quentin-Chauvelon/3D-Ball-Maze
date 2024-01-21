@@ -9,9 +9,9 @@ using UnityEngine.Localization.Settings;
 namespace BallMaze
 {
     /// <summary>
-    /// The possible states of the game.
+    /// The possible states of the level.
     /// </summary>
-    public enum GameState
+    public enum LevelState
     {
         Loading,
         WaitingToStart,
@@ -37,7 +37,7 @@ namespace BallMaze
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";
 
-        private GameState _gameState;
+        private LevelState _levelState;
 
         private Controls _controls;
         private Maze _maze;
@@ -50,7 +50,7 @@ namespace BallMaze
         // Start is called before the first frame update
         void Start()
         {
-            _gameState = GameState.Loading;
+            _levelState = LevelState.Loading;
             _controls = GetComponent<Controls>();
 
             // Get the path to the levels folder
@@ -65,7 +65,7 @@ namespace BallMaze
             // If the maze or ball gameobjects don't exist, there is an error
             if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
             {
-                _gameState = GameState.Error;
+                _levelState = LevelState.Error;
                 ExceptionManager.Instance.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingTryAgainGenericError"), ExceptionManager.ExceptionAction.BackToLevels);
                 return;
             }
@@ -88,9 +88,9 @@ namespace BallMaze
         // Update is called once per frame
         void Update()
         {
-            switch (_gameState)
+            switch (_levelState)
             {
-                case GameState.WaitingToStart:
+                case LevelState.WaitingToStart:
                     // If the player has start on touch enabled, is not over a UI element and clicks or touches the screen, start the game
                     if (SettingsManager.Instance.startOn == StartOnSettings.Touch &&
                         !EventSystem.current.currentSelectedGameObject &&
@@ -101,7 +101,7 @@ namespace BallMaze
 
                     break;
 
-                case GameState.Playing:
+                case LevelState.Playing:
                     _maze.UpdateMazeOrientation(_controls.GetControlsOrientation());
                     _ball.AddForce(_controls.GetRawControlsDirection());
 
@@ -128,7 +128,7 @@ namespace BallMaze
                 if (!result)
                 {
                     // No need to display the error message as it is already handled in the LevelLoader class
-                    _gameState = GameState.Error;
+                    _levelState = LevelState.Error;
                     return;
                 }
 
@@ -141,7 +141,7 @@ namespace BallMaze
             ResetLevel();
 
             // Game loaded, waiting to start
-            _gameState = GameState.WaitingToStart;
+            _levelState = LevelState.WaitingToStart;
 
             // Have to show the controls here because otherwise if the player uses TouchToStart
             // The first touch will both start the game and register as a touch on the joystick
@@ -166,7 +166,7 @@ namespace BallMaze
             _ball.SetBallVisible(true);
             _ball.FreezeBall(false);
 
-            _gameState = GameState.Playing;
+            _levelState = LevelState.Playing;
         }
 
 
@@ -176,7 +176,7 @@ namespace BallMaze
 
             _ball.FreezeBall(true);
 
-            _gameState = GameState.Paused;
+            _levelState = LevelState.Paused;
         }
 
 
@@ -188,7 +188,7 @@ namespace BallMaze
         
         private void ResetLevel()
         {
-            _gameState = GameState.WaitingToStart;
+            _levelState = LevelState.WaitingToStart;
 
             _controls.DisableAndShowControls();
 
@@ -207,11 +207,11 @@ namespace BallMaze
         /// </summary>
         private void TargetReached()
         {
-            if (_gameState == GameState.Playing)
+            if (_levelState == LevelState.Playing)
             {
                 PauseLevel();
 
-                _gameState = GameState.Won;
+                _levelState = LevelState.Won;
             }
         }
 
@@ -221,11 +221,11 @@ namespace BallMaze
         /// </summary>
         private void Lost()
         {
-            if (_gameState == GameState.Playing)
+            if (_levelState == LevelState.Playing)
             {
                 PauseLevel();
 
-                _gameState = GameState.Lost;
+                _levelState = LevelState.Lost;
             }
         }
 
