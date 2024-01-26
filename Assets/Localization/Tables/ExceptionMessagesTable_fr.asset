@@ -25,7 +25,12 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2259911057408
     m_Localized: "Nous sommes d\xE9sol\xE9, il semble y avoir eu un probl\xE8me lors
-      du chargement du niveau. Essayez de v\xE9rifier votre connexion internet..."
+      du chargement du niveau. Veuillez v\xE9rifier votre connexion internet..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1872712145444864
+    m_Localized: "Nous sommes d\xE9sol\xE9, il semble y avoir eu un probl\xE8me lors
+      du chargement des niveaux. Veuilez v\xE9rifier votre connexion internet..."
     m_Metadata:
       m_Items: []
   references:

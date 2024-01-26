@@ -28,6 +28,11 @@ MonoBehaviour:
       checking your internet connection...
     m_Metadata:
       m_Items: []
+  - m_Id: 1872712145444864
+    m_Localized: Sorry, there seems to have been a problem loading the levels. Try
+      checking your internet connection...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
