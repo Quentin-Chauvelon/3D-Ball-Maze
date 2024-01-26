@@ -10,6 +10,8 @@ namespace BallMaze.UI
 {
     public enum UIViews
     {
+        MainMenu,
+        DefaultLevelSelection,
         Permanent,
         ModalBackground,
         Settings
@@ -76,9 +78,15 @@ namespace BallMaze.UI
             _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
             _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
             _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+            _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
+            _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
 
             // Show the UIs that should be shown at the start
+            // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
+            // and it shouldn't be the case as it should always be visible
+            // For the other UIs, call the UIManager.Show() method to add them to the navigation history
             _uiViews[UIViews.Permanent].Show();
+            Show(_uiViews[UIViews.MainMenu]);
         }
 
 
@@ -269,6 +277,29 @@ namespace BallMaze.UI
         public void UpdateSettings()
         {
             (_uiViews[UIViews.Settings] as SettingsView).Update();
+        }
+
+
+        /// <summary>
+        /// Populate the default level selection view with the given levels selection
+        /// </summary>
+        public void PopulateLevelSelectionView()
+        {
+            LevelsSelection levelsSelection = LevelSelectionLoader.DeserializeLevelsSelection();
+            if (levelsSelection != null && levelsSelection.levels.Length > 0)
+            {
+                (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
+            }
+        }
+
+
+        /// <summary>
+        /// Checks if the default level selection view contains the levels
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDefaultLevelSelectionViewLoaded()
+        {
+            return (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded();
         }
     }
 }
