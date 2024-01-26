@@ -28,6 +28,31 @@ namespace UnityExtensionMethods
 
 
         /// <summary>
+        /// Checks if two DateTime objects are within a certain timeframe.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="timeframe">The timeframe in seconds</param>
+        /// <returns></returns>
+        public static bool DateInTimeframe(this DateTime start, DateTime end, int timeframe)
+        {
+            return (end - start).TotalSeconds < timeframe;
+        }
+
+
+        /// <summary>
+        /// Checks if a DateTime object is within a certain timeframe.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="timeframe">The timeframe in seconds</param>
+        /// <returns></returns>
+        public static bool DateInTimeframe(this DateTime start, int timeframe)
+        {
+            return start.DateInTimeframe(DateTime.UtcNow, timeframe);
+        }
+
+
+        /// <summary>
         /// Checks if two floats are equal within a certain epsilon.
         /// </summary>
         /// <param name="a"></param>
