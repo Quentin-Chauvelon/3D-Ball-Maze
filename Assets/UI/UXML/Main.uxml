@@ -1,13 +1,17 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="PermanentScreenView" src="project://database/Assets/UI/UXML/PermanentScreenView.uxml?fileID=9197481963319205126&amp;guid=704deb86a25e9b945bbda29724dca6cd&amp;type=3#PermanentUI" />
-    <ui:Template name="ModalBackgroundView" src="project://database/Assets/UI/UXML/ModalBackgroundView.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackground" />
-    <ui:Template name="SettingsModalView" src="project://database/Assets/UI/UXML/SettingsModalView.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsUI" />
+    <ui:Template name="PermanentScreenView" src="project://database/Assets/UI/UXML/PermanentScreenView.uxml?fileID=9197481963319205126&amp;guid=704deb86a25e9b945bbda29724dca6cd&amp;type=3#PermanentScreenView" />
+    <ui:Template name="MainMenuScreenView" src="project://database/Assets/UI/UXML/MainMenuScreenView.uxml?fileID=9197481963319205126&amp;guid=8fda520f9ce1ff543b37a85c8c8a0eef&amp;type=3#MainMenuScreenView" />
+    <ui:Template name="DefaultLevelSelectionScreenView" src="project://database/Assets/UI/UXML/DefaultLevelSelectionScreenView.uxml?fileID=9197481963319205126&amp;guid=c12b4d6373d56124cb78833507b8308a&amp;type=3#DefaultLevelSelectionScreenView" />
+    <ui:Template name="ModalBackgroundView" src="project://database/Assets/UI/UXML/ModalBackgroundView.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackgroundView" />
+    <ui:Template name="SettingsModalView" src="project://database/Assets/UI/UXML/SettingsModalView.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
         <ui:VisualElement name="main__screen-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
             <ui:Instance template="PermanentScreenView" name="permanent" focusable="false" picking-mode="Ignore" class="screen__anchor--center" style="display: none;">
                 <AttributeOverrides element-name="permanent" picking-mode="Ignore" />
             </ui:Instance>
+            <ui:Instance template="MainMenuScreenView" picking-mode="Ignore" name="main-menu" class="screen__anchor--center" style="display: none;" />
+            <ui:Instance template="DefaultLevelSelectionScreenView" picking-mode="Ignore" name="level-selection" class="screen__anchor--center" style="display: none;" />
         </ui:VisualElement>
         <ui:Instance template="ModalBackgroundView" name="modal-background" class="screen__anchor--center" style="display: none;" />
         <ui:VisualElement name="main__modal-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
