@@ -5,8 +5,25 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
+namespace BallMaze
+{
 public class InternetManager : MonoBehaviour
 {
+        // Singleton pattern
+        private static InternetManager _instance;
+        public static InternetManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Debug.LogError("InternetManager is null!");
+                }
+                return _instance;
+            }
+        }
+
     private bool _wasOnline;
     private bool _isOnline;
     public bool isOnline
@@ -41,8 +58,11 @@ public class InternetManager : MonoBehaviour
     /// On start, check if the internet is available.
     /// If it's not, try again every 5 seconds until it is for up to 5 times.
     /// </summary>
-    private async void Start()
+        private async void Awake()
     {
+            _instance = this;
+            DontDestroyOnLoad(this);
+
         _wasOnline = false;
         isOnline = false;
         initialized = false;
@@ -136,7 +156,6 @@ public class InternetManager : MonoBehaviour
     private IEnumerator Ping(TaskCompletionSource<bool> task)
     {
         UnityWebRequest request = new UnityWebRequest(PING_ADDRESS);
-        int now = DateTime.Now.Millisecond;
         yield return request.SendWebRequest();
 
         if (request.responseCode < 299 && string.IsNullOrEmpty(request.error))
@@ -150,4 +169,5 @@ public class InternetManager : MonoBehaviour
             task.SetResult(false);
         }
     }
+}
 }
