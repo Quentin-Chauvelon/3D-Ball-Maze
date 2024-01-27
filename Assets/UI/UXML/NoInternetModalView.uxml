@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="no-internet__background" style="flex-grow: 1; min-height: 40%; height: 40%; width: 50%; max-height: 40%; background-color: rgb(255, 255, 255); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;">
+        <ui:Label tabindex="-1" text="NO INTERNET" parse-escape-sequences="true" display-tooltip-when-elided="true" name="no-internet__title" enable-rich-text="false" style="-unity-text-align: upper-center; font-size: 50px; -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>

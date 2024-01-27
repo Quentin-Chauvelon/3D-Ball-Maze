@@ -1,3 +1,5 @@
+using BallMaze.Events;
+using BallMaze.UI;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
@@ -47,6 +49,7 @@ namespace BallMaze
         public bool initialized;
 
         private bool _isCheckOnlineLoopRunning;
+        private bool _isNoInternetUIVisible;
 
         private const string PING_ADDRESS = "www.google.com";
         // If internet is available, check every 30 seconds if it's still available
@@ -136,7 +139,43 @@ namespace BallMaze
         }
 
 
+        public async Task CheckIsOnlineAndDisplayUI(Action callback = null)
+        {
+            // If the UI is already being displayed, don't call checkIsOnline again as a loop is already running
+            // We simply want to add the callback method to the list of callbacks to call when the player goes back online
+            if (_isNoInternetUIVisible)
+            {
+                // Display the UI and will call the callback method when the player goes back online
+                UIManager.Instance.DisplayNoInternetUI(false, callback);
 
+                return;
+            }
+
+            //If internet is not available, display the UI to let the player know
+            if (!await CheckIsOnline())
+            {
+                _isNoInternetUIVisible = true;
+
+                // Display the UI and will call the callback method when the player goes back online
+                UIManager.Instance.DisplayNoInternetUI(false, callback);
+            }
+
+            // Check if the player is connected to the internet every few seconds
+            while (true)
+            {
+                await Task.Delay(5000);
+
+                if (await CheckIsOnline())
+                {
+                    _isNoInternetUIVisible = false;
+
+                    // Hide the UI and will call the callback methods
+                    UIManager.Instance.DisplayNoInternetUI(true);
+
+                    break;
+                }
+            }
+        }
 
 
         /// <summary>
