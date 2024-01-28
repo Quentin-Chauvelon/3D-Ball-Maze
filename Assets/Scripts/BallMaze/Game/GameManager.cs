@@ -44,6 +44,8 @@ namespace BallMaze
 
         public DefaultLevelSelection defaultLevelSelection;
 
+        public static bool isQuitting = false;
+
 
         private void Awake()
         {
@@ -78,6 +80,12 @@ namespace BallMaze
                     defaultLevelSelection.LoadDefaultLevelSelection();
                 }
             }
+        }
+
+
+        private void OnApplicationQuit()
+        {
+            isQuitting = true;
         }
     }
 }

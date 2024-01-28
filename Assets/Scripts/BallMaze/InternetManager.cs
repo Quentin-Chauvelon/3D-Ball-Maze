@@ -109,7 +109,8 @@ namespace BallMaze
 
             _isCheckOnlineLoopRunning = true;
 
-            while (true)
+            // Stop the loop if isQuitting is true, otherwise after exiting playmode in the unity editor, async methods keep running forever
+            while (!GameManager.isQuitting)
             {
                 await Task.Delay(CHECK_IS_ONLINE_DELAY * 1000);
 
@@ -130,7 +131,7 @@ namespace BallMaze
         /// <returns></returns>
         public async Task<bool> CheckIsOnline()
         {
-            // If the no network is available, we can't be connected to the internet
+            // If no network is available, we can't be connected to the internet
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 isOnline = false;
@@ -164,8 +165,8 @@ namespace BallMaze
                 UIManager.Instance.DisplayNoInternetUI(false, callback);
             }
 
-            // Check if the player is connected to the internet every few seconds
-            while (true)
+            // Stop the loop if isQuitting is true, otherwise after exiting playmode in the unity editor, async methods keep running forever
+            while (!GameManager.isQuitting)
             {
                 await Task.Delay(5000);
 
