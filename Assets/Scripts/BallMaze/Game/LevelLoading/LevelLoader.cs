@@ -16,6 +16,12 @@ namespace BallMaze
 
     public class LevelLoader : MonoBehaviour
     {
+        /// <summary>
+        /// Deserialize the level with the given id and type and returns it as a Level object.
+        /// </summary>
+        /// <param name="levelType"></param>
+        /// <param name="levelId"></param>
+        /// <returns></returns>
         public Level DeserializeLevel(LevelType levelType, string levelId)
         {
             try
@@ -48,7 +54,7 @@ namespace BallMaze
             switch(levelType)
             {
                 case LevelType.Default:
-                    path = Path.Combine(LevelManager.LEVELS_PATH, "defaultLevels.json");
+                    path = Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_FILE_NAME);
                     break;
 
                 case LevelType.DailyLevel:
@@ -98,6 +104,12 @@ namespace BallMaze
         }
 
 
+        /// <summary>
+        /// Reads the content of the file at the given path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        /// <exception cref="CouldNotLoadLevelException"></exception>
         private string ReadLevelFile(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)) || !File.Exists(path))

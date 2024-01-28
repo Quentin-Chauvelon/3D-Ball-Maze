@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -10,9 +11,12 @@ namespace BallMaze.UI
 {
     public enum UIViews
     {
+        MainMenu,
+        DefaultLevelSelection,
         Permanent,
         ModalBackground,
-        Settings
+        Settings,
+        NoInternet
     }
 
 
@@ -76,9 +80,16 @@ namespace BallMaze.UI
             _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
             _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
             _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+            _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
+            _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
+            _uiViews.Add(UIViews.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
 
             // Show the UIs that should be shown at the start
+            // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
+            // and it shouldn't be the case as it should always be visible
+            // For the other UIs, call the UIManager.Show() method to add them to the navigation history
             _uiViews[UIViews.Permanent].Show();
+            Show(_uiViews[UIViews.MainMenu]);
         }
 
 
@@ -269,6 +280,38 @@ namespace BallMaze.UI
         public void UpdateSettings()
         {
             (_uiViews[UIViews.Settings] as SettingsView).Update();
+        }
+
+
+        /// <summary>
+        /// Populate the default level selection view with the given levels selection
+        /// </summary>
+        /// <param name="levelsSelection"></param>
+        public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
+        {
+                (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
+            }
+
+
+        /// <summary>
+        /// Checks if the default level selection view contains the levels
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDefaultLevelSelectionViewLoaded()
+        {
+            return (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded();
+        }
+
+
+        /// <summary>
+        /// Displays the no internet UI based on the given internet availability.
+        /// If a callback method is passed, it will be called when the player goes back online.
+        /// </summary>
+        /// <param name="internetAvailable">True if the player is online and the UI should be hidden, false otherwise</param>
+        /// <param name="callback">The callback method to call when the player goes back online</param>
+        public void DisplayNoInternetUI(bool internetAvailable, Action callback = null)
+        {
+            (_uiViews[UIViews.NoInternet] as NoInternetView).DisplayNoInternetUI(internetAvailable, callback);
         }
     }
 }

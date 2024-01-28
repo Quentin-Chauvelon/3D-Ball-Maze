@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: LevelLoadingCheckInternetGenericError
     m_Metadata:
       m_Items: []
+  - m_Id: 1872712145444864
+    m_Key: LevelSelectionLoadingCheckInternetGenericError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
