@@ -68,7 +68,7 @@ namespace BallMaze
             if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
             {
                 _levelState = LevelState.Error;
-                ExceptionManager.Instance.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingTryAgainGenericError"), ExceptionManager.ExceptionAction.BackToLevels);
+                ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingTryAgainGenericError"), ExceptionManager.ExceptionAction.BackToLevels);
                 return;
             }
 
