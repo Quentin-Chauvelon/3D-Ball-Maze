@@ -36,6 +36,8 @@ namespace BallMaze
         public static string levelToLoad = "";
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";
+        public const string DEFAULT_LEVELS_FILE_NAME = "defaultLevels.json";
+        public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
 
         private LevelState _levelState;
 
