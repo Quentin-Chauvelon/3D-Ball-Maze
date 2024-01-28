@@ -75,6 +75,13 @@ namespace BallMaze
             for (int i = 0; i < MAX_ATTEMPTS; i++)
             {
                 bool result = await CheckIsOnline();
+
+                // Set initialized to true so that other script can know that if isOnline is false,
+                // it's because internet is not available and not because the ping is still running
+                // do it after the first iteration so that other scripts don't have to wait 25 seconds
+                // if the player doesn't have internet, but still keep trying 5 times after that (in the background)
+                initialized = true;
+
                 if (result)
                 {
                     break;
@@ -85,9 +92,6 @@ namespace BallMaze
                 }
             }
 
-            // Set initialized to true so that other script can know that if isOnline is false,
-            // it's because internet is not available and not because the ping is still running
-            initialized = true;
             InternetManagerEvents.intialized?.Invoke();
         }
 
