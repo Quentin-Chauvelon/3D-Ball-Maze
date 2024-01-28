@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityExtensionMethods;
 
 
 namespace BallMaze.UI
@@ -33,6 +34,25 @@ namespace BallMaze.UI
         {
             // Go back to the previous screen view
             _backButton.clickable.clicked += () => { UIManager.Instance.Back(); };
+        }
+
+
+        public override void Show()
+        {
+            base.Show();
+
+            // If the level selection files were not checked in the last 5 minutes, update the level selection
+            if (!GameManager.Instance.defaultLevelSelection.LastDefaultLevelFilesModifiedCheck.DateInTimeframe(60))
+            {
+                GameManager.Instance.defaultLevelSelection.LoadDefaultLevelSelection();
+                return;
+            }
+
+            // If the level selection is not loaded, load it
+            if (!IsDefaultLevelSelectionViewLoaded())
+            {
+                GameManager.Instance.defaultLevelSelection.LoadDefaultLevelSelection();
+            }
         }
 
 
@@ -104,7 +124,9 @@ namespace BallMaze.UI
         /// <param name="id"></param>
         public void LevelSelectionClicked(string id)
         {
-            
+            UIManager.Instance.Hide(UIViews.DefaultLevelSelection);
+
+            GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
         }
     }
 }

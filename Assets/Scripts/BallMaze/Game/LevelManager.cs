@@ -79,9 +79,6 @@ namespace BallMaze
                 levelToLoad = _config.levelToLoad;
             }
 
-            LoadLevel(levelToLoad);
-
-            // Restart the level if the player updates a setting linked to the start method (start on, cooldown duration...)
             SettingsEvents.UpdatedStartMethod += ResetLevel;
         }
 
@@ -114,7 +111,7 @@ namespace BallMaze
         /// Loads the the given level.
         /// </summary>
         /// <param name="level">The level to load</param>
-        private void LoadLevel(string levelId)
+        public void LoadLevel(string levelId)
         {
             if (levelToLoad != "")
             {
@@ -195,7 +192,10 @@ namespace BallMaze
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
             // Move the ball to the start position
-            _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(transform.position));
+            if (_maze.start)
+            {
+                _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(transform.position));
+            }
 
             _maze.ResetMazeOrientation();
         }

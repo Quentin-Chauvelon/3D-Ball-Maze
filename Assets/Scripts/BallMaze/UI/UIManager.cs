@@ -286,14 +286,11 @@ namespace BallMaze.UI
         /// <summary>
         /// Populate the default level selection view with the given levels selection
         /// </summary>
-        public void PopulateLevelSelectionView()
+        /// <param name="levelsSelection"></param>
+        public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
         {
-            LevelsSelection levelsSelection = LevelSelectionLoader.DeserializeLevelsSelection();
-            if (levelsSelection != null && levelsSelection.levels.Length > 0)
-            {
                 (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
             }
-        }
 
 
         /// <summary>
