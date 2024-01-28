@@ -16,6 +16,9 @@ namespace BallMaze.UI
         private ScrollView _levelsSelectionContainerScrollView;
         private Dictionary<string, Action> _levelSelectionButtonsClickAction;
 
+        // The height of the level relative to its container
+        private const float LEVEL_HEIGHT_PERCENTAGE = 0.35f;
+
 
         public DefaultLevelSelectionView(VisualElement root) : base(root)
         {
@@ -27,6 +30,9 @@ namespace BallMaze.UI
         {
             _backButton = _root.Q<Button>("default-level-selection__back-button");
             _levelsSelectionContainerScrollView = _root.Q<ScrollView>("default-level-selection__levels-container-scroll-view");
+
+            // Update the size of the children when the size of the container changes
+            _levelsSelectionContainerScrollView.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
 
@@ -127,6 +133,30 @@ namespace BallMaze.UI
             UIManager.Instance.Hide(UIViews.DefaultLevelSelection);
 
             GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
+        }
+
+
+        /// <summary>
+        /// Update the size of all levels so that they are always square which the height taking up 40% of the container (2 per column)
+        /// </summary>
+        /// <param name="evt"></param>
+        private void OnGeometryChanged(GeometryChangedEvent evt)
+        {
+            if (evt.oldRect.size == evt.newRect.size)
+            {
+                return;
+            }
+
+            float height = (float)(_levelsSelectionContainerScrollView.resolvedStyle.height * LEVEL_HEIGHT_PERCENTAGE);
+
+            if (height > 1)
+            {
+                foreach (VisualElement child in _levelsSelectionContainerScrollView.Children())
+                {
+                    child.style.width = height;
+                    child.style.height = height;
+                }
+            }
         }
     }
 }
