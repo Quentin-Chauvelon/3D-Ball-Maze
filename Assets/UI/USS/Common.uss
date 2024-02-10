@@ -5,3 +5,8 @@
     justify-content: center;
     position: absolute;
 }
+
+
+.screen_view {
+    height: 85%;
+}

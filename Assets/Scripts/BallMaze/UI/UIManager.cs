@@ -9,6 +9,7 @@ namespace BallMaze.UI
     public enum UIViews
     {
         MainMenu,
+        ModeSelection,
         DefaultLevelSelection,
         Permanent,
         ModalBackground,
@@ -80,6 +81,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
             _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
             _uiViews.Add(UIViews.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
+            _uiViews.Add(UIViews.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
 
             // Show the UIs that should be shown at the start
             // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
