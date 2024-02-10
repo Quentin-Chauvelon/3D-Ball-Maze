@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
-    <ui:VisualElement name="settings_background" style="flex-grow: 1; min-height: 80%; height: 80%; width: 80%; max-height: 80%; background-color: rgb(255, 255, 255); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;">
+    <ui:VisualElement name="settings__background" style="flex-grow: 1; min-height: 80%; height: 80%; width: 80%; max-height: 80%; background-color: rgb(255, 255, 255); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;">
         <ui:Label tabindex="-1" text="SETTINGS" parse-escape-sequences="true" display-tooltip-when-elided="true" name="settings__title" enable-rich-text="false" style="-unity-text-align: upper-center; font-size: 50px; -unity-font-style: bold;" />
         <ui:Button text="X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="settings__close-button" enable-rich-text="false" style="position: absolute; top: 0; right: 0; font-size: 50px; -unity-font-style: bold;" />
         <ui:VisualElement name="settings__controls-radio_button_group-container" style="flex-grow: 0; align-items: stretch; flex-direction: row; font-size: 30px; -unity-font-style: bold; max-height: none; flex-shrink: 0;">

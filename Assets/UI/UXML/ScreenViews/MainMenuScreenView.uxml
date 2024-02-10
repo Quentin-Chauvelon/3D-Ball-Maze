@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Button text="Player#QC2406" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__profile-button" enable-rich-text="false" />
+    <ui:Button text="Shop" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__shop-button" enable-rich-text="false" />
+    <ui:Button text="Skins" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__skins-button" enable-rich-text="false" />
+    <ui:Button text="Daily reward" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__daily-reward-button" enable-rich-text="false" />
+    <ui:Button text="Play" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__play-button" enable-rich-text="false" />
+    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="main-menu__bottom-info" enable-rich-text="false" />
+</ui:UXML>
