@@ -1,49 +1,60 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md) 
 
+<details>
+
+<summary>Sommaire</summary>
+
+1. [3D Ball Maze](#3d-ball-maze)
+2. [Statut](#statut)
+3. [Projet](#projet)
+4. [Inspiration](#inspiration)
+5. [Contact](#contact)
+
+</details>
+
+
 # 3D Ball Maze 
 
-Code source d'un jeu mobile/web à venir.
+Code source d'un jeu mobile/web Ã  venir.
 
-3D Ball Maze est un jeu grand public (casual) dont le but est d'amener une balle à l'objectif le plus vite possible en orientant son téléphone pour incliner et traverser un labyrinthe en veillant à éviter les divers obstacles.
+3D Ball Maze est un jeu grand public (casual) dont le but est d'amener une balle Ã  l'objectif le plus vite possible en orientant son tÃ©lÃ©phone pour incliner et traverser un labyrinthe en veillant Ã  Ã©viter les divers obstacles.
 
-Le jeu est développé en C# avec le moteur de jeu Unity 3D.
-
-
-# Status 
-
-Le projet est en cours de développement (débuté en décembre 2023). Il est actuellement en phase de prototypage pour valider l'idée et s'assurer que celui-ci est intéressant et amusant.
+Le jeu est dÃ©veloppÃ© en C# avec le moteur de jeu Unity 3D.
 
 
-# Project 
+# Statut
 
-<details> 
-<summary>Inspiration (cliquer pour voir plus)</summary>
-
-Ce projet est inspiré d'un mini-jeu nommé Tilt Maze du jeu Bomberman Land Wii.
-
-Dans ce jeu, vous devez faire pivoter votre télécommande Wii pour incliner le labyrinthe et faire rouler la balle (en haut à gauche de l'image) jusqu'à l'objectif (en bas à droite de l'image) dans le temps imparti. Il y a plusieurs niveaux qui augmentent en difficulté.
-
-![Capture d'écran du mini-jeu Tilt Maze](Images/Tilt_Maze_Bomberman_Land.jpg)
-*Capture d'écran prise de [Let's Play Bomberman Land Wii part 13 "Enter the Star Zone!"](https://www.youtube.com/watch?v=gYOpMycheL0&t=1719s) par ackieforest* 
+Le projet est en cours de dÃ©veloppement (dÃ©butÃ© en dÃ©cembre 2023). Il est actuellement en phase de prototypage pour valider l'idÃ©e et s'assurer que celui-ci est intÃ©ressant et amusant.
 
 
-J'aimais beaucoup jouer à ce jeu quand j'étais plus jeune et je souhaite essayer de faire une version plus moderne de celui-ci en y ajoutant des fonctionnalités que l'on peut retrouver dans la plupart des jeux actuels :
+# Projet 
+
+Je travaille sur ce projet depuis dÃ©cembre 2023 (j'ai commencÃ© Ã  travailler dessus en 2022 mais j'ai dÃ» arrÃªtÃ© Ã  cause d'une charge de travail trop importante de janvier Ã  juillet 2022 ainsi que pour travailler sur un autre projet : [Social Media Simulator](https://github.com/Quentin-Chauvelon/Social_Media_Simulator)). J'ai recommencÃ© Ã  travailler sur ce projet fin 2023 en repartant de zÃ©ro car je n'Ã©tais pas satisfait du code que j'avais Ã©crit en 2022 (c'Ã©tait la premiÃ¨re fois que je codais en C#).
+
+J'ai appris le C# par moi-mÃªme en travaillant sur la premiÃ¨re version du projet en 2022 et en lisant [Apprenez Ã  dÃ©velopper en C#](https://www.fnac.com/a8267393/Nicolas-Hilaire-Apprenez-a-developper-en-c) Ã©crit par Nicolas Hilaire.
+
+Travaillant seul sur ce projet, j'ai du m'occuper de tous les ascpects du jeu : dÃ©veloppement, design de l'interface graphique, modÃ©lisation 3D, tests, rÃ©solution de bugs... ce qui va me permettre d'apprendre et de m'amÃ©liorer dans tous ces domaines.
+
+
+# Inspiration
+
+Ce projet est inspirÃ© d'un mini-jeu nommÃ© Tilt Maze du jeu Bomberman Land Wii.
+
+Dans ce jeu, vous devez faire pivoter votre tÃ©lÃ©commande Wii pour incliner le labyrinthe et faire rouler la balle (en haut Ã  gauche de l'image) jusqu'Ã  l'objectif (en bas Ã  droite de l'image) dans le temps imparti. Il y a plusieurs niveaux qui augmentent en difficultÃ©.
+
+![Capture d'Ã©cran du mini-jeu Tilt Maze](Images/Tilt_Maze_Bomberman_Land.jpg)
+*Capture d'Ã©cran prise de [Let's Play Bomberman Land Wii part 13 "Enter the Star Zone!"](https://www.youtube.com/watch?v=gYOpMycheL0&t=1719s) par ackieforest* 
+
+
+J'aimais beaucoup jouer Ã  ce jeu quand j'Ã©tais plus jeune et je souhaite essayer de faire une version plus moderne de celui-ci en y ajoutant des fonctionnalitÃ©s que l'on peut retrouver dans la plupart des jeux actuels :
 
 - Elements sociaux tels que jouer avec ses amis
 - Nouveaux niveaux tous les jours
 - Niveaux avec classements
-- Cosmétiques tels que des skins
+- CosmÃ©tiques tels que des skins
 - Multijoueur
-- Evènements avec des mécaniques de jeu personnalisées
+- EvÃ¨nements avec des mÃ©caniques de jeu personnalisÃ©es
 - Et bien plus...
-
-</details> 
-
-Je travaille sur ce projet depuis décembre 2023 (j'ai commencé à travailler dessus en 2022 mais j'ai dû arrêté à cause d'une charge de travail trop importante de janvier à juillet 2022 ainsi que pour travailler sur un autre projet : [Social Media Simulator](https://github.com/Quentin-Chauvelon/Social_Media_Simulator)). J'ai recommencé à travailler sur ce projet fin 2023 en repartant de zéro car je n'étais pas satisfait du code que j'avais écrit en 2022 (c'était la première fois que je codais en C#).
-
-J'ai appris le C# par moi-même en travaillant sur la première version du projet en 2022 et en lisant [Apprenez à développer en C#](https://www.fnac.com/a8267393/Nicolas-Hilaire-Apprenez-a-developper-en-c) écrit par Nicolas Hilaire.
-
-Travaillant seul sur ce projet, j'ai du m'occuper de tous les ascpects du jeu : développement, design du UI, modélisation 3D, tests, résolution de bugs... ce qui va me permettre d'apprendre et de m'améliorer dans tous ces domaines.
 
 
 # Contact 
