@@ -12,6 +12,8 @@ namespace BallMaze.UI
 {
     public class SettingsView : ModalView
     {
+        public override bool isCloseable => true;
+
         // Top visual element
         private VisualElement _settingsContainer;
 

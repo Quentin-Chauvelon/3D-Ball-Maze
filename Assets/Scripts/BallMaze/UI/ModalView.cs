@@ -13,6 +13,10 @@ namespace BallMaze.UI
     public abstract class ModalView : UIView
     {
         public override bool isModal => true;
+        
+        // Some modal views should not be closeable (e.g. no internet, download progress...).
+        // This usually happens for modal views that are displayed automatically and are waiting for a specific event to happen.
+        public abstract bool isCloseable { get; }
 
         protected ModalView(VisualElement root) : base(root)
         {

@@ -8,6 +8,8 @@ namespace BallMaze.UI
 {
     public class NoInternetView : ModalView
     {
+        public override bool isCloseable => false;
+
         private List<Action> callbacks;
 
 

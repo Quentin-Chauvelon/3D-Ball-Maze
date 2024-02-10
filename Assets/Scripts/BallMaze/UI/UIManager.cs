@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -133,6 +130,13 @@ namespace BallMaze.UI
         /// <param name="modalView">The component of the modal view to open</param>
         private void ShowModalView(ModalView modalView)
         {
+            // If the modal view is not closeable, don't add it to the navigation history
+            if (!modalView.isCloseable)
+            {
+                modalView.Show();
+                return;
+            }
+
             // If the modal view is the first modal view to be opened, add the invisible button behind the modal view
             if (!_isModalOpened)
             {
@@ -150,6 +154,14 @@ namespace BallMaze.UI
         /// <param name="modalView">The component of the modal view to hide</param>
         private void HideModalView(ModalView modalView)
         {
+            // If the modal view is not closeable, don't try to remove it from the navigation history and simply hide it.
+            // Not closeable doesn't mean that it can't be hidden, it just means that it can't be closed by the user
+            if (!modalView.isCloseable)
+            {
+                modalView.Hide();
+                return;
+            }
+
             // If the modal view the player is trying to hide is not the top modal view, hide all modal views on top of it
             while (_navigationHistory.Count > 0 && _navigationHistory.Peek() as ModalView != modalView)
             {
@@ -232,9 +244,16 @@ namespace BallMaze.UI
         /// </summary>
         public void Back()
         {
-            if (_navigationHistory.Count == 0)
+            // If the navigation history is empty, show the previous screen view
+            if (_navigationHistory.Count == 0 || _navigationHistory.Peek() == null)
             {
                 ShowScreenView(_previousScreenView);
+                return;
+            }
+
+            // if the top UI is a uncloseable modal view, don't go back
+            if (_navigationHistory.Peek() is ModalView && !(_navigationHistory.Peek() as ModalView).isCloseable)
+            {
                 return;
             }
 
@@ -245,7 +264,11 @@ namespace BallMaze.UI
                 ScreenView previousScreenView = _previousScreenView;
 
                 Hide(_navigationHistory.Peek());
-                ShowScreenView(previousScreenView);
+
+                if (previousScreenView != null)
+                {
+                    ShowScreenView(previousScreenView);
+                }
             }
             else
             {
@@ -267,7 +290,7 @@ namespace BallMaze.UI
 
 
         /// <summary>
-        /// Called when the last modal view is hided.
+        /// Called when the last modal view is hidden.
         /// Removes the invisible button behind the modal view.
         /// </summary>
         private void NoModalsOpened()
