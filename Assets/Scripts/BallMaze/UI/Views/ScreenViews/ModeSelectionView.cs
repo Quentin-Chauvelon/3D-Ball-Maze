@@ -11,6 +11,7 @@ namespace BallMaze.UI {
         private Button _defaultLevelsButton;
         private Button _dailylevelsButton;
         private Button _rankedButton;
+        private Button _eventButton;
 
         // The height of the mode relative to its container
         private const float MODE_HEIGHT_PERCENTAGE = 0.8f;
@@ -27,6 +28,7 @@ namespace BallMaze.UI {
             _defaultLevelsButton = _root.Q<Button>("mode-selection__default-levels-button");
             _dailylevelsButton = _root.Q<Button>("mode-selection__daily-levels-button");
             _rankedButton = _root.Q<Button>("mode-selection__ranked-button");
+            _eventButton = _root.Q<Button>("mode-selection__event-button");
 
             // Update the size of the children when the size of the container changes
             _modeSelectionContainerScrollView.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
@@ -34,7 +36,19 @@ namespace BallMaze.UI {
 
         protected override void RegisterButtonCallbacks()
         {
-            
+            _defaultLevelsButton.clickable.clicked += () =>
+            {
+                // We are playing classic, so disable the event UI
+                UIManager.Instance.SetEventModeSelected(false);
+                UIManager.Instance.Show(UIViews.DefaultLevelSelection);
+            };
+
+            _eventButton.clickable.clicked += () =>
+            {
+                // We are playing event, so enable the event UI
+                UIManager.Instance.SetEventModeSelected(true);
+                UIManager.Instance.Show(UIViews.DefaultLevelSelection);
+            };
         }
 
 

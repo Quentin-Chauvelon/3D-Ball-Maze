@@ -360,6 +360,12 @@ namespace BallMaze.UI
         }
 
 
+        public void SetEventModeSelected(bool isEventModeSelected)
+        {
+            (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(isEventModeSelected);
+        }
+
+
         /// <summary>
         /// Displays the no internet UI based on the given internet availability.
         /// If a callback method is passed, it will be called when the player goes back online.

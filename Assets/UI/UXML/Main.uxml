@@ -13,7 +13,7 @@
                 <AttributeOverrides element-name="permanent" picking-mode="Ignore" />
             </ui:Instance>
             <ui:Instance template="MainMenuScreenView" picking-mode="Ignore" name="main-menu" class="screen__anchor--center" style="display: none;" />
-            <ui:Instance template="DefaultLevelSelectionScreenView" picking-mode="Ignore" name="level-selection" class="screen__anchor--center screen_view" style="display: none;" />
+            <ui:Instance template="DefaultLevelSelectionScreenView" picking-mode="Ignore" name="level-selection" class="screen__anchor--center screen_view" style="display: none; justify-content: space-around;" />
             <ui:Instance template="ModeSelectionScreenView" picking-mode="Ignore" name="mode-selection" class="screen__anchor--center screen_view" style="display: none;" />
         </ui:VisualElement>
         <ui:Instance template="ModalBackgroundView" name="modal-background" class="screen__anchor--center" style="display: none;" />
