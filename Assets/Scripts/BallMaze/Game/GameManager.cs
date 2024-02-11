@@ -18,6 +18,7 @@ namespace BallMaze
     public enum GameState
     {
         MainMenu,
+        ModeSelection,
         LevelSelection,
         Playing
     }
@@ -58,6 +59,39 @@ namespace BallMaze
             defaultLevelSelection = GetComponent<DefaultLevelSelection>();
         }
 
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                UIManager.Instance.Back();
+            }
+        }
+
+
+        /// <summary>
+        /// Updates the game state based on the current UI view
+        /// </summary>
+        /// <param name="uiView"></param>
+        public void UpdateGameState(UIViews uiView)
+        {
+            Debug.Log("Current game state: " + uiView.ToString());
+
+            switch (uiView)
+            {
+                case UIViews.MainMenu:
+                    _gameState = GameState.MainMenu;
+                    break;
+                case UIViews.ModeSelection:
+                    _gameState = GameState.ModeSelection;
+                    break;
+                case UIViews.DefaultLevelSelection:
+                    _gameState = GameState.LevelSelection;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void OnApplicationPause(bool pause)
         {

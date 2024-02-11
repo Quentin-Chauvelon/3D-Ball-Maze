@@ -8,6 +8,7 @@ namespace BallMaze.UI
 {
     public enum UIViews
     {
+        Unknown,
         MainMenu,
         ModeSelection,
         DefaultLevelSelection,
@@ -98,6 +99,18 @@ namespace BallMaze.UI
         /// <param name="screenView">The component of the screen view to open</param>
         private void ShowScreenView(ScreenView screenView)
         {
+            // Get the type of the UI view if it hasn't been passed given
+            UIViews uiView = GetUIViewType(screenView);
+
+            if (uiView != UIViews.Unknown)
+            {
+                // Update the game state based on the current UI view
+                GameManager.Instance.UpdateGameState(uiView);
+
+                // Update the visible elements of the permanent view
+                (_uiViews[UIViews.Permanent] as PermanentView).UpdateVisibleElements(uiView);
+            }
+
             HideScreenView();
 
             _currentScreenView = screenView;
@@ -186,7 +199,7 @@ namespace BallMaze.UI
         /// Opens the given uiView
         /// </summary>
         /// <param name="uiView">The view to open</param>
-        public void Show(UIView uiView)
+        private void Show(UIView uiView)
         {
             if (!uiView.isModal)
             {
@@ -216,7 +229,7 @@ namespace BallMaze.UI
         /// Closes the given uiView
         /// </summary>
         /// <param name="uiView">The view to hide</param>
-        public void Hide(UIView uiView)
+        private void Hide(UIView uiView)
         {
             if (!uiView.isModal)
             {
@@ -299,6 +312,25 @@ namespace BallMaze.UI
         {
             _isModalOpened = false;
             _uiViews[UIViews.ModalBackground].Hide();
+        }
+
+
+        /// <summary>
+        /// Returns the type from the UIViews enum corresponding to the given UI view
+        /// </summary>
+        /// <param name="uiView"></param>
+        /// <returns></returns>
+        private UIViews GetUIViewType(UIView uiView)
+        {
+            foreach (KeyValuePair<UIViews, UIView> item in _uiViews)
+            {
+                if (item.Value == uiView)
+                {
+                    return item.Key;
+                }
+            }
+
+            return UIViews.Unknown;
         }
 
 
