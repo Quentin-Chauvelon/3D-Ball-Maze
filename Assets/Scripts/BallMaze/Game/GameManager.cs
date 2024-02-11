@@ -89,7 +89,17 @@ namespace BallMaze
                     _gameState = GameState.LevelSelection;
                     break;
                 default:
+                    _gameState = GameState.Playing;
                     break;
+            }
+
+            if (_gameState == GameState.Playing)
+            {
+                UIManager.Instance.ShowBackground(false);
+            }
+            else
+            {
+                UIManager.Instance.ShowBackground(true);
             }
         }
 

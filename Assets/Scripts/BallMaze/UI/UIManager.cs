@@ -10,6 +10,7 @@ namespace BallMaze.UI
     {
         Unknown,
         MainMenu,
+        Background,
         ModeSelection,
         DefaultLevelSelection,
         Permanent,
@@ -75,6 +76,7 @@ namespace BallMaze.UI
 
             // Add all UIs to the uiViews dictionary
             _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
+            _uiViews.Add(UIViews.Background, new BackgroundView(root.Q<VisualElement>("background")));
             _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
             _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
             _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
@@ -87,6 +89,7 @@ namespace BallMaze.UI
             // and it shouldn't be the case as it should always be visible
             // For the other UIs, call the UIManager.Show() method to add them to the navigation history
             _uiViews[UIViews.Permanent].Show();
+            _uiViews[UIViews.Background].Show();
             Show(_uiViews[UIViews.MainMenu]);
         }
 
@@ -336,6 +339,19 @@ namespace BallMaze.UI
             }
 
             return UIViews.Unknown;
+        }
+
+
+        public void ShowBackground(bool visible)
+        {
+            if (visible)
+            {
+                _uiViews[UIViews.Background].Show();
+            }
+            else
+            {
+                _uiViews[UIViews.Background].Hide();
+            }
         }
 
 
