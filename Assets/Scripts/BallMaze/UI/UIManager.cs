@@ -40,7 +40,7 @@ namespace BallMaze.UI
         // This is easier to manage than having the documents attached to different game objects and getting references to all of them
         private UIDocument _mainUIDocument;
 
-        // Stack to keep track of the navigation history (a screen view is always at the bottom of the stack and modal views stack on top of it)
+        // Stack to keep track of the navigation history (screens views are always at the bottom of the stack and modal views stack on top of it)
         private Stack<UIView> _navigationHistory = new Stack<UIView>();
 
         // Dictionary that associates all UIs with their name
@@ -48,8 +48,6 @@ namespace BallMaze.UI
 
         private bool _isModalOpened = false;
 
-        private ScreenView _previousScreenView;
-        private ScreenView _currentScreenView;
 
         private void Awake()
         {
@@ -111,11 +109,21 @@ namespace BallMaze.UI
                 (_uiViews[UIViews.Permanent] as PermanentView).UpdateVisibleElements(uiView);
             }
 
+            // Hide all UIs
             HideScreenView();
 
-            _currentScreenView = screenView;
+            // If we are back at the main menu, clear the navigation history
+            if (screenView == _uiViews[UIViews.MainMenu])
+            {
+                _navigationHistory.Clear();
+            }
 
-            _navigationHistory.Push(screenView);
+            // If the screen view is not already in the navigation history, add it to the navigation history
+            if (!_navigationHistory.Contains(screenView))
+            {
+                _navigationHistory.Push(screenView);
+            }
+
             screenView.Show();
         }
 
@@ -125,17 +133,13 @@ namespace BallMaze.UI
         /// </summary>
         private void HideScreenView()
         {
-            _previousScreenView = _currentScreenView;
-
-            foreach (UIView ui in _navigationHistory)
+            foreach (UIView uiView in _navigationHistory)
             {
-                ui.Hide();
+                uiView.Hide();
             }
 
             // Remove the invisible button behind the modal view
             NoModalsOpened();
-
-            _navigationHistory.Clear();
         }
 
 
@@ -259,14 +263,14 @@ namespace BallMaze.UI
         /// </summary>
         public void Back()
         {
-            // If the navigation history is empty, show the previous screen view
+            // If the navigation history is empty, show the main menu
             if (_navigationHistory.Count == 0 || _navigationHistory.Peek() == null)
             {
-                ShowScreenView(_previousScreenView);
+                Show(UIViews.MainMenu);
                 return;
             }
 
-            // if the top UI is a uncloseable modal view, don't go back
+            // if the top UI is an uncloseable modal view, don't go back
             if (_navigationHistory.Peek() is ModalView && !(_navigationHistory.Peek() as ModalView).isCloseable)
             {
                 return;
@@ -275,14 +279,15 @@ namespace BallMaze.UI
             // If the top UI is a screen view, hide it and show the previous screen view, otherwise hide the top UI
             if (!_navigationHistory.Peek().isModal)
             {
-                // We have to keep a reference to the previous screen view because calling Hide() will change the value of _previousScreenView (it will be _currentScreenView)
-                ScreenView previousScreenView = _previousScreenView;
+                _navigationHistory.Pop().Hide();
 
-                Hide(_navigationHistory.Peek());
-
-                if (previousScreenView != null)
+                if (_navigationHistory.Count > 0)
                 {
-                    ShowScreenView(previousScreenView);
+                    ShowScreenView(_navigationHistory.Peek() as ScreenView);
+                }
+                else
+                {
+                    Show(UIViews.MainMenu);
                 }
             }
             else
