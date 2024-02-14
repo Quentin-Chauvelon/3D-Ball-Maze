@@ -13,6 +13,7 @@ namespace BallMaze.UI
         Background,
         ModeSelection,
         DefaultLevelSelection,
+        DailyLevels,
         Permanent,
         ModalBackground,
         Settings,
@@ -75,14 +76,22 @@ namespace BallMaze.UI
             VisualElement root = _mainUIDocument.rootVisualElement;
 
             // Add all UIs to the uiViews dictionary
+            // Special views
             _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
             _uiViews.Add(UIViews.Background, new BackgroundView(root.Q<VisualElement>("background")));
             _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
-            _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+
+            // Screen views
             _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
-            _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
-            _uiViews.Add(UIViews.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
             _uiViews.Add(UIViews.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
+            _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
+            _uiViews.Add(UIViews.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
+
+            // Closeable modal views
+            _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+
+            // Uncloseable modal views
+            _uiViews.Add(UIViews.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
 
             // Show the UIs that should be shown at the start
             // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history

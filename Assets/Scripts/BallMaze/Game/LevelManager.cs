@@ -31,6 +31,16 @@ namespace BallMaze
     }
 
 
+    public enum DailyLevelDifficulty
+    {
+        VeryEasy,
+        Easy,
+        Medium,
+        Hard,
+        Extreme
+    }
+
+
     public class LevelManager : MonoBehaviour
     {
         public static string levelToLoad = "";
