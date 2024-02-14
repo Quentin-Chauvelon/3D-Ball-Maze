@@ -85,9 +85,6 @@ namespace BallMaze.UI
 
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-id").text = levelSelection.id;
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-name").text = levelSelection.name;
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-1").text = levelSelection.times[0].ToString();
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-2").text = levelSelection.times[1].ToString();
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-3").text = levelSelection.times[2].ToString();
             }
         }
 
