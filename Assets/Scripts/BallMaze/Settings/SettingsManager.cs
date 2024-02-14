@@ -170,7 +170,7 @@ namespace BallMaze
 
         private void Start()
         {
-            UIManager.Instance.UpdateSettings();
+            (UIManager.Instance.UIViews[UIViewType.Settings] as SettingsView).Update();
         }
 
 

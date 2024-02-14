@@ -47,6 +47,14 @@ namespace BallMaze.UI
 
         // Dictionary that associates all UIs with their name
         private Dictionary<UIViewType, UIView> _uiViews = new Dictionary<UIViewType, UIView>();
+        // Public getter for the dictionary (read-only as we want other classes to be able to call methods on the UIs but not to modify the dictionary itself)
+        public Dictionary<UIViewType, UIView> UIViews
+        {
+            get
+            {
+                return _uiViews;
+            }
+        }
 
         private bool _isModalOpened = false;
 
@@ -348,63 +356,6 @@ namespace BallMaze.UI
             }
 
             return UIViewType.Unknown;
-        }
-
-
-        public void ShowBackground(bool visible)
-        {
-            if (visible)
-            {
-                _uiViews[UIViewType.Background].Show();
-            }
-            else
-            {
-                _uiViews[UIViewType.Background].Hide();
-            }
-        }
-
-
-        public void UpdateSettings()
-        {
-            (_uiViews[UIViewType.Settings] as SettingsView).Update();
-        }
-
-
-        /// <summary>
-        /// Populate the default level selection view with the given levels selection
-        /// </summary>
-        /// <param name="levelsSelection"></param>
-        public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
-        {
-            (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
-        }
-
-
-        /// <summary>
-        /// Checks if the default level selection view contains the levels
-        /// </summary>
-        /// <returns></returns>
-        public bool IsDefaultLevelSelectionViewLoaded()
-        {
-            return (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded();
-        }
-
-
-        public void SetEventModeSelected(bool isEventModeSelected)
-        {
-            (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(isEventModeSelected);
-        }
-
-
-        /// <summary>
-        /// Displays the no internet UI based on the given internet availability.
-        /// If a callback method is passed, it will be called when the player goes back online.
-        /// </summary>
-        /// <param name="internetAvailable">True if the player is online and the UI should be hidden, false otherwise</param>
-        /// <param name="callback">The callback method to call when the player goes back online</param>
-        public void DisplayNoInternetUI(bool internetAvailable, Action callback = null)
-        {
-            (_uiViews[UIViewType.NoInternet] as NoInternetView).DisplayNoInternetUI(internetAvailable, callback);
         }
     }
 }

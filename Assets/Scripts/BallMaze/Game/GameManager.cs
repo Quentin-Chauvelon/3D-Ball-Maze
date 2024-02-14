@@ -95,11 +95,11 @@ namespace BallMaze
 
             if (_gameState == GameState.Playing)
             {
-                UIManager.Instance.ShowBackground(false);
+                UIManager.Instance.UIViews[UIViewType.Background].Hide();
             }
             else
             {
-                UIManager.Instance.ShowBackground(true);
+                UIManager.Instance.UIViews[UIViewType.Background].Show();
             }
         }
 
@@ -119,7 +119,7 @@ namespace BallMaze
                     UIManager.Instance.Show(UIViewType.MainMenu);
                 }
                 // If the levels have not been populated yet, load them
-                else if (!UIManager.Instance.IsDefaultLevelSelectionViewLoaded())
+                else if (!(UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded())
                 {
                     defaultLevelSelection.LoadDefaultLevelSelection();
                 }

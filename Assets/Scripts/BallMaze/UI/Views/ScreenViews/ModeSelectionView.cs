@@ -39,7 +39,7 @@ namespace BallMaze.UI {
             _defaultLevelsButton.clickable.clicked += () =>
             {
                 // We are playing classic, so disable the event UI
-                UIManager.Instance.SetEventModeSelected(false);
+                (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(false);
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
 
@@ -51,7 +51,7 @@ namespace BallMaze.UI {
             _eventButton.clickable.clicked += () =>
             {
                 // We are playing event, so enable the event UI
-                UIManager.Instance.SetEventModeSelected(true);
+                (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(true);
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
         }

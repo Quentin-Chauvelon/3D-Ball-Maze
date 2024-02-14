@@ -165,7 +165,7 @@ namespace BallMaze
 
             if (levelsSelection != null && levelsSelection.levels.Length > 0)
             {
-                UIManager.Instance.PopulateLevelSelectionView(levelsSelection);
+                (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
             }
             else
             {
