@@ -54,7 +54,7 @@ namespace BallMaze.UI
         protected override void RegisterButtonCallbacks()
         {
             // Close the settings modal view
-            _closeButton.clickable.clicked += () => { UIManager.Instance.Hide(UIViews.Settings); };
+            _closeButton.clickable.clicked += () => { UIManager.Instance.Hide(UIViewType.Settings); };
 
             // Set the controls
             _controlsJoystickRadioButton.RegisterValueChangedCallback((evt) =>

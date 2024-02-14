@@ -40,19 +40,19 @@ namespace BallMaze.UI {
             {
                 // We are playing classic, so disable the event UI
                 UIManager.Instance.SetEventModeSelected(false);
-                UIManager.Instance.Show(UIViews.DefaultLevelSelection);
+                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
 
             _dailylevelsButton.clickable.clicked += () =>
             {
-                UIManager.Instance.Show(UIViews.DailyLevels);
+                UIManager.Instance.Show(UIViewType.DailyLevels);
             };
 
             _eventButton.clickable.clicked += () =>
             {
                 // We are playing event, so enable the event UI
                 UIManager.Instance.SetEventModeSelected(true);
-                UIManager.Instance.Show(UIViews.DefaultLevelSelection);
+                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
         }
 

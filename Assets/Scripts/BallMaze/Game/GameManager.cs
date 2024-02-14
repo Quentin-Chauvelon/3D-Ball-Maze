@@ -73,19 +73,19 @@ namespace BallMaze
         /// Updates the game state based on the current UI view
         /// </summary>
         /// <param name="uiView"></param>
-        public void UpdateGameState(UIViews uiView)
+        public void UpdateGameState(UIViewType uiView)
         {
             Debug.Log("Current game state: " + uiView.ToString());
 
             switch (uiView)
             {
-                case UIViews.MainMenu:
+                case UIViewType.MainMenu:
                     _gameState = GameState.MainMenu;
                     break;
-                case UIViews.ModeSelection:
+                case UIViewType.ModeSelection:
                     _gameState = GameState.ModeSelection;
                     break;
-                case UIViews.DefaultLevelSelection:
+                case UIViewType.DefaultLevelSelection:
                     _gameState = GameState.LevelSelection;
                     break;
                 default:
@@ -116,7 +116,7 @@ namespace BallMaze
                 // This way, when the player clicks on the level selection button, levels update and UI populate will be handled by the LevelSelection script
                 if (_lastUnfocus.DateInTimeframe(3600))
                 {
-                    UIManager.Instance.Show(UIViews.MainMenu);
+                    UIManager.Instance.Show(UIViewType.MainMenu);
                 }
                 // If the levels have not been populated yet, load them
                 else if (!UIManager.Instance.IsDefaultLevelSelectionViewLoaded())

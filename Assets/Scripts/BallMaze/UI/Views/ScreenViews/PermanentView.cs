@@ -50,10 +50,10 @@ namespace BallMaze.UI
             _backButton.clickable.clicked += () => { UIManager.Instance.Back(); };
 
             // Go to the main menu
-            _homeButton.clickable.clicked += () => { UIManager.Instance.Show(UIViews.MainMenu); };
+            _homeButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.MainMenu); };
 
             // Open the settings modal view
-            _settingsButton.clickable.clicked += () => { UIManager.Instance.Show(UIViews.Settings); };
+            _settingsButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Settings); };
         }
 
 
@@ -66,23 +66,23 @@ namespace BallMaze.UI
         /// <summary>
         /// Updates the visible elements based on the screen view currently shown
         /// </summary>
-        public void UpdateVisibleElements(UIViews uiView)
+        public void UpdateVisibleElements(UIViewType uiView)
         {
             switch (uiView)
             {
-                case UIViews.MainMenu:
+                case UIViewType.MainMenu:
                     _backButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     break;
-                case UIViews.ModeSelection:
+                case UIViewType.ModeSelection:
                     _backButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.Flex;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     break;
-                case UIViews.DefaultLevelSelection:
+                case UIViewType.DefaultLevelSelection:
                     _backButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.Flex;
                     _skipButton.style.display = DisplayStyle.None;

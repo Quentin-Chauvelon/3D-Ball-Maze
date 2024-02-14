@@ -35,7 +35,7 @@ namespace BallMaze.UI
         protected override void RegisterButtonCallbacks()
         {
             // Open mode selection when play is clicked
-            _playButton.clickable.clicked += () => { UIManager.Instance.Show(UIViews.ModeSelection); };
+            _playButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.ModeSelection); };
         }
     }
 }

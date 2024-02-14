@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace BallMaze.UI
 {
-    public enum UIViews
+    public enum UIViewType
     {
         Unknown,
         MainMenu,
@@ -46,7 +46,7 @@ namespace BallMaze.UI
         private Stack<UIView> _navigationHistory = new Stack<UIView>();
 
         // Dictionary that associates all UIs with their name
-        private Dictionary<UIViews, UIView> _uiViews = new Dictionary<UIViews, UIView>();
+        private Dictionary<UIViewType, UIView> _uiViews = new Dictionary<UIViewType, UIView>();
 
         private bool _isModalOpened = false;
 
@@ -77,29 +77,29 @@ namespace BallMaze.UI
 
             // Add all UIs to the uiViews dictionary
             // Special views
-            _uiViews.Add(UIViews.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
-            _uiViews.Add(UIViews.Background, new BackgroundView(root.Q<VisualElement>("background")));
-            _uiViews.Add(UIViews.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
+            _uiViews.Add(UIViewType.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
+            _uiViews.Add(UIViewType.Background, new BackgroundView(root.Q<VisualElement>("background")));
+            _uiViews.Add(UIViewType.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
 
             // Screen views
-            _uiViews.Add(UIViews.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
-            _uiViews.Add(UIViews.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
-            _uiViews.Add(UIViews.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
-            _uiViews.Add(UIViews.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
+            _uiViews.Add(UIViewType.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
+            _uiViews.Add(UIViewType.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
+            _uiViews.Add(UIViewType.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
+            _uiViews.Add(UIViewType.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
 
             // Closeable modal views
-            _uiViews.Add(UIViews.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+            _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));
 
             // Uncloseable modal views
-            _uiViews.Add(UIViews.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
+            _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
 
             // Show the UIs that should be shown at the start
             // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
             // and it shouldn't be the case as it should always be visible
             // For the other UIs, call the UIManager.Show() method to add them to the navigation history
-            _uiViews[UIViews.Permanent].Show();
-            _uiViews[UIViews.Background].Show();
-            Show(_uiViews[UIViews.MainMenu]);
+            _uiViews[UIViewType.Permanent].Show();
+            _uiViews[UIViewType.Background].Show();
+            Show(_uiViews[UIViewType.MainMenu]);
         }
 
 
@@ -110,22 +110,22 @@ namespace BallMaze.UI
         private void ShowScreenView(ScreenView screenView)
         {
             // Get the type of the UI view if it hasn't been passed given
-            UIViews uiView = GetUIViewType(screenView);
+            UIViewType uiView = GetUIViewType(screenView);
 
-            if (uiView != UIViews.Unknown)
+            if (uiView != UIViewType.Unknown)
             {
                 // Update the game state based on the current UI view
                 GameManager.Instance.UpdateGameState(uiView);
 
                 // Update the visible elements of the permanent view
-                (_uiViews[UIViews.Permanent] as PermanentView).UpdateVisibleElements(uiView);
+                (_uiViews[UIViewType.Permanent] as PermanentView).UpdateVisibleElements(uiView);
             }
 
             // Hide all UIs
             HideScreenView();
 
             // If we are back at the main menu, clear the navigation history
-            if (screenView == _uiViews[UIViews.MainMenu])
+            if (screenView == _uiViews[UIViewType.MainMenu])
             {
                 _navigationHistory.Clear();
             }
@@ -232,7 +232,7 @@ namespace BallMaze.UI
         /// Opens the given uiView
         /// </summary>
         /// <param name="uiView">The name of the view to open</param>
-        public void Show(UIViews uiView)
+        public void Show(UIViewType uiView)
         {
             if (_uiViews.ContainsKey(uiView))
             {
@@ -261,7 +261,7 @@ namespace BallMaze.UI
         /// Closes the given uiView
         /// </summary>
         /// <param name="uiView">The name of the view to hide</param>
-        public void Hide(UIViews uiView)
+        public void Hide(UIViewType uiView)
         {
             if (_uiViews.ContainsKey(uiView))
             {
@@ -278,7 +278,7 @@ namespace BallMaze.UI
             // If the navigation history is empty, show the main menu
             if (_navigationHistory.Count == 0 || _navigationHistory.Peek() == null)
             {
-                Show(UIViews.MainMenu);
+                Show(UIViewType.MainMenu);
                 return;
             }
 
@@ -299,7 +299,7 @@ namespace BallMaze.UI
                 }
                 else
                 {
-                    Show(UIViews.MainMenu);
+                    Show(UIViewType.MainMenu);
                 }
             }
             else
@@ -317,7 +317,7 @@ namespace BallMaze.UI
         private void ModalOpened()
         {
             _isModalOpened = true;
-            _uiViews[UIViews.ModalBackground].Show();
+            _uiViews[UIViewType.ModalBackground].Show();
         }
 
 
@@ -328,18 +328,18 @@ namespace BallMaze.UI
         private void NoModalsOpened()
         {
             _isModalOpened = false;
-            _uiViews[UIViews.ModalBackground].Hide();
+            _uiViews[UIViewType.ModalBackground].Hide();
         }
 
 
         /// <summary>
-        /// Returns the type from the UIViews enum corresponding to the given UI view
+        /// Returns the type from the UIViewType enum corresponding to the given UI view
         /// </summary>
         /// <param name="uiView"></param>
         /// <returns></returns>
-        private UIViews GetUIViewType(UIView uiView)
+        private UIViewType GetUIViewType(UIView uiView)
         {
-            foreach (KeyValuePair<UIViews, UIView> item in _uiViews)
+            foreach (KeyValuePair<UIViewType, UIView> item in _uiViews)
             {
                 if (item.Value == uiView)
                 {
@@ -347,7 +347,7 @@ namespace BallMaze.UI
                 }
             }
 
-            return UIViews.Unknown;
+            return UIViewType.Unknown;
         }
 
 
@@ -355,18 +355,18 @@ namespace BallMaze.UI
         {
             if (visible)
             {
-                _uiViews[UIViews.Background].Show();
+                _uiViews[UIViewType.Background].Show();
             }
             else
             {
-                _uiViews[UIViews.Background].Hide();
+                _uiViews[UIViewType.Background].Hide();
             }
         }
 
 
         public void UpdateSettings()
         {
-            (_uiViews[UIViews.Settings] as SettingsView).Update();
+            (_uiViews[UIViewType.Settings] as SettingsView).Update();
         }
 
 
@@ -376,8 +376,8 @@ namespace BallMaze.UI
         /// <param name="levelsSelection"></param>
         public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
         {
-                (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
-            }
+            (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
+        }
 
 
         /// <summary>
@@ -386,13 +386,13 @@ namespace BallMaze.UI
         /// <returns></returns>
         public bool IsDefaultLevelSelectionViewLoaded()
         {
-            return (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded();
+            return (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded();
         }
 
 
         public void SetEventModeSelected(bool isEventModeSelected)
         {
-            (_uiViews[UIViews.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(isEventModeSelected);
+            (_uiViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(isEventModeSelected);
         }
 
 
@@ -404,7 +404,7 @@ namespace BallMaze.UI
         /// <param name="callback">The callback method to call when the player goes back online</param>
         public void DisplayNoInternetUI(bool internetAvailable, Action callback = null)
         {
-            (_uiViews[UIViews.NoInternet] as NoInternetView).DisplayNoInternetUI(internetAvailable, callback);
+            (_uiViews[UIViewType.NoInternet] as NoInternetView).DisplayNoInternetUI(internetAvailable, callback);
         }
     }
 }
