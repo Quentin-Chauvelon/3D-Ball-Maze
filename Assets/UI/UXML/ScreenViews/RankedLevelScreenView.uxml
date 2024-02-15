@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="GlobalLeaderboardEntryTemplate" src="project://database/Assets/UI/UXML/Templates/GlobalLeaderboardEntryTemplate.uxml?fileID=9197481963319205126&amp;guid=8023cd2213dc9e6e69d5eafba793d1f7&amp;type=3#GlobalLeaderboardEntryTemplate" />
+    <Style src="project://database/Assets/UI/USS/ScreenViews/RankedLevel.uss?fileID=7433441132597879392&amp;guid=8ac9a0724ff6b92348cfbbdb134b913e&amp;type=3#RankedLevel" />
+    <ui:VisualElement name="ranked-level__left-container" style="flex-grow: 0; padding-top: 5%; padding-right: 5%; padding-bottom: 5%; padding-left: 5%; width: 50%; height: 100%;">
+        <ui:VisualElement name="ranked-level__leaderboard-container" style="flex-grow: 1; background-color: rgb(158, 98, 0); align-items: center; justify-content: center; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+            <ui:VisualElement name="ranked-level__leaderboard-area-buttons-container" style="flex-direction: row; justify-content: space-around; align-items: center; height: 10%; margin-top: 3%; width: 80%;">
+                <ui:Button text="Global" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ranked-level__global-button" enable-rich-text="false" class="ranked-level__leaderboard-area-button" />
+                <ui:Button text="Local" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ranked-level__local-button" enable-rich-text="false" class="ranked-level__leaderboard-area-button" />
+            </ui:VisualElement>
+            <ui:Label tabindex="-1" text="RESETS IN: 0d 0h" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ranked-level__resets-in-label" enable-rich-text="false" style="height: 5%; -unity-text-align: middle-center; font-size: 30%; -unity-font-style: bold; margin-top: 5%; margin-bottom: 5%; color: rgb(255, 255, 255);" />
+            <ui:Label tabindex="-1" text="Loading..." parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="ranked-level__leaderboard-loading-label" style="font-size: 20%; -unity-font-style: bold; color: rgb(255, 255, 255); flex-grow: 1;" />
+            <ui:ScrollView name="ranked-level__leaderboard-entries-container-scroll-view" horizontal-scroller-visibility="Hidden" style="flex-grow: 1; flex-shrink: 1; width: 80%; display: none;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ranked-level__user-entry-container" style="flex-grow: 0; height: 15%; background-color: rgb(255, 211, 149); border-top-width: 5px; border-top-color: rgb(0, 0, 0); border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;">
+            <ui:Instance template="GlobalLeaderboardEntryTemplate" name="ranked-level__user-entry" style="height: 100%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="ranked-level__level-container" style="flex-grow: 1; padding-top: 5%; padding-right: 5%; padding-bottom: 5%; padding-left: 5%; height: 100%; align-items: center; justify-content: space-around;">
+        <BallMaze.UI.AspectRatio aspect-ratio-x="1" aspect-ratio-y="1" name="ranked-level__level-image-aspect-ratio" style="flex-grow: 0; flex-shrink: 1; width: 60%; height: 100%; background-image: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2346436936791262179&amp;guid=a1aee1c8f18a5e1439b56cd28c82a727&amp;type=3#console.infoicon&apos;);">
+            <ui:VisualElement name="ranked-level__level-image" style="flex-grow: 1; flex-shrink: 0;" />
+        </BallMaze.UI.AspectRatio>
+        <ui:Label tabindex="-1" text="BEST TIME: 00:00s" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ranked-level__best-time" enable-rich-text="false" style="font-size: 30%; -unity-font-style: bold;" />
+        <ui:Button text="PLAY" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ranked-level__play-level-button" enable-rich-text="false" style="padding-top: 2%; padding-right: 5%; padding-bottom: 2%; padding-left: 5%;" />
+    </ui:VisualElement>
+</ui:UXML>

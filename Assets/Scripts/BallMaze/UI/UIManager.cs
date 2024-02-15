@@ -9,13 +9,14 @@ namespace BallMaze.UI
     public enum UIViewType
     {
         Unknown,
-        MainMenu,
+        Permanent,
         Background,
+        ModalBackground,
+        MainMenu,
         ModeSelection,
         DefaultLevelSelection,
         DailyLevels,
-        Permanent,
-        ModalBackground,
+        RankedLevel,
         Settings,
         NoInternet
     }
@@ -94,6 +95,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
             _uiViews.Add(UIViewType.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
             _uiViews.Add(UIViewType.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
+            _uiViews.Add(UIViewType.RankedLevel, new RankedLevelView(root.Q<VisualElement>("ranked-level")));
 
             // Closeable modal views
             _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));

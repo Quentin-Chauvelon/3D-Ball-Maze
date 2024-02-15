@@ -1,0 +1,8 @@
+.ranked-level__leaderboard-area-button {
+    height: 100%;
+    width: 30%;
+}
+
+#ranked-level__leaderboard-entries-container-scroll-view > * {
+    margin-top: 1%;
+}

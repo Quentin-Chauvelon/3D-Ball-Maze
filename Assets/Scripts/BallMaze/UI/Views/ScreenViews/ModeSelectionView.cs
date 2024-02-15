@@ -48,6 +48,11 @@ namespace BallMaze.UI {
                 UIManager.Instance.Show(UIViewType.DailyLevels);
             };
 
+            _rankedButton.clickable.clicked += () =>
+            {
+                UIManager.Instance.Show(UIViewType.RankedLevel);
+            };
+
             _eventButton.clickable.clicked += () =>
             {
                 // We are playing event, so enable the event UI

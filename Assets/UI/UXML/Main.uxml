@@ -5,6 +5,7 @@
     <ui:Template name="DefaultLevelSelectionScreenView" src="project://database/Assets/UI/UXML/ScreenViews/DefaultLevelSelectionScreenView.uxml?fileID=9197481963319205126&amp;guid=c12b4d6373d56124cb78833507b8308a&amp;type=3#DefaultLevelSelectionScreenView" />
     <ui:Template name="ModeSelectionScreenView" src="project://database/Assets/UI/UXML/ScreenViews/ModeSelectionScreenView.uxml?fileID=9197481963319205126&amp;guid=bff6c04e68e901b24ba3f5af6fcb532a&amp;type=3#ModeSelectionScreenView" />
     <ui:Template name="DailyLevelsScreenView" src="project://database/Assets/UI/UXML/ScreenViews/DailyLevelsScreenView.uxml?fileID=9197481963319205126&amp;guid=2821b83c861434287b4c433ed9281952&amp;type=3#DailyLevelsScreenView" />
+    <ui:Template name="RankedLevelView" src="project://database/Assets/UI/UXML/ScreenViews/RankedLevelScreenView.uxml?fileID=9197481963319205126&amp;guid=8e57a1cc6023d5f4a94626e5ae53319f&amp;type=3#RankedLevelScreenView" />
     <ui:Template name="ModalBackgroundView" src="project://database/Assets/UI/UXML/ModalBackgroundView.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackgroundView" />
     <ui:Template name="SettingsModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/SettingsModalView.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsModalView" />
     <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
@@ -19,6 +20,7 @@
             <ui:Instance template="DefaultLevelSelectionScreenView" picking-mode="Ignore" name="level-selection" class="screen__anchor--center screen_view" style="display: none; justify-content: space-around;" />
             <ui:Instance template="ModeSelectionScreenView" picking-mode="Ignore" name="mode-selection" class="screen__anchor--center screen_view" style="display: none;" />
             <ui:Instance template="DailyLevelsScreenView" picking-mode="Ignore" name="daily-levels" class="screen__anchor--center screen_view" style="justify-content: space-around; align-items: center; display: none;" />
+            <ui:Instance template="RankedLevelView" name="ranked-level" class="screen__anchor--center screen_view" style="flex-direction: row; display: none;" />
         </ui:VisualElement>
         <ui:Instance template="ModalBackgroundView" name="modal-background" class="screen__anchor--center" style="display: none;" />
         <ui:VisualElement name="main__modal-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
