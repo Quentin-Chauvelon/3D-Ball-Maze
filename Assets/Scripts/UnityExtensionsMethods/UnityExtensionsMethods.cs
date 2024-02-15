@@ -53,6 +53,33 @@ namespace UnityExtensionMethods
 
 
         /// <summary>
+        /// Returns the date at midnight UTC of the given date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime MidnightUtc(this DateTime date)
+        {
+            return date.Date.AddDays(1);
+        }
+
+
+        /// <summary>
+        /// Returns the date at the start of the week of the given date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime EndOfWeek(this DateTime date)
+        {
+            int days = date.DayOfWeek - DayOfWeek.Monday;
+
+            if (days < 0)
+                days += 7;
+
+            return date.AddDays(-1 * days).Date.AddDays(7);
+        }
+
+
+        /// <summary>
         /// Checks if two floats are equal within a certain epsilon.
         /// </summary>
         /// <param name="a"></param>

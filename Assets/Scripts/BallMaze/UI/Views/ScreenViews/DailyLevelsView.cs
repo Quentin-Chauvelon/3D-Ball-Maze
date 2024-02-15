@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 using Redcode.Awaiting;
 using UnityEditor.PackageManager.Requests;
 using System.Linq;
+using UnityExtensionMethods;
 
 
 namespace BallMaze.UI
@@ -247,7 +248,7 @@ namespace BallMaze.UI
         /// </summary>
         private async void StartUpdatesInTimer()
         {
-            DateTime midnightUtc = DateTime.UtcNow.Date.AddDays(1);
+            DateTime midnightUtc = DateTime.UtcNow.MidnightUtc();
 
             while (isEnabled)
             {
