@@ -9,6 +9,7 @@
     <ui:Template name="ModalBackgroundView" src="project://database/Assets/UI/UXML/ModalBackgroundView.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackgroundView" />
     <ui:Template name="SettingsModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/SettingsModalView.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsModalView" />
     <ui:Template name="SecondChanceModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/SecondChanceModalView.uxml?fileID=9197481963319205126&amp;guid=57ea838de26fd162b9b6aeddd0890869&amp;type=3#SecondChanceModalView" />
+    <ui:Template name="LevelFailedModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/LevelFailedModalView.uxml?fileID=9197481963319205126&amp;guid=4fa9e4027b44b989185e1ccd5596ae17&amp;type=3#LevelFailedModalView" />
     <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
@@ -28,6 +29,9 @@
             <ui:Instance template="SettingsModalView" name="settings" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:VisualElement name="second-chance-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="SecondChanceModalView" name="second-chance" style="width: 50%; height: 70%; flex-grow: 0; flex-shrink: 0; align-items: center; justify-content: center; display: flex;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="level-failed-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
+                <ui:Instance template="LevelFailedModalView" name="level-failed" style="width: 50%; height: 70%; justify-content: center; align-items: center;" />
             </ui:VisualElement>
             <ui:Instance template="NoInternetModalView" name="no-internet" class="screen__anchor--center" style="display: none; background-color: rgba(0, 0, 0, 0.44);" />
         </ui:VisualElement>

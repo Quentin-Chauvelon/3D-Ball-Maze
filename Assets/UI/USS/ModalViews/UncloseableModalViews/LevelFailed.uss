@@ -1,0 +1,61 @@
+#level-failed__aspect-ratio-container.default-levels {
+    justify-content: center;
+}
+
+#level-failed__aspect-ratio-container.ranked-level {
+    justify-content: flex-start;
+}
+
+#level-failed__aspect-ratio-container.default-levels #level-failed__level-failed-label {
+    margin-top: 10%;
+}
+
+#level-failed__aspect-ratio-container.ranked-level #level-failed__level-failed-label {
+    margin-top: 12%;
+}
+
+#level-failed__aspect-ratio-container.ranked-level #level-failed__restart-where-you-failed-container {
+    display: none;
+}
+
+#level-failed__buttons-container {
+    --buttons-container-width: 100%;
+    width: var(--buttons-container-width);
+    height: var(--buttons-container-height);
+}
+
+#level-failed__aspect-ratio-container.default-levels #level-failed__buttons-container {
+    --buttons-container-height: 37%;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-around;
+}
+
+#level-failed__aspect-ratio-container.ranked-level #level-failed__buttons-container {
+    --buttons-container-height: 80%;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;
+}
+
+#level-failed__aspect-ratio-container.default-levels #level-failed__buttons-container > * {
+    width: var(--buttons-container-height);
+    height: var(--buttons-container-width);
+}
+
+#level-failed__aspect-ratio-container.ranked-level #level-failed__try-again-radial-progress {
+    width: 38%;
+    height: 47.5%;
+}
+
+#level-failed__aspect-ratio-container.ranked-level #level-failed__home-button {
+    width: 26%;
+    height: 32.5%;
+    margin-top: 8%;
+}
+
+#level-failed__try-again-radial-progress {
+    --track-color: rgba(0, 0, 0, 0);
+    --progress-color: rgb(130, 130, 130);
+}
