@@ -18,6 +18,7 @@ namespace BallMaze.UI
         DailyLevels,
         RankedLevel,
         Settings,
+        SecondChance,
         NoInternet
     }
 
@@ -102,6 +103,7 @@ namespace BallMaze.UI
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
+            _uiViews.Add(UIViewType.SecondChance, new SecondChanceView(root.Q<VisualElement>("second-chance-container")));
 
             // Show the UIs that should be shown at the start
             // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history

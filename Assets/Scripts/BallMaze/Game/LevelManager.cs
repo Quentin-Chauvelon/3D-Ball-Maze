@@ -27,6 +27,7 @@ namespace BallMaze
     {
         Default,
         DailyLevel,
+        RankedLevel,
         UserCreated
     }
 
