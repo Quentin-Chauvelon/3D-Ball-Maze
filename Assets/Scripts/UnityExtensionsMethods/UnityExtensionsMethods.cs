@@ -1,4 +1,5 @@
 using System;
+using BallMaze;
 using UnityEngine;
 
 namespace UnityExtensionMethods
@@ -116,6 +117,34 @@ namespace UnityExtensionMethods
                 Mathf.Round(vector3.y),
                 Mathf.Round(vector3.z)
             );
+        }
+
+
+        /// <summary>
+        /// Gets the name and color from the given DailyLevelDifficulty enum.
+        /// This is used to display difficulties in the UI with a friendly name and color.
+        /// </summary>
+        /// <param name="difficulty"></param>
+        /// <returns></returns>
+        public static (string name, Color color) GetDifficultyInfo(this DailyLevelDifficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case DailyLevelDifficulty.VeryEasy:
+                    return ("Very easy", new Color(0.235f, 0.765f, 0.22f));
+                case DailyLevelDifficulty.Easy:
+                    return ("Easy", new Color(1f, 0.898f, 0f));
+                case DailyLevelDifficulty.Medium:
+                    return ("Medium", new Color(1f, 0.592f, 0f));
+                case DailyLevelDifficulty.Hard:
+                    return ("Hard", new Color(1f, 0f, 0f));
+                case DailyLevelDifficulty.Extreme:
+                    return ("Extreme", new Color(0.686f, 0f, 0.757f));
+                case DailyLevelDifficulty.Unknown:
+                    return ("", new Color(0.51f, 0.51f, 0.51f));
+                default:
+                    return ("", new Color(0.51f, 0.51f, 0.51f));
+            }
         }
     }
 }

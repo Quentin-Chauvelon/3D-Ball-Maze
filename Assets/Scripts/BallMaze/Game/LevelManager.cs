@@ -1,4 +1,5 @@
 using BallMaze.Events;
+using System.ComponentModel;
 using System.IO;
 using TMPro.EditorUtilities;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace BallMaze
 
     public enum DailyLevelDifficulty
     {
+        Unknown,
         VeryEasy,
         Easy,
         Medium,
