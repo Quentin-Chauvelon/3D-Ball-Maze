@@ -1,7 +1,0 @@
-#default-level-selection-template__stars-container > * {
-    -unity-background-image-tint-color: rgb(81, 81, 81);
-}
-
-#default-level-selection-template__stars-container > .star-active {
-    -unity-background-image-tint-color: #FF0;
-}

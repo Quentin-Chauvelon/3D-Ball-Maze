@@ -1,0 +1,7 @@
+.star {
+    -unity-background-image-tint-color: rgb(81, 81, 81);
+}
+
+.star.star-active {
+    -unity-background-image-tint-color: #FF0;
+}
