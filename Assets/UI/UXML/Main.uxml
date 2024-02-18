@@ -11,8 +11,9 @@
     <ui:Template name="SecondChanceModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/SecondChanceModalView.uxml?fileID=9197481963319205126&amp;guid=57ea838de26fd162b9b6aeddd0890869&amp;type=3#SecondChanceModalView" />
     <ui:Template name="LevelFailedModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/LevelFailedModalView.uxml?fileID=9197481963319205126&amp;guid=4fa9e4027b44b989185e1ccd5596ae17&amp;type=3#LevelFailedModalView" />
     <ui:Template name="SkipModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/SkipModalView.uxml?fileID=9197481963319205126&amp;guid=3b1cdf0f47b6620888c1882d106a93a7&amp;type=3#SkipModalView" />
-    <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
     <ui:Template name="PauseModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/PauseModalView.uxml?fileID=9197481963319205126&amp;guid=ff4936174fe874076b081088cf4bad06&amp;type=3#PauseModalView" />
+    <ui:Template name="LevelCompletedModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/LevelCompletedModalView.uxml?fileID=9197481963319205126&amp;guid=ddc1637a5eaec7a2587eb1db9d3549c4&amp;type=3#LevelCompletedModalView" />
+    <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
         <ui:Instance template="Background" name="background" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100px; display: none;" />
@@ -40,6 +41,9 @@
             </ui:VisualElement>
             <ui:VisualElement name="pause-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="PauseModalView" name="pause" style="width: 50%; height: 70%; justify-content: center; align-items: center;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="level-completed-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
+                <ui:Instance template="LevelCompletedModalView" name="level-completed" style="width: 60%; height: 80%; justify-content: center; align-items: center;" />
             </ui:VisualElement>
             <ui:Instance template="NoInternetModalView" name="no-internet" class="screen__anchor--center" style="display: none; background-color: rgba(0, 0, 0, 0.44);" />
         </ui:VisualElement>

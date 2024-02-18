@@ -20,6 +20,7 @@ namespace BallMaze.UI
         Settings,
         SecondChance,
         LevelFailed,
+        LevelCompleted,
         Skip,
         Pause,
         NoInternet
@@ -108,6 +109,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
             _uiViews.Add(UIViewType.SecondChance, new SecondChanceView(root.Q<VisualElement>("second-chance-container")));
             _uiViews.Add(UIViewType.LevelFailed, new LevelFailedView(root.Q<VisualElement>("level-failed-container")));
+            _uiViews.Add(UIViewType.LevelCompleted, new LevelCompletedView(root.Q<VisualElement>("level-completed-container")));
             _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip-container")));
             _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause-container")));
 
