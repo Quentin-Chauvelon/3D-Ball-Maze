@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="ModalViewCloseButtonTemplate" src="project://database/Assets/UI/UXML/Templates/ModalViewCloseButtonTemplate.uxml?fileID=9197481963319205126&amp;guid=d714d2f5487b3638a88d6b5900494d8d&amp;type=3#ModalViewCloseButtonTemplate" />
+    <ui:Template name="DailyRewardDayTemplate" src="project://database/Assets/UI/UXML/Templates/DailyRewardDayTemplate.uxml?fileID=9197481963319205126&amp;guid=de33e618b9b89bdc0bc3f46711deaba5&amp;type=3#DailyRewardDayTemplate" />
+    <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
+    <Style src="project://database/Assets/UI/USS/ModalViews/CloseableModalViews/DailyReward.uss?fileID=7433441132597879392&amp;guid=aaf7051556c1a9083b893feb7959c8c5&amp;type=3#DailyReward" />
+    <ui:VisualElement name="daily-reward__background" style="flex-grow: 0; width: 80%; height: 70%; justify-content: center; align-items: center; background-color: rgb(255, 255, 255);">
+        <ui:VisualElement name="level-completed__title-container" style="flex-grow: 1; position: absolute; top: 0; width: 35%; background-color: rgb(255, 217, 123); padding-top: 1%; padding-right: 1%; padding-bottom: 1%; padding-left: 1%; margin-left: 15%; margin-right: 0; margin-top: -3%;">
+            <ui:Label tabindex="-1" text="DAILY REWARD" parse-escape-sequences="true" display-tooltip-when-elided="true" name="level-completed__title" enable-rich-text="false" style="font-size: 55px; -unity-font-style: bold; -unity-text-align: middle-center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+        </ui:VisualElement>
+        <ui:Instance template="ModalViewCloseButtonTemplate" name="daily-reward__close-button" class="modal-view-close-button" />
+        <ui:VisualElement name="daily-reward__rewards-container" style="flex-grow: 1; width: 90%; margin: 6% 0 2% 0; flex-direction: row;">
+            <ui:VisualElement name="daily-reward__day-1-to-6-rewards-container" style="flex-grow: 1; margin-right: 3%;">
+                <ui:VisualElement name="daily-reward__day-1-3-rewards-container" style="flex-grow: 1; flex-direction: row; align-items: flex-start;">
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-1-reward" class="day-1-6" />
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-2-reward" class="day-1-6" />
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-3-reward" class="day-1-6" />
+                </ui:VisualElement>
+                <ui:VisualElement name="daily-reward__day-4-6-rewards-container" style="flex-grow: 1; flex-direction: row; align-items: flex-end;">
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-4-reward" class="day-1-6" />
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-5-reward" class="day-1-6" />
+                    <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-6-reward" class="day-1-6" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="daily-reward__day-7-reward-container" style="flex-grow: 0; height: 100%; padding: 0; border-width: 0;">
+                <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-7-reward" style="width: 100%; height: 100%;" class="day-7" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label name="daily-reward__info-label" tabindex="-1" enable-rich-text="false" text="CLAIM YOUR DAILY REWARD!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; font-size: 30px; -unity-font-style: bold;" />
+        <ui:Button name="daily-reward__claim-reward-button" enable-rich-text="false" text="CLAIM REWARD" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin: 2% 0; -unity-text-align: middle-left; font-size: 40px; -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>

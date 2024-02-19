@@ -1,0 +1,14 @@
+#daily-reward__day-7-reward-container {
+    width: 30%;
+}
+
+
+#daily-reward__day-1-to-6-rewards-container > * {
+    justify-content: space-between;
+}
+
+/* Width of a daily reward (day 1 to 6) */
+#daily-reward__day-1-to-6-rewards-container > * > * {
+    width: 30%;
+    height: 94%;
+}

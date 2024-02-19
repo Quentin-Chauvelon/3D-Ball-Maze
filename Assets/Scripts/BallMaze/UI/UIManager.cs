@@ -18,6 +18,7 @@ namespace BallMaze.UI
         DailyLevels,
         RankedLevel,
         Settings,
+        DailyReward,
         SecondChance,
         LevelFailed,
         LevelCompleted,
@@ -104,6 +105,7 @@ namespace BallMaze.UI
 
             // Closeable modal views
             _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));
+            _uiViews.Add(UIViewType.DailyReward, new DailyRewardView(root.Q<VisualElement>("daily-reward")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));

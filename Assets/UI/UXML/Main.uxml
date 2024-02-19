@@ -14,6 +14,7 @@
     <ui:Template name="PauseModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/PauseModalView.uxml?fileID=9197481963319205126&amp;guid=ff4936174fe874076b081088cf4bad06&amp;type=3#PauseModalView" />
     <ui:Template name="LevelCompletedModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/LevelCompletedModalView.uxml?fileID=9197481963319205126&amp;guid=ddc1637a5eaec7a2587eb1db9d3549c4&amp;type=3#LevelCompletedModalView" />
     <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
+    <ui:Template name="DailyRewardModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/DailyRewardModalView.uxml?fileID=9197481963319205126&amp;guid=592fb3d8aa647f2218a01a64e696a69c&amp;type=3#DailyRewardModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
         <ui:Instance template="Background" name="background" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100px; display: none;" />
@@ -30,6 +31,7 @@
         <ui:Instance template="ModalBackgroundView" name="modal-background" class="screen__anchor--center" style="display: none;" />
         <ui:VisualElement name="main__modal-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
             <ui:Instance template="SettingsModalView" name="settings" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
+            <ui:Instance template="DailyRewardModalView" name="daily-reward" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:VisualElement name="second-chance-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="SecondChanceModalView" name="second-chance" style="width: 50%; height: 70%; flex-grow: 0; flex-shrink: 0; align-items: center; justify-content: center; display: flex;" />
             </ui:VisualElement>
