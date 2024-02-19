@@ -1,0 +1,20 @@
+#second-chance__buttons-container {
+    --buttons-container-width: 100%;
+    --buttons-container-height: 28%;
+    width: var(--buttons-container-width);
+    height: var(--buttons-container-height);
+}
+
+/*
+Buttons width should be the height of the container and height should be the width
+This allows to keep the buttons square and taking the whole height of the container
+*/
+#second-chance__buttons-container > * {
+    width: var(--buttons-container-height);
+    height: var(--buttons-container-width);
+}
+
+#second-chance__radial-progress {
+    --track-color: rgba(0, 0, 0, 0);
+    --progress-color: rgb(130, 130, 130);
+}

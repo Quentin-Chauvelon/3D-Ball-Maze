@@ -1,0 +1,85 @@
+#pause__audio-controls-buttons-container > * {
+    width: 40%;
+}
+
+.audio-controls-button-active {
+    background-color: rgb(0, 179, 33);
+}
+
+.audio-controls-button-inactive {
+    background-color: rgb(250, 0, 0);
+}
+
+#pause__music-button.audio-controls-button-active {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=21300000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#pause__sfx-button.audio-controls-button-active {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=21300000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#pause__music-button.audio-controls-button-inactive {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged_Arrows.png?fileID=21300000&guid=4cbc879550e5e374a925e2e0a84d6f3c&type=3#AllAxis_Ridged_Arrows');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#pause__sfx-button.audio-controls-button-inactive {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged_Arrows.png?fileID=21300000&guid=4cbc879550e5e374a925e2e0a84d6f3c&type=3#AllAxis_Ridged_Arrows');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#pause__aspect-ratio-container.ranked-level #pause__audio-controls-buttons-container {
+    display: none;
+}
+
+#pause__aspect-ratio-container.ranked-level #pause__level-info-container {
+    display: none;
+}
+
+#pause__aspect-ratio-container.ranked-level #pause__level-times-container {
+    display: none;
+}
+
+#pause__aspect-ratio-container.default-levels #pause__level-difficulty-label {
+    display: none;
+}
+
+#pause__aspect-ratio-container.daily-levels #pause__next-star-label {
+    display: none;
+}
+
+#pause__aspect-ratio-container.default-levels #pause__leaderboard-container {
+    display: none;
+}
+
+#pause__aspect-ratio-container.daily-levels #pause__leaderboard-container {
+    display: none;
+}
+
+#pause__leaderboard-top-3-entries-container > * {
+    height: 30%;
+}
+
+#pause__buttons-container {
+    --buttons-container-width: 100%;
+    --buttons-container-height: 40%;
+    width: var(--buttons-container-width);
+    height: var(--buttons-container-height);
+}
+
+#pause__buttons-container > Button {
+    width: 20%;
+    height: 50%;
+}
+
+#pause__buttons-container > #pause__resume-button {
+    width: 30%;
+    height: 75%;
+}
+
+#pause__radial-progress {
+    --track-color: rgba(0, 0, 0, 0);
+    --progress-color: rgb(130, 130, 130);
+}

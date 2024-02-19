@@ -5,3 +5,14 @@
     justify-content: center;
     position: absolute;
 }
+
+.screen_view {
+    height: 85%;
+}
+
+.modal-view-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    flex-grow: 1;
+}

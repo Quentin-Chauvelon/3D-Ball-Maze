@@ -35,7 +35,7 @@ namespace BallMaze.UI
 
         protected override void SetVisualElements()
         {
-            _closeButton = _root.Q<Button>("settings__close-button");
+            _closeButton = _root.Q<Button>("close-button-template__close-button");
             _controlsJoystickRadioButton = _root.Q<RadioButton>("settings__joystick-radio-button");
             _controlsAccelerometerRadioButton = _root.Q<RadioButton>("settings__accelerometer-radio-button");
             _joystickPositionToggle= _root.Q<Toggle>("settings__joystick-position-toggle");
@@ -54,7 +54,7 @@ namespace BallMaze.UI
         protected override void RegisterButtonCallbacks()
         {
             // Close the settings modal view
-            _closeButton.clickable.clicked += () => { UIManager.Instance.Hide(UIViews.Settings); };
+            _closeButton.clickable.clicked += () => { UIManager.Instance.Hide(UIViewType.Settings); };
 
             // Set the controls
             _controlsJoystickRadioButton.RegisterValueChangedCallback((evt) =>

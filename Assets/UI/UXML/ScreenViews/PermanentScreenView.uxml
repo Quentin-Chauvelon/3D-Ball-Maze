@@ -1,5 +1,28 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="permanent" style="flex-grow: 1; display: flex; width: 100%; height: 100%; min-width: auto; min-height: auto;">
-        <ui:Button text="S" parse-escape-sequences="true" display-tooltip-when-elided="true" name="permanent__settings-button" enable-rich-text="false" style="position: absolute; top: 0; right: 0; font-size: 50px; -unity-font-style: bold; width: 80px; height: 80px;" />
+    <ui:VisualElement name="permanent" style="flex-grow: 1; display: flex; width: 100%; height: 100%; min-width: auto; min-height: auto; right: auto; justify-content: space-between; align-items: center; flex-direction: row;">
+        <ui:VisualElement name="permanent__navigation-container" style="flex-grow: 0; width: 25%; height: 100%; min-width: auto; min-height: auto; flex-direction: row;">
+            <ui:Button text="&lt;-- Back" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__back-button" style="width: 50%; height: 100%;" />
+            <ui:Button text="Home" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__home-button" style="width: 30%; height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="permanent__leaderstats-container" style="flex-grow: 0; width: 40%; height: 100%; align-items: center; justify-content: center; flex-direction: row;">
+            <ui:VisualElement name="permanent__trophies-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between; display: none; align-items: stretch;">
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__trophies-value-label" style="flex-grow: 1; font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="permanent__coins-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between;">
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__coins-value-label" style="flex-grow: 1; font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+                <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__more-coins-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="permanent__settings-container" style="flex-grow: 0; height: 100%; width: 25%; align-items: center; justify-content: flex-end; padding-right: 0; flex-direction: row; padding-top: 0; padding-bottom: 0; padding-left: 0;">
+            <BallMaze.UI.AspectRatio aspect-ratio-x="1" aspect-ratio-y="1" name="permanent__skip-aspect-ratio" balance-y="50" balance-x="98" style="height: 80%; width: 25%; align-self: auto; left: auto; position: relative; bottom: auto; right: auto; max-height: 80%; top: auto; min-height: 80%; visibility: visible; display: flex; overflow: visible; margin-top: 2%; margin-right: 2%; margin-bottom: 2%; margin-left: 2%;">
+                <ui:Button text="Sk" parse-escape-sequences="true" display-tooltip-when-elided="true" name="permanent__skip-button" enable-rich-text="false" style="position: relative; top: auto; right: auto; font-size: 50px; -unity-font-style: bold; width: 100%; height: 100%; margin-top: 0; padding-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </BallMaze.UI.AspectRatio>
+            <BallMaze.UI.AspectRatio aspect-ratio-x="1" aspect-ratio-y="1" name="permanent__pause-aspect-ratio" balance-y="50" balance-x="98" style="height: 80%; width: 25%; align-self: auto; left: auto; position: relative; bottom: auto; right: auto; max-height: 80%; top: auto; min-height: 80%; visibility: visible; display: flex; overflow: visible; margin-top: 2%; margin-right: 2%; margin-bottom: 2%; margin-left: 2%;">
+                <ui:Button text="Pa" parse-escape-sequences="true" display-tooltip-when-elided="true" name="permanent__pause-button" enable-rich-text="false" style="position: relative; top: auto; right: auto; font-size: 50px; -unity-font-style: bold; width: 100%; height: 100%; margin-top: 0; padding-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </BallMaze.UI.AspectRatio>
+            <BallMaze.UI.AspectRatio aspect-ratio-x="1" aspect-ratio-y="1" name="permanent__settings-aspect-ratio" balance-y="50" balance-x="98" style="height: 80%; width: 25%; align-self: auto; left: auto; position: relative; bottom: auto; right: auto; max-height: 80%; top: auto; min-height: 80%; visibility: visible; display: flex; overflow: visible; margin-top: 2%; margin-right: 2%; margin-bottom: 2%; margin-left: 2%;">
+                <ui:Button text="Se" parse-escape-sequences="true" display-tooltip-when-elided="true" name="permanent__settings-button" enable-rich-text="false" style="position: relative; top: auto; right: auto; font-size: 50px; -unity-font-style: bold; width: 100%; height: 100%; margin-top: 0; padding-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </BallMaze.UI.AspectRatio>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

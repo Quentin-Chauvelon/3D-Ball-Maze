@@ -113,7 +113,7 @@ namespace BallMaze
                     // Display no internet message and call LoadDefaultLevelSelection() when the player goes back online
                     await InternetManager.Instance.CheckIsOnlineAndDisplayUI(LoadDefaultLevelSelection);
 
-                    UIManager.Instance.Show(UIViews.MainMenu);
+                    UIManager.Instance.Show(UIViewType.MainMenu);
 
                     return;
                 }
@@ -165,7 +165,7 @@ namespace BallMaze
 
             if (levelsSelection != null && levelsSelection.levels.Length > 0)
             {
-                UIManager.Instance.PopulateLevelSelectionView(levelsSelection);
+                (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).PopulateLevelSelectionView(levelsSelection);
             }
             else
             {

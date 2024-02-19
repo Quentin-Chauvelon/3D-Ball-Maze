@@ -151,7 +151,7 @@ namespace BallMaze
             if (_isNoInternetUIVisible)
             {
                 // Display the UI and will call the callback method when the player goes back online
-                UIManager.Instance.DisplayNoInternetUI(false, callback);
+                (UIManager.Instance.UIViews[UIViewType.NoInternet] as NoInternetView).DisplayNoInternetUI(false, callback);
 
                 return;
             }
@@ -162,7 +162,7 @@ namespace BallMaze
                 _isNoInternetUIVisible = true;
 
                 // Display the UI and will call the callback method when the player goes back online
-                UIManager.Instance.DisplayNoInternetUI(false, callback);
+                (UIManager.Instance.UIViews[UIViewType.NoInternet] as NoInternetView).DisplayNoInternetUI(false, callback);
             }
 
             // Stop the loop if isQuitting is true, otherwise after exiting playmode in the unity editor, async methods keep running forever
@@ -175,7 +175,7 @@ namespace BallMaze
                     _isNoInternetUIVisible = false;
 
                     // Hide the UI and will call the callback methods
-                    UIManager.Instance.DisplayNoInternetUI(true);
+                    (UIManager.Instance.UIViews[UIViewType.NoInternet] as NoInternetView).DisplayNoInternetUI(true);
 
                     break;
                 }

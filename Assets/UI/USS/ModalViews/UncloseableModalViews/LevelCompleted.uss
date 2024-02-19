@@ -1,0 +1,41 @@
+.star {
+    width: 30%;
+    height: 70%;
+}
+
+#level-completed__star-2 {
+    align-self: flex-start;
+}
+
+#level-completed__coins-double-container.coins-not-doubled > #level-completed__double-coins-ad-button {
+    display: flex;
+}
+
+#level-completed__coins-double-container.coins-not-doubled > #level-completed__double-coins-ad-button-doubled-container {
+    display: none;
+}
+
+#level-completed__coins-double-container.coins-doubled > #level-completed__double-coins-ad-button {
+    display: none;
+}
+
+#level-completed__coins-double-container.coins-doubled > #level-completed__double-coins-ad-button-doubled-container {
+    display: flex;
+}
+
+#level-completed__buttons-container {
+    --buttons-container-width: 100%;
+    --buttons-container-height: 30%;
+    width: var(--buttons-container-width);
+    height: var(--buttons-container-height);
+}
+
+#level-completed__buttons-container > Button {
+    width: 15%;
+    height: 50%;
+}
+
+#level-completed__buttons-container > #level-completed__next-button {
+    width: 22.5%;
+    height: 75%;
+}

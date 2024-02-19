@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <BallMaze.UI.AspectRatio aspect-ratio-x="1" aspect-ratio-y="1" name="daily-levels__streak-day-container" style="height: 100%; flex-grow: 0; width: 100%;">
+        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__streak-day-number" enable-rich-text="false" style="flex-grow: 1; -unity-text-align: middle-center; -unity-font-style: bold; font-size: 100%;" />
+    </BallMaze.UI.AspectRatio>
+    <ui:VisualElement name="daily-levels__streak-next-day-connection" style="flex-grow: 1; height: 30%;" />
+</ui:UXML>

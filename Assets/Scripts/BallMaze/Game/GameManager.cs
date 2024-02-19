@@ -18,6 +18,7 @@ namespace BallMaze
     public enum GameState
     {
         MainMenu,
+        ModeSelection,
         LevelSelection,
         Playing
     }
@@ -59,6 +60,49 @@ namespace BallMaze
         }
 
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                UIManager.Instance.Back();
+            }
+        }
+
+
+        /// <summary>
+        /// Updates the game state based on the current UI view
+        /// </summary>
+        /// <param name="uiView"></param>
+        public void UpdateGameState(UIViewType uiView)
+        {
+            Debug.Log("Current game state: " + uiView.ToString());
+
+            switch (uiView)
+            {
+                case UIViewType.MainMenu:
+                    _gameState = GameState.MainMenu;
+                    break;
+                case UIViewType.ModeSelection:
+                    _gameState = GameState.ModeSelection;
+                    break;
+                case UIViewType.DefaultLevelSelection:
+                    _gameState = GameState.LevelSelection;
+                    break;
+                default:
+                    _gameState = GameState.Playing;
+                    break;
+            }
+
+            if (_gameState == GameState.Playing)
+            {
+                UIManager.Instance.UIViews[UIViewType.Background].Hide();
+            }
+            else
+            {
+                UIManager.Instance.UIViews[UIViewType.Background].Show();
+            }
+        }
+
         private void OnApplicationPause(bool pause)
         {
             // If the game is paused, save the time it was paused at, this will allow to know how much time the game was paused for
@@ -72,10 +116,10 @@ namespace BallMaze
                 // This way, when the player clicks on the level selection button, levels update and UI populate will be handled by the LevelSelection script
                 if (_lastUnfocus.DateInTimeframe(3600))
                 {
-                    UIManager.Instance.Show(UIViews.MainMenu);
+                    UIManager.Instance.Show(UIViewType.MainMenu);
                 }
                 // If the levels have not been populated yet, load them
-                else if (!UIManager.Instance.IsDefaultLevelSelectionViewLoaded())
+                else if (!(UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).IsDefaultLevelSelectionViewLoaded())
                 {
                     defaultLevelSelection.LoadDefaultLevelSelection();
                 }

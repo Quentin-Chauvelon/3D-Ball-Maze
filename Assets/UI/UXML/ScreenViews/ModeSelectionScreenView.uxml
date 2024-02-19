@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="mode-selection__background" style="flex-grow: 1; flex-shrink: 0; width: 100%;">
+        <ui:Label tabindex="-1" text="MODE SELECTION" parse-escape-sequences="true" display-tooltip-when-elided="true" name="mode-selection__title" style="flex-grow: 0; height: 15%; -unity-text-align: middle-center; font-size: 30px; -unity-font-style: bold;" />
+        <ui:ScrollView name="mode-selection__modes-container-scroll-view" vertical-page-size="-1" horizontal-page-size="-1" mode="Horizontal" focusable="true" vertical-scroller-visibility="Hidden" style="width: 100%; height: 80%; padding-top: 4%; padding-right: 0; padding-bottom: 0; padding-left: 2%; overflow: visible;">
+            <ui:Button text="Classic" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="mode-selection__default-levels-button" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 2%; margin-bottom: 0; margin-left: 2%; height: 95%;" />
+            <ui:Button text="Daily levels" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="mode-selection__daily-levels-button" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 2%; margin-bottom: 0; margin-left: 2%; height: 95%;" />
+            <ui:Button text="Ranked" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="mode-selection__ranked-button" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 2%; margin-bottom: 0; margin-left: 2%; height: 95%;" />
+            <ui:Button text="Event" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="mode-selection__event-button" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 2%; margin-bottom: 0; margin-left: 2%; height: 95%;" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,11 @@
+#skip__buttons-container {
+    --buttons-container-width: 100%;
+    --buttons-container-height: 37%;
+    width: var(--buttons-container-width);
+    height: var(--buttons-container-height);
+}
+
+#skip__buttons-container > * {
+    width: var(--buttons-container-height);
+    height: var(--buttons-container-width);
+}

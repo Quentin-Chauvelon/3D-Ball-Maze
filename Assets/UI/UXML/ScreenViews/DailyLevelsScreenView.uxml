@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="DefaultLevelSelectionTemplate" src="project://database/Assets/UI/UXML/Templates/DefaultLevelSelectionTemplate.uxml?fileID=9197481963319205126&amp;guid=dbd514e0432219042a8db055ffb92b69&amp;type=3#DefaultLevelSelectionTemplate" />
+    <ui:Template name="DailyLevelsStreakDayTemplate" src="project://database/Assets/UI/UXML/Templates/DailyLevelsStreakDayTemplate.uxml?fileID=9197481963319205126&amp;guid=f9369a614a1c36f6db7a1bc6c8e5c2f5&amp;type=3#DailyLevelsStreakDayTemplate" />
+    <Style src="project://database/Assets/UI/USS/DailyLevels.uss?fileID=7433441132597879392&amp;guid=946c2c88ac01a05378aa459e1ef2df2a&amp;type=3#DailyLevels" />
+    <ui:Label tabindex="-1" text="DAILY LEVELS" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__title" enable-rich-text="false" style="font-size: 30px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+    <ui:VisualElement name="daily-levels__levels-container" style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: space-around; width: 95%;" />
+    <ui:VisualElement name="daily-levels__diffiulty-container" style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: space-around; width: 95%; height: 5%;">
+        <ui:Label tabindex="-1" text="Very easy" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__difficulty-1" class="daily-levels__difficulty-label" style="color: rgb(60, 195, 56);" />
+        <ui:Label tabindex="-1" text="Easy" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__difficulty-2" class="daily-levels__difficulty-label" style="color: rgb(255, 229, 0);" />
+        <ui:Label tabindex="-1" text="Medium" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__difficulty-3" class="daily-levels__difficulty-label" style="color: rgb(255, 151, 0);" />
+        <ui:Label tabindex="-1" text="Hard" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__difficulty-4" class="daily-levels__difficulty-label" style="color: rgb(255, 0, 0);" />
+        <ui:Label tabindex="-1" text="Impossible" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__difficulty-5" class="daily-levels__difficulty-label" style="color: rgb(175, 0, 193);" />
+    </ui:VisualElement>
+    <ui:VisualElement name="daily-levels__streak-container" style="flex-grow: 0; height: 16%; flex-direction: row; width: 80%; align-items: center; justify-content: center; margin-bottom: -3%;">
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-1" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-2" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-3" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-4" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-5" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-6" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
+        <BallMaze.UI.AspectRatio name="daily-levels__streak-day-7" class="daily-levels__streak-day-inactive" aspect-ratio-x="1" aspect-ratio-y="1" style="flex-grow: 0; height: 100%; width: 40%;" />
+    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="UPDATES IN 00:00:00" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__updates-in-label" enable-rich-text="false" style="font-size: 30px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+</ui:UXML>

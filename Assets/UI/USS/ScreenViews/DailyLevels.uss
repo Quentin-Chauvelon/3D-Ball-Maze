@@ -1,0 +1,40 @@
+.daily-levels__level-button {
+    width: 17%;
+}
+
+.daily-levels__streak-day-template {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    height: 70%;
+}
+
+#daily-levels__streak-day-7.daily-levels__streak-day-inactive,
+.daily-levels__streak-day-inactive > * {
+    background-color: rgb(255, 255, 255);
+}
+
+
+#daily-levels__streak-day-7.daily-levels__streak-day-active,
+.daily-levels__streak-day-active > * {
+    background-color: rgb(81, 178, 57);
+}
+
+.daily-levels__difficulty-label {
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    font-size: 40px;
+    width: 17%;
+}
+
+#daily-levels__levels-container > .level-locked > * {
+    background-color: rgb(117, 117, 117);
+}
+
+#daily-levels__levels-container > .level-locked > *:hover {
+    background-color: rgb(117, 117, 117);
+}
+
+#daily-levels__levels-container > .level-locked > *:active {
+    background-color: rgb(117, 117, 117);
+}

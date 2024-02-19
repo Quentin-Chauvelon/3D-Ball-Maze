@@ -12,9 +12,10 @@ namespace BallMaze.UI
     public class DefaultLevelSelectionView : ScreenView
     {
         // Visual Elements
-        private Button _backButton;
         private ScrollView _levelsSelectionContainerScrollView;
         private Dictionary<string, Action> _levelSelectionButtonsClickAction;
+        private VisualElement _eventImage;
+        private Label _eventName;
 
         // The height of the level relative to its container
         private const float LEVEL_HEIGHT_PERCENTAGE = 0.35f;
@@ -28,18 +29,12 @@ namespace BallMaze.UI
 
         protected override void SetVisualElements()
         {
-            _backButton = _root.Q<Button>("default-level-selection__back-button");
             _levelsSelectionContainerScrollView = _root.Q<ScrollView>("default-level-selection__levels-container-scroll-view");
+            _eventImage = _root.Q<VisualElement>("default-level-selection__event-image");
+            _eventName = _root.Q<Label>("default-level-selection__event-name-label");
 
             // Update the size of the children when the size of the container changes
             _levelsSelectionContainerScrollView.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-        }
-
-
-        protected override void RegisterButtonCallbacks()
-        {
-            // Go back to the previous screen view
-            _backButton.clickable.clicked += () => { UIManager.Instance.Back(); };
         }
 
 
@@ -90,9 +85,6 @@ namespace BallMaze.UI
 
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-id").text = levelSelection.id;
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-name").text = levelSelection.name;
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-1").text = levelSelection.times[0].ToString();
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-2").text = levelSelection.times[1].ToString();
-                levelSelectionCloneBackground.Q<Label>("default-level-selection-template__star-3").text = levelSelection.times[2].ToString();
             }
         }
 
@@ -130,9 +122,27 @@ namespace BallMaze.UI
         /// <param name="id"></param>
         public void LevelSelectionClicked(string id)
         {
-            UIManager.Instance.Hide(UIViews.DefaultLevelSelection);
+            UIManager.Instance.Hide(UIViewType.DefaultLevelSelection);
 
             GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
+        }
+
+
+        /// <summary>
+        /// Update the UI based on the selected mode (classic or event)
+        /// </summary>
+        public void SetEventModeSelected(bool isEventModeSelected)
+        {
+            if (isEventModeSelected)
+            {
+                _eventImage.style.display = DisplayStyle.Flex;
+                _eventName.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                _eventImage.style.display = DisplayStyle.None;
+                _eventName.style.display = DisplayStyle.None;
+            }
         }
 
 
