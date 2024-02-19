@@ -16,6 +16,7 @@ namespace BallMaze.UI
 
         // Visual Elements
         private VisualElement _aspectRatioContainer;
+        private Label _restartWhereYouFailedLabel;
         private Button _restartCoinsButton;
         private Button _restartAdButton;
         private Button _unlimitedRestartsIAPButton;
@@ -34,6 +35,7 @@ namespace BallMaze.UI
         protected override void SetVisualElements()
         {
             _aspectRatioContainer = _root.Q<VisualElement>("level-failed__aspect-ratio-container");
+            _restartWhereYouFailedLabel = _root.Q<Label>("level-failed__level-failed-label");
             _restartCoinsButton = _root.Q<Button>("level-failed__restart-where-you-failed-coins-button");
             _restartAdButton = _root.Q<Button>("level-failed__restart-where-you-failed-ad-button");
             _unlimitedRestartsIAPButton = _root.Q<Button>("level-failed__unlimited-restarts-iap-button");
@@ -121,18 +123,21 @@ namespace BallMaze.UI
             switch (levelType)
             {
                 case LevelType.Default:
+                    _restartWhereYouFailedLabel.text = "Restart where you failed?";
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("default-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.None;
                     break;
                 case LevelType.DailyLevel:
+                    _restartWhereYouFailedLabel.text = "Restart where you failed?";
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("default-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.Flex;
                     break;
                 case LevelType.RankedLevel:
+                    _restartWhereYouFailedLabel.text = "Try again?";
                     _aspectRatioContainer.RemoveFromClassList("default-levels");
                     _aspectRatioContainer.AddToClassList("ranked-level");
                     _defaultLevelsListButton.style.display = DisplayStyle.None;

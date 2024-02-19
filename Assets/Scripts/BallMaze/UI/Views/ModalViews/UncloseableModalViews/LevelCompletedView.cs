@@ -11,7 +11,7 @@ namespace BallMaze.UI
     {
         public override bool isCloseable => false;
 
-        private VisualElement[] _stars;
+        private VisualElement[] _stars = new VisualElement[3];
 
         // Visual Elements
         private Label _coinsEarntLabel;
@@ -27,7 +27,7 @@ namespace BallMaze.UI
 
         public LevelCompletedView(VisualElement root) : base(root)
         {
-            _stars = new VisualElement[3];
+
         }
 
 

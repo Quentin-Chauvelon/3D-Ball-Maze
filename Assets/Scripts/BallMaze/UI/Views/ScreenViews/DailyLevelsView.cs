@@ -203,7 +203,9 @@ namespace BallMaze.UI
                 }
 
                 // Hide the stars and time
+                dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-1-image").RemoveFromClassList("star-active");
                 dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-2-image").RemoveFromClassList("star-active");
+                dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-3-image").RemoveFromClassList("star-active");
                 dailyLevelButton.Q<Label>("default-level-selection-template__time-label").style.display = DisplayStyle.None;
             }
 
@@ -232,7 +234,7 @@ namespace BallMaze.UI
             VisualElement dailyLevelButton = _dailyLevelsButtonsContainerScrollView.Q<VisualElement>($"daily-levels__level-{(int)difficulty + 1}");
 
             // Show the time
-            dailyLevelButton.Q<Label>("default-level-selection-template__time-label").text = time.ToString(@"ss\:ff");
+            dailyLevelButton.Q<Label>("default-level-selection-template__time-label").text = time.ToString(@"ss\:ff\s");
             dailyLevelButton.Q<Label>("default-level-selection-template__time-label").style.display = DisplayStyle.Flex;
 
             // Show the stars

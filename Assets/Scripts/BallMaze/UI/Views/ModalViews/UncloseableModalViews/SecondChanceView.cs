@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Redcode.Awaiting;
@@ -16,24 +15,24 @@ namespace BallMaze.UI
         private const int RADIAL_PROGRESS_DURATION = 6;
 
         // Visual Elements
-        private RadialProgress _radialProgress;
+        private RadialProgress _secondChanceRadialProgress;
         private Button _secondChanceButton;
-        private Button _defaultlevelsListButton;
+        private Button _defaultLevelsListButton;
         private Button _homeButton;
         private Button _tryAgainButton;
 
 
         public SecondChanceView(VisualElement root) : base(root)
         {
-            Show();
+
         }
 
 
         protected override void SetVisualElements()
         {
-            _radialProgress = _root.Q<RadialProgress>("second-chance__radial-progress");
+            _secondChanceRadialProgress = _root.Q<RadialProgress>("second-chance__radial-progress");
             _secondChanceButton = _root.Q<Button>("second-chance__second-chance-button");
-            _defaultlevelsListButton = _root.Q<Button>("second-chance__default-levels-list-button");
+            _defaultLevelsListButton = _root.Q<Button>("second-chance__default-levels-list-button");
             _homeButton = _root.Q<Button>("second-chance__home-button");
             _tryAgainButton = _root.Q<Button>("second-chance__try-again-button");
         }
@@ -47,11 +46,10 @@ namespace BallMaze.UI
                 Hide();
             };
 
-            _defaultlevelsListButton.clicked += () =>
+            _defaultLevelsListButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
                 Hide();
-
             };
 
             _homeButton.clicked += () =>
@@ -86,10 +84,10 @@ namespace BallMaze.UI
             // Decrease the progress every frame while the view is visible
             while (isEnabled)
             {
-                _radialProgress.progress -= step;
+                _secondChanceRadialProgress.progress -= step;
                 await new WaitForFixedUpdate();
 
-                if (_radialProgress.progress <= 0)
+                if (_secondChanceRadialProgress.progress <= 0)
                 {
                     // TODO: Call the level manager second chance
                     Hide();
@@ -97,7 +95,7 @@ namespace BallMaze.UI
             }
 
             // Reset the progress
-            _radialProgress.progress = 100;
+            _secondChanceRadialProgress.progress = 100;
         }
 
 
@@ -109,11 +107,11 @@ namespace BallMaze.UI
             switch (levelType)
             {
                 case LevelType.Default:
-                    _defaultlevelsListButton.style.display = DisplayStyle.Flex;
+                    _defaultLevelsListButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.None;
                     break;
                 case LevelType.DailyLevel:
-                    _defaultlevelsListButton.style.display = DisplayStyle.None;
+                    _defaultLevelsListButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.Flex;
                     break;
                 default:
