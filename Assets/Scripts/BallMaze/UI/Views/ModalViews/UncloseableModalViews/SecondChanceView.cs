@@ -43,25 +43,23 @@ namespace BallMaze.UI
             _secondChanceButton.clicked += () =>
             {
                 // TODO: Call the level manager second chance
-                Hide();
+                UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
             _defaultLevelsListButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
-                Hide();
             };
 
             _homeButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
-                Hide();
             };
 
             _tryAgainButton.clicked += () =>
             {
                 // TODO: Call the level manager to restart the level
-                Hide();
+                UIManager.Instance.Hide(UIViewType.SecondChance);
             };
         }
 
@@ -90,7 +88,7 @@ namespace BallMaze.UI
                 if (_secondChanceRadialProgress.progress <= 0)
                 {
                     // TODO: Call the level manager second chance
-                    Hide();
+                    UIManager.Instance.Hide(UIViewType.SecondChance);
                 }
             }
 

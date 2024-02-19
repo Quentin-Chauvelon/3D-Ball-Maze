@@ -66,13 +66,11 @@ namespace BallMaze.UI
             _defaultLevelsListButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
-                Hide();
             };
 
             _homeButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
-                Hide();
             };
 
             _tryAgainButton.clicked += () =>
@@ -106,7 +104,7 @@ namespace BallMaze.UI
                 if (_tryAgainRadialProgress.progress <= 0)
                 {
                     // TODO: Try again
-                    Hide();
+                    UIManager.Instance.Hide(UIViewType.LevelFailed);
                 }
             }
 
