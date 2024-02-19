@@ -1,0 +1,7 @@
+#game-quit-confirmation__buttons-container > * {
+    width: 40%;
+    font-size: 55px;
+    -unity-font-style: bold;
+    color: #FFF;
+    border-width: 0;
+}

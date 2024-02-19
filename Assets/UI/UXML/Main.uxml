@@ -9,6 +9,7 @@
     <ui:Template name="ModalBackgroundView" src="project://database/Assets/UI/UXML/ModalBackgroundView.uxml?fileID=9197481963319205126&amp;guid=9f66db82064f0a04f8bada1f2ce53f85&amp;type=3#ModalBackgroundView" />
     <ui:Template name="SettingsModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/SettingsModalView.uxml?fileID=9197481963319205126&amp;guid=cdfb817b549de1e46ad4ac2c419c024d&amp;type=3#SettingsModalView" />
     <ui:Template name="DailyRewardModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/DailyRewardModalView.uxml?fileID=9197481963319205126&amp;guid=592fb3d8aa647f2218a01a64e696a69c&amp;type=3#DailyRewardModalView" />
+    <ui:Template name="GameQuitConfirmationModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/GameQuitConfirmationModalView.uxml?fileID=9197481963319205126&amp;guid=c39be62ea81916b15aa6633649305d23&amp;type=3#GameQuitConfirmationModalView" />
     <ui:Template name="SecondChanceModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/SecondChanceModalView.uxml?fileID=9197481963319205126&amp;guid=57ea838de26fd162b9b6aeddd0890869&amp;type=3#SecondChanceModalView" />
     <ui:Template name="LevelFailedModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/LevelFailedModalView.uxml?fileID=9197481963319205126&amp;guid=4fa9e4027b44b989185e1ccd5596ae17&amp;type=3#LevelFailedModalView" />
     <ui:Template name="SkipModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/SkipModalView.uxml?fileID=9197481963319205126&amp;guid=3b1cdf0f47b6620888c1882d106a93a7&amp;type=3#SkipModalView" />
@@ -36,6 +37,7 @@
             <ui:Instance template="SettingsModalView" name="settings" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="DailyRewardModalView" name="daily-reward" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="LevelQuitConfirmationModalView" name="level-quit-confirmation" class="screen__anchor--center" style="display: none;" />
+            <ui:Instance template="GameQuitConfirmationModalView" name="game-quit-confirmation" class="screen__anchor--center" style="display: none;" />
             <ui:VisualElement name="second-chance-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="SecondChanceModalView" name="second-chance" style="width: 50%; height: 70%; flex-grow: 0; flex-shrink: 0; align-items: center; justify-content: center; display: flex;" />
             </ui:VisualElement>

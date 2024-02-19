@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="ModalViewCloseButtonTemplate" src="project://database/Assets/UI/UXML/Templates/ModalViewCloseButtonTemplate.uxml?fileID=9197481963319205126&amp;guid=d714d2f5487b3638a88d6b5900494d8d&amp;type=3#ModalViewCloseButtonTemplate" />
+    <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
+    <Style src="project://database/Assets/UI/USS/ModalViews/CloseableModalViews/GameQuitConfirmation.uss?fileID=7433441132597879392&amp;guid=982cbf40050a9ef4dba6fb07e6251606&amp;type=3#GameQuitConfirmation" />
+    <ui:VisualElement name="game-quit-confirmation__background" style="flex-grow: 0; justify-content: space-around; align-items: center; width: 50%; height: 40%; background-color: rgb(255, 255, 255);">
+        <ui:VisualElement name="game-quit-confirmation__title-container" style="flex-grow: 1; position: absolute; top: 0; width: 30%; background-color: rgb(255, 217, 123); padding-top: 1%; padding-right: 1%; padding-bottom: 1%; padding-left: 1%; margin-left: 15%; margin-right: 0; margin-top: -4%;">
+            <ui:Label tabindex="-1" text="QUIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="game-quit-confirmation__title" enable-rich-text="false" style="font-size: 55px; -unity-font-style: bold; -unity-text-align: middle-center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+        </ui:VisualElement>
+        <ui:Instance template="ModalViewCloseButtonTemplate" name="game-quit-confirmation__close-button" class="modal-view-close-button" />
+        <ui:Label name="game-quit-confirmation__are-you-sure-label" tabindex="-1" text="Are you sure you want to go back to the level selection?" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" style="width: 80%; margin-top: 8%; font-size: 35px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center;" />
+        <ui:VisualElement name="game-quit-confirmation__buttons-container" style="flex-grow: 0; flex-direction: row; justify-content: space-between; align-items: center; width: 80%;">
+            <ui:Button name="game-quit-confirmation__cancel-button" text="CANCEL" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" style="background-color: rgb(255, 0, 0);" />
+            <ui:Button name="game-quit-confirmation__quit-button" text="QUIT" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" style="background-color: rgb(0, 255, 0);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

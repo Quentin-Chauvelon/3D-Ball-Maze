@@ -21,6 +21,7 @@ namespace BallMaze.UI
         Settings,
         DailyReward,
         LevelQuitConfirmation,
+        GameQuitConfirmation,
         SecondChance,
         LevelFailed,
         LevelCompleted,
@@ -110,6 +111,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));
             _uiViews.Add(UIViewType.DailyReward, new DailyRewardView(root.Q<VisualElement>("daily-reward")));
             _uiViews.Add(UIViewType.LevelQuitConfirmation, new LevelQuitConfirmationView(root.Q<VisualElement>("level-quit-confirmation")));
+            _uiViews.Add(UIViewType.GameQuitConfirmation, new GameQuitConfirmationView(root.Q<VisualElement>("game-quit-confirmation")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
