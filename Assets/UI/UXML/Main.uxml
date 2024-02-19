@@ -38,17 +38,13 @@
             <ui:Instance template="DailyRewardModalView" name="daily-reward" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="LevelQuitConfirmationModalView" name="level-quit-confirmation" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="GameQuitConfirmationModalView" name="game-quit-confirmation" class="screen__anchor--center" style="display: none;" />
+            <ui:Instance template="SkipModalView" name="skip" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
+            <ui:Instance template="PauseModalView" name="pause" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:VisualElement name="second-chance-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="SecondChanceModalView" name="second-chance" style="width: 50%; height: 70%; flex-grow: 0; flex-shrink: 0; align-items: center; justify-content: center; display: flex;" />
             </ui:VisualElement>
             <ui:VisualElement name="level-failed-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="LevelFailedModalView" name="level-failed" style="width: 50%; height: 70%; justify-content: center; align-items: center;" />
-            </ui:VisualElement>
-            <ui:VisualElement name="skip-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
-                <ui:Instance template="SkipModalView" name="skip" style="width: 50%; height: 70%;" />
-            </ui:VisualElement>
-            <ui:VisualElement name="pause-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
-                <ui:Instance template="PauseModalView" name="pause" style="width: 50%; height: 70%; justify-content: center; align-items: center;" />
             </ui:VisualElement>
             <ui:VisualElement name="level-completed-container" class="screen__anchor--center" style="flex-grow: 1; display: none;">
                 <ui:Instance template="LevelCompletedModalView" name="level-completed" style="width: 60%; height: 80%; justify-content: center; align-items: center;" />

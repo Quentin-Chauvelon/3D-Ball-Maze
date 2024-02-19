@@ -9,10 +9,11 @@ namespace BallMaze.UI
 {
     public class SkipView : ModalView
     {
-        public override bool isCloseable => false;
+        public override bool isCloseable => true;
 
 
         // Visual Elements
+        private Button _closeButton;
         private Button _unlockNextLevelCoinsButton;
         private Button _unlockNextLevelAdButton;
         private Button _unlockAllLevelsIAPButton;
@@ -27,6 +28,7 @@ namespace BallMaze.UI
 
         protected override void SetVisualElements()
         {
+            _closeButton = _root.Q<Button>("close-button-template__close-button");
             _unlockNextLevelCoinsButton = _root.Q<Button>("skip__unlock-next-level-coins-button");
             _unlockNextLevelAdButton = _root.Q<Button>("skip__unlock-next-level-ad-button");
             _unlockAllLevelsIAPButton = _root.Q<Button>("skip__unlock-all-levels-iap-button");
@@ -36,6 +38,8 @@ namespace BallMaze.UI
 
         protected override void RegisterButtonCallbacks()
         {
+            _closeButton.clicked += () => { UIManager.Instance.Hide(UIViewType.Skip); };
+
             _unlockNextLevelCoinsButton.clicked += () =>
             {
                 // TODO: pay coins to unlock the next level check if has enough coins and hide the UI + unlock next level if it's the case
@@ -54,7 +58,7 @@ namespace BallMaze.UI
             _resumeButton.clicked += () =>
             {
                 // TODO: resume level
-                Hide();
+                UIManager.Instance.Hide(UIViewType.Skip);
             };
         }
     }

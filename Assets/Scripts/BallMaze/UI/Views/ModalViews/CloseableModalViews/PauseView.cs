@@ -10,13 +10,14 @@ namespace BallMaze.UI
 {
     public class PauseView : ModalView
     {
-        public override bool isCloseable => false;
+        public override bool isCloseable => true;
 
 
         private bool _musicEnabled;
         private bool _sfxEnabled;
 
         // Visual Elements
+        private Button _closeButton;
         private VisualElement _aspectRatioContainer;
         private Button _musicButton;
         private Button _sfxButton;
@@ -43,6 +44,7 @@ namespace BallMaze.UI
             _musicEnabled = true;
             _sfxEnabled = true;
 
+            _closeButton = _root.Q<Button>("close-button-template__close-button");
             _aspectRatioContainer = _root.Q<VisualElement>("pause__aspect-ratio-container");
             _musicButton = _root.Q<Button>("pause__music-button");
             _sfxButton = _root.Q<Button>("pause__sfx-button");
@@ -61,6 +63,8 @@ namespace BallMaze.UI
 
         protected override void RegisterButtonCallbacks()
         {
+            _closeButton.clicked += () => { UIManager.Instance.Hide(UIViewType.Pause); };
+
             _musicButton.clicked += () =>
             {
                 _musicEnabled = !_musicEnabled;
@@ -77,25 +81,23 @@ namespace BallMaze.UI
             _defaultLevelsListButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
-                Hide();
             };
 
             _homeButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
-                Hide();
             };
 
             _resumeButton.clicked += () =>
             {
                 // TODO: resume the level
-                Hide();
+                UIManager.Instance.Hide(UIViewType.Pause);
             };
 
             _tryAgainButton.clicked += () =>
             {
                 // TODO: restart the level
-                Hide();
+                UIManager.Instance.Hide(UIViewType.Pause);
             };
         }
 

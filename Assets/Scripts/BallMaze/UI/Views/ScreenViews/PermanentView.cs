@@ -54,6 +54,10 @@ namespace BallMaze.UI
 
             // Open the settings modal view
             _settingsButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Settings); };
+
+            _pauseButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Pause); };
+
+            _skipButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Skip); };
         }
 
 

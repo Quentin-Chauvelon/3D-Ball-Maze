@@ -121,8 +121,8 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.SecondChance, new SecondChanceView(root.Q<VisualElement>("second-chance-container")));
             _uiViews.Add(UIViewType.LevelFailed, new LevelFailedView(root.Q<VisualElement>("level-failed-container")));
             _uiViews.Add(UIViewType.LevelCompleted, new LevelCompletedView(root.Q<VisualElement>("level-completed-container")));
-            _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip-container")));
-            _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause-container")));
+            _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip")));
+            _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause")));
 
             // Show the UIs that should be shown at the start
             // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
