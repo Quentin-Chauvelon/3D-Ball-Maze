@@ -62,9 +62,44 @@ namespace BallMaze
 
         private void Update()
         {
+            // When the player presses escape (or back button on Android)
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                UIManager.Instance.Back();
+                // If we are playing, show the leve quit confirmation
+                if (_gameState == GameState.Playing)
+                {
+                    // If a modal is opened, we want to close it
+                    if (UIManager.Instance.IsModalOpened)
+                    {
+                        UIManager.Instance.Back();
+                    }
+                    // If no modal is opened, show the quit confirmation
+                    else
+                    {
+                        // Don't call UIManager.Show(), as it will add the view to the navigation history, instead, call Show() on the view itself
+                        UIManager.Instance.UIViews[UIViewType.LevelQuitConfirmation].Show();
+                    }
+                }
+                // If the user is on the main menu, show the game quit confirmation
+                else if (_gameState == GameState.MainMenu)
+                {
+                    // If a modal is opened, we want to close it
+                    if (UIManager.Instance.IsModalOpened)
+                    {
+                        UIManager.Instance.Back();
+                    }
+                    // If no modal is opened, show the quit confirmation
+                    else
+                    {
+                        // Don't call UIManager.Show(), as it will add the view to the navigation history, instead, call Show() on the view itself
+                        UIManager.Instance.UIViews[UIViewType.GameQuitConfirmation].Show();
+                    }
+                }
+                // Otherwise, go back to the previous UI view in the navigation history
+                else
+                {
+                    UIManager.Instance.Back();
+                }
             }
         }
 
@@ -87,6 +122,9 @@ namespace BallMaze
                     break;
                 case UIViewType.DefaultLevelSelection:
                     _gameState = GameState.LevelSelection;
+                    break;
+                case UIViewType.Playing:
+                    _gameState = GameState.Playing;
                     break;
                 default:
                     _gameState = GameState.Playing;
@@ -130,6 +168,20 @@ namespace BallMaze
         private void OnApplicationQuit()
         {
             isQuitting = true;
+        }
+
+
+        /// <summary>
+        /// Quits the game
+        /// </summary>
+        public void QuitGame()
+        {
+            Application.Quit();
+
+            // Application.Quit() doesn't work in the editor, so we need to stop the editor manually
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
     }
 }

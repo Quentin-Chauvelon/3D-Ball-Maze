@@ -67,7 +67,10 @@ namespace BallMaze.UI
         }
 
         private bool _isModalOpened = false;
-
+        public bool IsModalOpened
+        {
+            get { return _isModalOpened; }
+        }
 
         private void Awake()
         {
