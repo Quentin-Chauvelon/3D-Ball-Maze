@@ -13,6 +13,7 @@ namespace BallMaze.UI
         Background,
         ModalBackground,
         MainMenu,
+        Playing,
         ModeSelection,
         DefaultLevelSelection,
         DailyLevels,

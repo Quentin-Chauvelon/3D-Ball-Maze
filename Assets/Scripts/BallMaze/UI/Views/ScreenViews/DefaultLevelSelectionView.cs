@@ -122,7 +122,7 @@ namespace BallMaze.UI
         /// <param name="id"></param>
         public void LevelSelectionClicked(string id)
         {
-            UIManager.Instance.Hide(UIViewType.DefaultLevelSelection);
+            UIManager.Instance.Show(UIViewType.Playing);
 
             GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
         }
