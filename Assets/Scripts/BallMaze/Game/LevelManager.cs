@@ -259,7 +259,7 @@ namespace BallMaze
         /// <summary>
         /// Quit the level and resets everything.
         /// </summary>
-        private void QuitLevel()
+        public void QuitLevel()
         {
             PauseLevel();
 
