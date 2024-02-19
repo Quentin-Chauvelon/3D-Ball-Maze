@@ -76,17 +76,11 @@ namespace BallMaze.UI
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     break;
-                case UIViewType.ModeSelection:
-                    _backButton.style.display = DisplayStyle.Flex;
-                    _homeButton.style.display = DisplayStyle.Flex;
-                    _skipButton.style.display = DisplayStyle.None;
-                    _pauseButton.style.display = DisplayStyle.None;
-                    break;
-                case UIViewType.DefaultLevelSelection:
-                    _backButton.style.display = DisplayStyle.Flex;
-                    _homeButton.style.display = DisplayStyle.Flex;
-                    _skipButton.style.display = DisplayStyle.None;
-                    _pauseButton.style.display = DisplayStyle.None;
+                case UIViewType.Playing:
+                    _backButton.style.display = DisplayStyle.None;
+                    _homeButton.style.display = DisplayStyle.None;
+                    _skipButton.style.display = DisplayStyle.Flex;
+                    _pauseButton.style.display = DisplayStyle.Flex;
                     break;
                 default:
                     _backButton.style.display = DisplayStyle.Flex;

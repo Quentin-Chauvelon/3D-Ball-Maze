@@ -13,12 +13,15 @@ namespace BallMaze.UI
         Background,
         ModalBackground,
         MainMenu,
+        Playing,
         ModeSelection,
         DefaultLevelSelection,
         DailyLevels,
         RankedLevel,
         Settings,
         DailyReward,
+        LevelQuitConfirmation,
+        GameQuitConfirmation,
         SecondChance,
         LevelFailed,
         LevelCompleted,
@@ -64,7 +67,10 @@ namespace BallMaze.UI
         }
 
         private bool _isModalOpened = false;
-
+        public bool IsModalOpened
+        {
+            get { return _isModalOpened; }
+        }
 
         private void Awake()
         {
@@ -98,6 +104,7 @@ namespace BallMaze.UI
 
             // Screen views
             _uiViews.Add(UIViewType.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));
+            _uiViews.Add(UIViewType.Playing, new PlayingView(root.Q<VisualElement>("playing")));
             _uiViews.Add(UIViewType.ModeSelection, new ModeSelectionView(root.Q<VisualElement>("mode-selection")));
             _uiViews.Add(UIViewType.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
             _uiViews.Add(UIViewType.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
@@ -106,6 +113,8 @@ namespace BallMaze.UI
             // Closeable modal views
             _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));
             _uiViews.Add(UIViewType.DailyReward, new DailyRewardView(root.Q<VisualElement>("daily-reward")));
+            _uiViews.Add(UIViewType.LevelQuitConfirmation, new LevelQuitConfirmationView(root.Q<VisualElement>("level-quit-confirmation")));
+            _uiViews.Add(UIViewType.GameQuitConfirmation, new GameQuitConfirmationView(root.Q<VisualElement>("game-quit-confirmation")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
