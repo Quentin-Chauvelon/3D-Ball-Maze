@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
-using Redcode.Awaiting;
+using Cysharp.Threading.Tasks;
 
 
 namespace BallMaze
