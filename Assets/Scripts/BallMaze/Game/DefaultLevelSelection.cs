@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityExtensionMethods;
-using Redcode.Awaiting;
+using Cysharp.Threading.Tasks;
 using System.IO;
 using BallMaze.UI;
 using UnityEngine.Localization.Settings;

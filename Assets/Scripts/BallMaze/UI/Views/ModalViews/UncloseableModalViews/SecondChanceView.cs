@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Redcode.Awaiting;
+using Cysharp.Threading.Tasks;
 
 
 namespace BallMaze.UI
@@ -83,7 +83,7 @@ namespace BallMaze.UI
             while (isEnabled)
             {
                 _secondChanceRadialProgress.progress -= step;
-                await new WaitForFixedUpdate();
+                await UniTask.Yield();
 
                 if (_secondChanceRadialProgress.progress <= 0)
                 {

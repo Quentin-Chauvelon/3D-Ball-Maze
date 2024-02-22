@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
-using Redcode.Awaiting;
 using UnityEditor.PackageManager.Requests;
 using System.Linq;
 using UnityExtensionMethods;
