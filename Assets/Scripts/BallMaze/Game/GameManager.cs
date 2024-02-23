@@ -147,6 +147,10 @@ namespace BallMaze
             if (pause)
             {
                 _lastUnfocus = DateTime.UtcNow;
+
+                // Save the game on Application.Pause() and not on Application.Quit().
+                // This is done because Application.Quit() is not always called on mobile devices (especially older ones)
+                DataPersistenceManager.Instance.SaveGame();
             }
             else
             {
@@ -168,6 +172,8 @@ namespace BallMaze
         private void OnApplicationQuit()
         {
             isQuitting = true;
+
+            DataPersistenceManager.Instance.SaveGame();
         }
 
 
@@ -176,6 +182,8 @@ namespace BallMaze
         /// </summary>
         public void QuitGame()
         {
+            DataPersistenceManager.Instance.SaveGame();
+
             Application.Quit();
 
             // Application.Quit() doesn't work in the editor, so we need to stop the editor manually
