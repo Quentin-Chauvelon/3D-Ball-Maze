@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using System;
+using System.IO.IsolatedStorage;
 
 
 namespace BallMaze
@@ -38,7 +39,14 @@ namespace BallMaze
 
         private PlayerData playerData;
         private List<IDataPersistence> dataPersistenceObjects;
+
         private FileDataHandler fileDataHandler;
+        public static bool isFileSaveEnabled = false;
+
+        public CloudDataHandler cloudDataHandler;
+        // This bool is used to know if the CloudDataHandler has been initialized (Cloud Save and authentification initialized)
+        public static bool cloudDataHandlerInitialized = false;
+        public static bool isCloudSaveEnabled = false;
 
 
         private void Awake()
@@ -46,34 +54,57 @@ namespace BallMaze
             _instance = this;
             DontDestroyOnLoad(gameObject);
 
+            // Store a bool to know if CloudSave is enabled. This is used so that we don't have to add conditional compilation every time we want to know
+#if UNITY_WEBGL
+            isCloudSaveEnabled = true;
+#elif UNITY_ANDROID || UNITY_IOS
+            isFileSaveEnabled = true;
+#endif
+
             if (disableDataPersistence)
             {
                 Debug.LogWarning("Data Persistence is currently disabled!");
             }
+        }
+
+
+        public async void Initialize()
+        {
+            // If the editor is being tested as WebGL, enable Cloud Save
+            if (GameManager.Instance.editorIsWebGL)
+            {
+                isCloudSaveEnabled = true;
+            }
+
+            // If the editor is being tested as mobile, enable File Save
+            if (GameManager.Instance.editorIsMobile)
+            {
+                isFileSaveEnabled = true;
+            }
 
             fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
+
+            // For the CloudDataHandler, we can't call the constructor directly
+            cloudDataHandler = await CloudDataHandler.CloudDataHandlerAsync();
+            cloudDataHandlerInitialized = cloudDataHandler.initialized;
+
+            StartGame();
         }
 
 
-        private void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-
-        private void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-
-        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        /// <summary>
+        /// Load the data to start the game
+        /// </summary>
+        private void StartGame()
         {
             dataPersistenceObjects = FindAllDataPersistenceObjects();
 
             LoadGame();
 
-            AutoSave();
+            if (isFileSaveEnabled)
+            {
+                AutoSave();
+            }
         }
 
 
@@ -92,7 +123,7 @@ namespace BallMaze
         }
 
 
-        public void LoadGame()
+        public async void LoadGame()
         {
             // return right away if data persistence is disabled
             if (disableDataPersistence)
@@ -100,8 +131,15 @@ namespace BallMaze
                 return;
             }
 
-            // load any saved data from a file using the data handler
-            playerData = fileDataHandler.Load();
+            if (isCloudSaveEnabled)
+            {
+                playerData = await cloudDataHandler.Load();
+            }
+
+            if (isFileSaveEnabled)
+            {
+                playerData = fileDataHandler.Load();
+            }
 
             // start a new game if the data is null and we're configured to initialize data for debugging purposes
             if (playerData == null && initializeDataIfNull)
@@ -123,10 +161,11 @@ namespace BallMaze
             }
         }
 
+
         public void SaveGame()
         {
-            // return right away if data persistence is disabled
-            if (disableDataPersistence)
+            // return right away if data persistence is disabled or if file save is disabled
+            if (disableDataPersistence || !isFileSaveEnabled)
             {
                 return;
             }

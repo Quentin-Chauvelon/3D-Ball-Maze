@@ -27,9 +27,19 @@ namespace BallMaze {
         /// and a DateTime being the result of the request (the date the file at the given url was last modified </returns>
         public static async Task<Tuple<bool, DateTime>> GetLastUrlModifiedDate(string url)
         {
-            // Make a get request to the given url
-            UnityWebRequest request = UnityWebRequest.Get(url);
-            await request.SendWebRequest();
+            // Make a get request to the given url.
+            // With UniTask, a try catch is needed, because if the user is offline, the request will throw an exception
+            UnityWebRequest request;
+            try
+            {
+                request = UnityWebRequest.Get(url);
+                await request.SendWebRequest();
+            }
+            catch (Exception)
+            {
+                Debug.Log("Error getting last modified date of url: " + url);
+                return new Tuple<bool, DateTime>(false, DateTime.UnixEpoch);
+            }
 
             if (request.responseCode < 299 && string.IsNullOrEmpty(request.error))
             {

@@ -1,4 +1,3 @@
-using BallMaze;
 using BallMaze.UI;
 using System;
 using System.Collections;
@@ -45,18 +44,31 @@ namespace BallMaze
 
         public DefaultLevelSelection defaultLevelSelection;
 
+        // These two variables are used to test the editor and act as different platforms.
+        // This is primarly used for features like Cloud Save where WebGL and mobile have different implementations
+        [SerializeField] public bool editorIsWebGL = false;
+        [SerializeField] public bool editorIsMobile = false;
+
         public static bool isQuitting = false;
 
 
-        private void Awake()
+        public void Awake()
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
 
-            _gameState = GameState.MainMenu;
+            _gameState = GameState.Loading;
+
             _lastUnfocus = DateTime.UnixEpoch;
 
             defaultLevelSelection = GetComponent<DefaultLevelSelection>();
+        }
+
+
+        public void Initialize()
+        {
+            Debug.Log("Initializing game");
+            GameObject.Find("DataPersistenceManager").GetComponent<DataPersistenceManager>().Initialize();
         }
 
 
@@ -65,7 +77,7 @@ namespace BallMaze
             // When the player presses escape (or back button on Android)
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // If we are playing, show the leve quit confirmation
+                // If we are playing, show the level quit confirmation
                 if (_gameState == GameState.Playing)
                 {
                     // If a modal is opened, we want to close it
