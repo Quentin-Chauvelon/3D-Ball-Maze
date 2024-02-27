@@ -38,6 +38,42 @@ MonoBehaviour:
       Try checking your internet connection...
     m_Metadata:
       m_Items: []
+  - m_Id: 13644265484328960
+    m_Localized: Sorry, there seems to have been a problem. Try checking your internet
+      connection and restart the game...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646760772247552
+    m_Localized: Sorry, there seems to have been a problem loading your data. To
+      avoid losing any data, try checking your internet connection and restart the
+      game...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646840803762176
+    m_Localized: Sorry, there seems to have been an internal error loading your data.
+      To avoid losing any data, please try again later...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646904376827904
+    m_Localized: Sorry, there seems to have been a problem saving your data. Try
+      checking your internet connection...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646923305721856
+    m_Localized: Sorry, there seems to have been an internal error saving your data.
+      Your data won't be saved, please try again later...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646945950769152
+    m_Localized: Sorry, there seems to have been a problem deleting your data. Try
+      checking your internet connection and try again...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646978326601728
+    m_Localized: Sorry, there seems to have been an internal error deleting your
+      data. Please try again later...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

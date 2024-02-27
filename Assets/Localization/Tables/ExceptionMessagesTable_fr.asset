@@ -24,18 +24,59 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2259911057408
-    m_Localized: "Nous sommes d\xE9sol\xE9, il semble y avoir eu un probl\xE8me lors
-      du chargement du niveau. Veuillez v\xE9rifier votre connexion internet..."
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement du niveau. Veuillez v\xE9rifier votre connexion internet..."
     m_Metadata:
       m_Items: []
   - m_Id: 1872712145444864
-    m_Localized: "Nous sommes d\xE9sol\xE9, il semble y avoir eu un probl\xE8me lors
-      du chargement des niveaux. Veuilez v\xE9rifier votre connexion internet..."
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement des niveaux. Veuilez v\xE9rifier votre connexion internet..."
     m_Metadata:
       m_Items: []
   - m_Id: 8749922454216704
-    m_Localized: "Nous sommes d\xE9sol\xE9, il semble y avoir eu un probl\xE8me lors
-      du chargement des niveaux du jour. Veuillez v\xE9rifier votre connexion internet..."
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement des niveaux du jour. Veuillez v\xE9rifier votre connexion
+      internet..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13644265484328960
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me.
+      Veuillez v\xE9rifier votre connexion internet et r\xE9essayer..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646760772247552
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement de vos donn\xE9es. Veuillez v\xE9rifier votre connexion
+      internet et r\xE9essayer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646840803762176
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu une erreur lors
+      du chargement de vos donn\xE9es. Afin de ne pas perdre votre progression, veuillez
+      r\xE9essayer dans quelques minutes..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646904376827904
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors de la sauvegarde de vos donn\xE9es. Veuillez v\xE9rifier votre connexion
+      internet et r\xE9essayer..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646923305721856
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu une erreur lors
+      de la sauvegarde de vos donn\xE9es. Votre progression n'a pas pu \xEAtre sauvegard\xE9e,
+      veuillez r\xE9essayer dans quelques minutes..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646945950769152
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors de la suppression de vos donn\xE9es. Veuillez v\xE9rifier votre connexion
+      internet et r\xE9essayer..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646978326601728
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu une erreur lors
+      de la suppression de vos donn\xE9es. Veuillez r\xE9essayez dans quelques minutes..."
     m_Metadata:
       m_Items: []
   references:

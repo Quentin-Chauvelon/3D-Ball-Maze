@@ -31,6 +31,34 @@ MonoBehaviour:
     m_Key: DailyLevelsLoadingCheckInternetGenericError
     m_Metadata:
       m_Items: []
+  - m_Id: 13644265484328960
+    m_Key: CloudSaveGenericError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646760772247552
+    m_Key: CloudSaveLoadGenericError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646840803762176
+    m_Key: CloudSaveLoadRateLimitedError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646904376827904
+    m_Key: CloudSaveSaveGenericError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646923305721856
+    m_Key: CloudSaveSaveRateLimitedError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646945950769152
+    m_Key: CloudSaveDeleteGenericError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13646978326601728
+    m_Key: CloudSaveDeleteRateLimitedError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

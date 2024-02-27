@@ -17,13 +17,13 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 5b6049980aecf1d4fad1bd3b00310627
   m_SerializeEntries:
-  - m_GUID: d8ad1e5cc2fe29f439c0a5a0553c6de1
-    m_Address: Assets/Localization/Tables/ExceptionMessagesTable Shared Data.asset
+  - m_GUID: bda3aa2b3002f024a83508824578bea0
+    m_Address: Assets/Localization/Tables/SettingsUITable Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bda3aa2b3002f024a83508824578bea0
-    m_Address: Assets/Localization/Tables/SettingsUITable Shared Data.asset
+  - m_GUID: d8ad1e5cc2fe29f439c0a5a0553c6de1
+    m_Address: Assets/Localization/Tables/ExceptionMessagesTable Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
