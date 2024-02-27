@@ -78,7 +78,11 @@ namespace BallMaze.UI
             DontDestroyOnLoad(gameObject);
 
             _mainUIDocument = GetComponent<UIDocument>();
+        }
 
+
+        public void Initialize()
+        {
             SetupViews();
         }
 
