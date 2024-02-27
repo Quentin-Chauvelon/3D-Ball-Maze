@@ -17,14 +17,14 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 87710996e8cad4b4d9ed81b82708160f
   m_SerializeEntries:
-  - m_GUID: b3613056dc57f97498af1140e62d77d0
-    m_Address: SettingsUITable_fr
+  - m_GUID: 7aceffdea21408745a366fd245561f6e
+    m_Address: ExceptionMessagesTable_fr
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-fr
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7aceffdea21408745a366fd245561f6e
-    m_Address: ExceptionMessagesTable_fr
+  - m_GUID: b3613056dc57f97498af1140e62d77d0
+    m_Address: SettingsUITable_fr
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-fr
