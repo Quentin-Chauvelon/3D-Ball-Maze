@@ -79,6 +79,12 @@ MonoBehaviour:
       de la suppression de vos donn\xE9es. Veuillez r\xE9essayez dans quelques minutes..."
     m_Metadata:
       m_Items: []
+  - m_Id: 14046363074043904
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement du jeu. Veuillez v\xE9rifier votre connexion internet et
+      r\xE9essayer..."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

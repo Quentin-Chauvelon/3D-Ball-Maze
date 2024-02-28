@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UIElements;
 using BallMaze.UI;
+using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze
@@ -79,8 +80,7 @@ namespace BallMaze
 
         private void GameUnableToLoad()
         {
-            // TODO: show error with a button to restart the game, have a small button to show error message? (and add a message as a parameter to this method)
-
+            ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "UnableToStartGame"), ExceptionManager.ExceptionAction.RestartGame);
             _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             return;
         }
