@@ -16,6 +16,7 @@ namespace BallMaze
     /// </summary>
     public enum GameState
     {
+        Loading,
         MainMenu,
         ModeSelection,
         LevelSelection,
@@ -69,6 +70,18 @@ namespace BallMaze
         {
             Debug.Log("Initializing game");
             GameObject.Find("DataPersistenceManager").GetComponent<DataPersistenceManager>().Initialize();
+            defaultLevelSelection.Initialize();
+        }
+
+
+        /// <summary>
+        /// Start the game once it has finished loading
+        /// </summary>
+        public void StartGame()
+        {
+            _gameState = GameState.MainMenu;
+
+            UIManager.Instance.Initialize();
         }
 
 

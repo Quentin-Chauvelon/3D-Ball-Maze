@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 493928572}
   - component: {fileID: 493928571}
+  - component: {fileID: 493928573}
   m_Layer: 0
   m_Name: LoadingScreen
   m_TagString: Untagged
@@ -198,6 +199,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &493928573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493928570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: ed847d21558cbd342bed8b93d67c5322, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 5dba300cd8ce271c98af9a16ef9f5c7f, type: 3}
+  m_SortingOrder: 2
 --- !u!1 &514934737
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,7 +512,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1110262685}
   - component: {fileID: 1110262684}
-  - component: {fileID: 1110262686}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -515,7 +531,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb08129923acd0249891d4eb36c804ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultLevelSelection: {fileID: 0}
   editorIsWebGL: 1
   editorIsMobile: 0
 --- !u!4 &1110262685
@@ -533,18 +548,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1110262686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110262683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 320ae54d13458ce489decaeac3616226, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1127480191
 GameObject:
   m_ObjectHideFlags: 0

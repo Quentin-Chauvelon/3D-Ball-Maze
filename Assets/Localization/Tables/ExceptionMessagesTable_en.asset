@@ -74,6 +74,11 @@ MonoBehaviour:
       data. Please try again later...
     m_Metadata:
       m_Items: []
+  - m_Id: 14046363074043904
+    m_Localized: Sorry, there seems to have been a problem loading the game. Try
+      checking your internet connection and try again...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

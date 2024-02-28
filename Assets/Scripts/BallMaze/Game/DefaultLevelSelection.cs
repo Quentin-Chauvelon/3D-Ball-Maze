@@ -13,7 +13,7 @@ using UnityEngine.Localization.Settings;
 
 namespace BallMaze
 {
-    public class DefaultLevelSelection : MonoBehaviour
+    public class DefaultLevelSelection
     {
         // Last time the default level files were checked for modification
         private DateTime _lastDefaultLevelFilesModifiedCheck;
@@ -43,7 +43,7 @@ namespace BallMaze
         private bool _forceDownload;
 
 
-        private void Start()
+        public void Initialize()
         {
             // Load the last time the default level files were checked for modification if it exists
             if (PlayerPrefs.HasKey("LastDefaultLevelFilesModifiedCheck"))
