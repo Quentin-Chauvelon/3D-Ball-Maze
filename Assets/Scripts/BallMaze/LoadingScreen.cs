@@ -1,18 +1,30 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using System;
+using UnityEngine.UIElements;
+using BallMaze.UI;
 
 
 namespace BallMaze
 {
     public class LoadingScreen : MonoBehaviour
     {
-        public static readonly int TIMEOUT = 20;
+        private UIDocument _loadingScreenUIDocument;
+        private LoadingScreenView _loadingScreenUIView;
+
+        private int _numberOfTasksCompleted = 0;
+
+        private static readonly int TIMEOUT = 20;
+        private readonly int NUMBER_OF_TASKS = 1;
 
 
         private async void Start()
         {
-            // TODO: display loading screen UI
+            // Initialize and show the loading screen UI
+            _loadingScreenUIDocument = GetComponent<UIDocument>();
+            _loadingScreenUIView = new LoadingScreenView(_loadingScreenUIDocument.rootVisualElement.Q<VisualElement>("loading-screen__background"));
+            _loadingScreenUIView.SetProgressBarValue(0);
+            _loadingScreenUIView.Show();
 
             // Wait for Unity Gaming Services to initialize
             if (GameManager.Instance.editorIsWebGL)
@@ -35,9 +47,10 @@ namespace BallMaze
             int position = await UniTask.WhenAny(
                 UniTask.WhenAll(
                     // If Cloud Save is enabled, wait for the CloudDataHandler to be initialized
-                    DataPersistenceManager.isCloudSaveEnabled
+                    (DataPersistenceManager.isCloudSaveEnabled
                         ? UniTask.WaitUntil(() => DataPersistenceManager.cloudDataHandlerInitialized)
                         : UniTask.CompletedTask
+                    ).ContinueWith(UpdateProgress)
                 ),
                 UniTask.Delay(TimeSpan.FromSeconds(TIMEOUT))
             );
@@ -51,8 +64,16 @@ namespace BallMaze
             else
             {
                 Debug.Log("Services have been initialized, game launching");
+                _loadingScreenUIView.Hide();
                 GameManager.Instance.StartGame();
             }
+        }
+
+
+        private void UpdateProgress()
+        {
+            _numberOfTasksCompleted += 1;
+            _loadingScreenUIView.SetProgressBarValue((100 * _numberOfTasksCompleted) / NUMBER_OF_TASKS);
         }
 
 
