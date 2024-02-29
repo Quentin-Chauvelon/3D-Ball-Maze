@@ -2,13 +2,13 @@ using BallMaze.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityExtensionMethods;
 using Cysharp.Threading.Tasks;
 using System.IO;
 using BallMaze.UI;
 using UnityEngine.Localization.Settings;
+using Unity.VisualScripting;
 
 
 namespace BallMaze
@@ -140,7 +140,7 @@ namespace BallMaze
         /// The defaultLevelsSelection.json file containing less information about each level for faster download
         /// as is it only used to populate the level selection view.
         /// </summary>
-        public async Task DownloadDefaultLevelFiles()
+        public async UniTask DownloadDefaultLevelFiles()
         {
             // Download defaultLevelsSelection.json file containing information about the default levels to populate the level selection view (id, name, times)
             // It contains the same information as the defaultLevels.json file but with less data for faster download

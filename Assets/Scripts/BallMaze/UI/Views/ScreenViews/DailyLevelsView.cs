@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -257,7 +257,7 @@ namespace BallMaze.UI
                 TimeSpan timeLeft = midnightUtc - DateTime.UtcNow;
 
                 _dailyLevelsUpdatesInLabel.text = $"Updates in: {timeLeft.ToString(@"hh\:mm\:ss")}";
-                await Task.Delay(1000);
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
             }
         }
 

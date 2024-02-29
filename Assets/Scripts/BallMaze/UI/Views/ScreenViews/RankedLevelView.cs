@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityExtensionMethods;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 
 namespace BallMaze.UI
@@ -129,7 +129,7 @@ namespace BallMaze.UI
                 TimeSpan timeLeft = endOfWeek - DateTime.UtcNow;
 
                 _rankedLevelResetsInLabel.text = $"Resets in: {timeLeft.ToString(@"dd\:hh")}";
-                await Task.Delay(1000);
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
             }
         }
     }

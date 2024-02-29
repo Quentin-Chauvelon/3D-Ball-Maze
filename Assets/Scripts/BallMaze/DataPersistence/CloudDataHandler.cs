@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models.Data.Player;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
 using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 
@@ -56,7 +55,7 @@ namespace BallMaze
         /// that loads the services and then call and return the constructor
         /// </summary>
         /// <returns></returns>
-        async public static Task<CloudDataHandler> CloudDataHandlerAsync()
+        async public static UniTask<CloudDataHandler> CloudDataHandlerAsync()
         {
             bool error = false;
             try
@@ -89,7 +88,7 @@ namespace BallMaze
         /// Fetch all data from Cloud Save and return a PlayerData object with the data
         /// </summary>
         /// <returns></returns>
-        public async Task<PlayerData> Load()
+        public async UniTask<PlayerData> Load()
         {
             try
             {
@@ -132,7 +131,7 @@ namespace BallMaze
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public async Task Save(CloudSaveKey key, object value)
+        public async UniTask Save(CloudSaveKey key, object value)
         {
             // If Cloud Save is disabled or if there is an error, don't save
             if (!DataPersistenceManager.isCloudSaveEnabled || ExceptionManager.isError)
@@ -170,7 +169,7 @@ namespace BallMaze
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public async Task Save(Dictionary<CloudSaveKey, object> values)
+        public async UniTask Save(Dictionary<CloudSaveKey, object> values)
         {
             try
             {
@@ -210,7 +209,7 @@ namespace BallMaze
         }
 
 
-        public async Task Delete()
+        public async UniTask Delete()
         {
             try
             {

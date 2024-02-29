@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
@@ -25,7 +24,7 @@ namespace BallMaze {
         /// <param name="url"></param>
         /// <returns>A tuple containing a boolean indicating if the request was a success or not
         /// and a DateTime being the result of the request (the date the file at the given url was last modified </returns>
-        public static async Task<Tuple<bool, DateTime>> GetLastUrlModifiedDate(string url)
+        public static async UniTask<Tuple<bool, DateTime>> GetLastUrlModifiedDate(string url)
         {
             // Make a get request to the given url.
             // With UniTask, a try catch is needed, because if the user is offline, the request will throw an exception
@@ -67,7 +66,7 @@ namespace BallMaze {
         /// <param name="path"></param>
         /// <param name="displayDownloadProgressUI">True if the UI showing the download progress should be shown, false otherwise. Defaults to false</param>
         /// <returns>A boolean indicating if the download was a success or not</returns>
-        public static async Task<bool> DownloadFile(string url, string path, bool displayDownloadProgressUI = false)
+        public static async UniTask<bool> DownloadFile(string url, string path, bool displayDownloadProgressUI = false)
         {
             _isDownloading = true;
 
@@ -78,7 +77,7 @@ namespace BallMaze {
             while (!operation.isDone)
             {
                 progress = request.downloadProgress * 100;
-                await Task.Yield();
+                await UniTask.Yield();
             }
 
             DisplayDownloadProgressUI(displayDownloadProgressUI);

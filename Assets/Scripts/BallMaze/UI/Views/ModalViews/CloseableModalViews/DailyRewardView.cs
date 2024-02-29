@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SearchService;
 using UnityEngine.UIElements;
@@ -138,7 +138,7 @@ namespace BallMaze.UI
                 TimeSpan timeLeft = midnightUtc - DateTime.UtcNow;
 
                 _dailyRewardInfoLabel.text = $"COME BACK IN {timeLeft.ToString(@"hh\h\ mm\m")}";
-                await Task.Delay(1000);
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
             }
         }
     }

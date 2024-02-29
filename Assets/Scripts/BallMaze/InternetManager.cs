@@ -2,11 +2,10 @@ using BallMaze.Events;
 using BallMaze.UI;
 using System;
 using System.Collections;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
-using Cysharp.Threading.Tasks;
 
 
 namespace BallMaze
@@ -88,7 +87,7 @@ namespace BallMaze
                 }
                 else
                 {
-                    await Task.Delay(5000);
+                    await UniTask.Delay(TimeSpan.FromSeconds(5));
                 }
             }
 
@@ -112,7 +111,7 @@ namespace BallMaze
             // Stop the loop if isQuitting is true, otherwise after exiting playmode in the unity editor, async methods keep running forever
             while (!GameManager.isQuitting)
             {
-                await Task.Delay(CHECK_IS_ONLINE_DELAY * 1000);
+                await UniTask.Delay(TimeSpan.FromSeconds(CHECK_IS_ONLINE_DELAY));
 
                 bool result = await CheckIsOnline();
                 if (!result)
@@ -129,7 +128,7 @@ namespace BallMaze
         /// Check if the internet is available by pinging the given address.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> CheckIsOnline()
+        public async UniTask<bool> CheckIsOnline()
         {
             // If no network is available, we can't be connected to the internet
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -144,7 +143,7 @@ namespace BallMaze
         }
 
 
-        public async Task CheckIsOnlineAndDisplayUI(Action callback = null)
+        public async UniTask CheckIsOnlineAndDisplayUI(Action callback = null)
         {
             // If the UI is already being displayed, don't call checkIsOnline again as a loop is already running
             // We simply want to add the callback method to the list of callbacks to call when the player goes back online
@@ -168,7 +167,7 @@ namespace BallMaze
             // Stop the loop if isQuitting is true, otherwise after exiting playmode in the unity editor, async methods keep running forever
             while (!GameManager.isQuitting)
             {
-                await Task.Delay(5000);
+                await UniTask.Delay(TimeSpan.FromSeconds(5));
 
                 if (await CheckIsOnline())
                 {
@@ -187,7 +186,7 @@ namespace BallMaze
         /// Ping the given address to check if the internet is available.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> Ping()
+        private async UniTask<bool> Ping()
         {
             UnityWebRequest request;
             try

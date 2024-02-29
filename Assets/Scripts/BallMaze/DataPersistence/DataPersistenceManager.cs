@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using System.IO.IsolatedStorage;
 
@@ -212,7 +212,7 @@ namespace BallMaze
         {
             while (true)
             {
-                await Task.Delay(TimeSpan.FromSeconds(autoSaveTimeSeconds));
+                await UniTask.Delay(TimeSpan.FromSeconds(autoSaveTimeSeconds));
                 SaveGame();
                 Debug.Log("Auto Saved Game");
             }

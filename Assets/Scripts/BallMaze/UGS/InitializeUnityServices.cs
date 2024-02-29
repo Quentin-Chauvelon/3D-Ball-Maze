@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 using UnityEngine;
@@ -9,7 +9,7 @@ public class InitializeUnityServices : MonoBehaviour
     private static readonly string ENVIRONMENT = "development";
 
 
-    public static async Task<bool> Initialize()
+    public static async UniTask<bool> Initialize()
     {
         try
         {
