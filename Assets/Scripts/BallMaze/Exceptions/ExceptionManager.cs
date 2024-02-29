@@ -6,6 +6,18 @@ using UnityEngine.Localization.Settings;
 
 namespace BallMaze
 {
+    /// <summary>
+    /// Possible actions to display to the player when an exception occurs
+    /// </summary>
+    public enum ExceptionAction
+    {
+        Resume,
+        RestartGame,
+        BackToMainMenu,
+        BackToLevels
+    }
+
+
     public class ExceptionManager : MonoBehaviour
     {
         // Boolean to check if an exception is currently being displayed
@@ -23,18 +35,6 @@ namespace BallMaze
             Debug.Log(message);
             // TODO: UI to display message
             // TODO: add buttons according to the given action, when buttons are clicked, set isError to false
-        }
-
-
-        /// <summary>
-        /// Possible actions to display to the player when an exception occurs
-        /// </summary>
-        public enum ExceptionAction
-        {
-            Resume,
-            RestartGame,
-            BackToMainMenu,
-            BackToLevels
         }
     }
 }
