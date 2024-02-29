@@ -189,9 +189,18 @@ namespace BallMaze
         /// <returns></returns>
         private async Task<bool> Ping()
         {
-            UnityWebRequest request = new UnityWebRequest(PING_ADDRESS);
-            request.timeout = 3;
-            await request.SendWebRequest();
+            UnityWebRequest request;
+            try
+            {
+                request = new UnityWebRequest(PING_ADDRESS);
+                request.timeout = 3;
+                await request.SendWebRequest();
+            }
+            catch (Exception)
+            {
+                isOnline = false;
+                return false;
+            }
 
             if (request.responseCode < 299 && string.IsNullOrEmpty(request.error))
             {
