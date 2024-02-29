@@ -28,13 +28,26 @@ namespace BallMaze
         /// Displays the given exception message
         /// </summary>
         /// <param name="message">The message to display</param>
-        /// <param name="action">Defines what buttons to display to the user (by default go back to the main menu)</param>
+        /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
         public static void ShowExceptionMessage(string message, ExceptionAction action = ExceptionAction.BackToMainMenu)
         {
             isError = true;
             Debug.Log(message);
             // TODO: UI to display message
             // TODO: add buttons according to the given action, when buttons are clicked, set isError to false
+        }
+
+
+
+        /// <summary>
+        /// Displays the exception message from the given localization table and key
+        /// </summary>
+        /// <param name="table">The localization table to use</param>
+        /// <param name="key">The localization key of the message</param>
+        /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
+        public static void ShowExceptionMessage(string table, string key, ExceptionAction action = ExceptionAction.BackToMainMenu)
+        {
+            ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString(table, key), action);
         }
     }
 }

@@ -173,7 +173,7 @@ namespace BallMaze
                 if (_lastDefaultLevelFilesModifiedCheck.DateInTimeframe(300))
                 {
                     _forceDownload = true;
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError"));
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError");
                 }
                 else
                 {

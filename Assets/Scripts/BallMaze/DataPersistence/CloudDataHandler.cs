@@ -66,7 +66,7 @@ namespace BallMaze
             {
                 error = true;
                 Debug.LogWarning(e);
-                ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveGenericError"), ExceptionAction.RestartGame);
+                ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveGenericError", ExceptionAction.RestartGame);
                 _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             }
 
@@ -241,31 +241,31 @@ namespace BallMaze
             switch (exceptionType)
             {
                 case CloudSaveExceptionType.Load:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveLoadGenericError"), ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveLoadGenericError", ExceptionAction.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.LoadRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveLoadRateLimitedError"), ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveLoadRateLimitedError", ExceptionAction.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Save:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveSaveGenericError"), ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveSaveGenericError", ExceptionAction.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.SaveRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveSaveRateLimitedError"), ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveSaveRateLimitedError", ExceptionAction.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Delete:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveDeleteGenericError"), ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveDeleteGenericError", ExceptionAction.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.DeleteRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError"), ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError", ExceptionAction.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 default:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveGenericError"), ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "CloudSaveGenericError", ExceptionAction.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
             }

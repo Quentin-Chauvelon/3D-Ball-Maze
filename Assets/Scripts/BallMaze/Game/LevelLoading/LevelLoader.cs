@@ -138,7 +138,7 @@ namespace BallMaze
         private void DisplayDefaultLevelLoadingException(Exception exception)
         {
             Debug.LogException(exception, this);
-            ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelLoadingCheckInternetGenericError"), ExceptionAction.BackToLevels);
+            ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "LevelLoadingCheckInternetGenericError", ExceptionAction.BackToLevels);
         }
     }
 }

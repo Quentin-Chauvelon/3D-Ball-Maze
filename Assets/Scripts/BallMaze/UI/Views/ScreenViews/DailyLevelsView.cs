@@ -268,7 +268,7 @@ namespace BallMaze.UI
         private void DisplayDefaultDailyLevelsLoadingException()
         {
             Debug.Log("No daily levels loaded");
-            ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError"), ExceptionAction.BackToMainMenu);
+            ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionAction.BackToMainMenu);
         }
     }
 }

@@ -95,7 +95,7 @@ namespace BallMaze.UI
         private static void DisplayLevelSelectionLoadingException(Exception exception)
         {
             Debug.LogException(exception);
-            ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError"), ExceptionAction.BackToLevels);
+            ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError", ExceptionAction.BackToLevels);
         }
     }
 }
