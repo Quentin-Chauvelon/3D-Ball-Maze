@@ -62,7 +62,7 @@ namespace BallMaze
 
             _lastUnfocus = DateTime.UnixEpoch;
 
-            defaultLevelSelection = GetComponent<DefaultLevelSelection>();
+            defaultLevelSelection = new DefaultLevelSelection();
         }
 
 
