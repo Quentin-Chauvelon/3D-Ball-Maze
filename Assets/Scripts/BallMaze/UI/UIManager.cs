@@ -78,12 +78,19 @@ namespace BallMaze.UI
             DontDestroyOnLoad(gameObject);
 
             _mainUIDocument = GetComponent<UIDocument>();
+            SetupViews();
         }
 
 
         public void Initialize()
         {
-            SetupViews();
+            // Show the UIs that should be shown at the start
+            // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
+            // and it shouldn't be the case as it should always be visible
+            // For the other UIs, call the UIManager.Show() method to add them to the navigation history
+            _uiViews[UIViewType.Permanent].Show();
+            _uiViews[UIViewType.Background].Show();
+            Show(_uiViews[UIViewType.MainMenu]);
         }
 
 
@@ -127,14 +134,6 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.LevelCompleted, new LevelCompletedView(root.Q<VisualElement>("level-completed-container")));
             _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip")));
             _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause")));
-
-            // Show the UIs that should be shown at the start
-            // For the permanent UI, don't call the UIManager.Show() method because it would add the permanent UI to the navigation history
-            // and it shouldn't be the case as it should always be visible
-            // For the other UIs, call the UIManager.Show() method to add them to the navigation history
-            _uiViews[UIViewType.Permanent].Show();
-            _uiViews[UIViewType.Background].Show();
-            Show(_uiViews[UIViewType.MainMenu]);
         }
 
 
