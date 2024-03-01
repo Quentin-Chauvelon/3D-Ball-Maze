@@ -1,4 +1,5 @@
 using System;
+using BallMaze.UI;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
@@ -20,8 +21,29 @@ namespace BallMaze
 
     public class ExceptionManager : MonoBehaviour
     {
+        // Singleton pattern
+        private static ExceptionManager _instance;
+        public static ExceptionManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Debug.LogError("ExceptionManager is null!");
+                }
+                return _instance;
+            }
+        }
+
         // Boolean to check if an exception is currently being displayed
         public static bool isError = false;
+
+
+        private void Awake()
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
 
         /// <summary>
@@ -33,8 +55,8 @@ namespace BallMaze
         {
             isError = true;
             Debug.Log(message);
-            // TODO: UI to display message
-            // TODO: add buttons according to the given action, when buttons are clicked, set isError to false
+
+            UIManager.Instance.UIViews[UIViewType.Exception].Show();
         }
 
 
@@ -48,6 +70,26 @@ namespace BallMaze
         public static void ShowExceptionMessage(string table, string key, ExceptionAction action = ExceptionAction.BackToMainMenu)
         {
             ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString(table, key), action);
+        }
+
+
+        /// <summary>
+        /// Executes the action that should be executed based on the exception once the button is clicked
+        /// </summary>
+        public void ActionButtonClicked()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="additionalInformation"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SendErrorToSupport(string additionalInformation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

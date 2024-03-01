@@ -27,6 +27,9 @@ namespace BallMaze.UI
         LevelCompleted,
         Skip,
         Pause,
+        Exception,
+        ExceptionDetails,
+        ExceptionSendToSupport,
         NoInternet
     }
 
@@ -126,14 +129,17 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.DailyReward, new DailyRewardView(root.Q<VisualElement>("daily-reward")));
             _uiViews.Add(UIViewType.LevelQuitConfirmation, new LevelQuitConfirmationView(root.Q<VisualElement>("level-quit-confirmation")));
             _uiViews.Add(UIViewType.GameQuitConfirmation, new GameQuitConfirmationView(root.Q<VisualElement>("game-quit-confirmation")));
+            _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip")));
+            _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
             _uiViews.Add(UIViewType.SecondChance, new SecondChanceView(root.Q<VisualElement>("second-chance-container")));
             _uiViews.Add(UIViewType.LevelFailed, new LevelFailedView(root.Q<VisualElement>("level-failed-container")));
             _uiViews.Add(UIViewType.LevelCompleted, new LevelCompletedView(root.Q<VisualElement>("level-completed-container")));
-            _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip")));
-            _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause")));
+            _uiViews.Add(UIViewType.ExceptionSendToSupport, new ExceptionSendToSupportView(root.Q<VisualElement>("exception-send-to-support"))); // Exception views have to be added in this order (last to first) because Exception.Hide() calls ExceptionDetails.Hide(), etc...
+            _uiViews.Add(UIViewType.ExceptionDetails, new ExceptionDetailsView(root.Q<VisualElement>("exception-details")));
+            _uiViews.Add(UIViewType.Exception, new ExceptionView(root.Q<VisualElement>("exception")));
         }
 
 
@@ -233,7 +239,10 @@ namespace BallMaze.UI
                 _navigationHistory.Pop().Hide();
             }
 
-            _navigationHistory.Pop();
+            if (_navigationHistory.Count > 0)
+            {
+                _navigationHistory.Pop();
+            }
             modalView.Hide();
 
             // If the stack is empty or if the top UI is not a modal view, remove the invisible button behind the modal view

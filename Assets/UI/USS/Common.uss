@@ -10,9 +10,25 @@
     height: 85%;
 }
 
+
 .modal-view-close-button {
     position: absolute;
     top: 0;
     right: 0;
     flex-grow: 1;
+}
+
+
+.text-field__transparent > #unity-text-input {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+
+.text-field__placeholder-active {
+    color: rgb(130, 130, 130);
+}
+
+.text-field__placeholder-inactive {
+    color: rgb(0, 0, 0);
 }
