@@ -19,6 +19,7 @@
     <ui:Template name="PlayingScreenView" src="project://database/Assets/UI/UXML/ScreenViews/PlayingScreenView.uxml?fileID=9197481963319205126&amp;guid=a7303c82ea8edb6258c30df2be544c99&amp;type=3#PlayingScreenView" />
     <ui:Template name="LevelQuitConfirmationModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/LevelQuitConfirmationModalView.uxml?fileID=9197481963319205126&amp;guid=d26ad887f39a4198abed33cb36ebe07b&amp;type=3#LevelQuitConfirmationModalView" />
     <ui:Template name="ExceptionModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/ExceptionModalView.uxml?fileID=9197481963319205126&amp;guid=d5b8eeeedab271a6990001a88c51e64f&amp;type=3#ExceptionModalView" />
+    <ui:Template name="ExceptionDetailsModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/ExceptionDetailsModalView.uxml?fileID=9197481963319205126&amp;guid=f5ac7b557f7d333e3a4055070988ac87&amp;type=3#ExceptionDetailsModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
         <ui:Instance template="Background" name="background" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100px; display: none;" />
@@ -51,6 +52,7 @@
                 <ui:Instance template="LevelCompletedModalView" name="level-completed" style="width: 60%; height: 80%; justify-content: center; align-items: center;" />
             </ui:VisualElement>
             <ui:Instance template="ExceptionModalView" name="exception" class="screen__anchor--center" style="display: none; background-color: rgba(0, 0, 0, 0.44);" />
+            <ui:Instance template="ExceptionDetailsModalView" name="exception-details" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="NoInternetModalView" name="no-internet" class="screen__anchor--center" style="display: none; background-color: rgba(0, 0, 0, 0.44);" />
         </ui:VisualElement>
     </ui:VisualElement>
