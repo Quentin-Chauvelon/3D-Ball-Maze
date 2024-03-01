@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: SettingsUITable_fr
+  m_Name: UITable_fr
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: fr
-  m_SharedData: {fileID: 11400000, guid: bda3aa2b3002f024a83508824578bea0, type: 2}
+  m_SharedData: {fileID: 11400000, guid: f0cce3b4745615ff4bb0dc1d048cefe3, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 67904872448
-    m_Localized: "Param\xE8tres"
+  - m_Id: 96647913472
+    m_Localized: "Quand est-ce arriv\xE9? Comment ? ..."
     m_Metadata:
       m_Items: []
   references:

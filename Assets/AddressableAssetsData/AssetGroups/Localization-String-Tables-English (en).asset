@@ -23,8 +23,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8b9d046c0fc4eb34f813a55003ab0207
-    m_Address: SettingsUITable_en
+  - m_GUID: 8cc13efd4c0962765be0f309eb152e7b
+    m_Address: UITable_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

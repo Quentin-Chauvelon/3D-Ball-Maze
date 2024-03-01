@@ -22,8 +22,8 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bda3aa2b3002f024a83508824578bea0
-    m_Address: Assets/Localization/Tables/SettingsUITable Shared Data.asset
+  - m_GUID: f0cce3b4745615ff4bb0dc1d048cefe3
+    m_Address: Assets/Localization/Tables/UITable/UITable Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

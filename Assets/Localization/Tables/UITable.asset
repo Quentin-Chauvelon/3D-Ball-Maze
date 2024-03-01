@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
-  m_Name: SettingsUITable
+  m_Name: UITable
   m_EditorClassIdentifier: 
-  m_SharedTableData: {fileID: 11400000, guid: bda3aa2b3002f024a83508824578bea0, type: 2}
+  m_SharedTableData: {fileID: 11400000, guid: f0cce3b4745615ff4bb0dc1d048cefe3, type: 2}
   m_Tables:
-  - {fileID: 11400000, guid: 8b9d046c0fc4eb34f813a55003ab0207, type: 2}
-  - {fileID: 11400000, guid: b3613056dc57f97498af1140e62d77d0, type: 2}
+  - {fileID: 11400000, guid: 8cc13efd4c0962765be0f309eb152e7b, type: 2}
+  - {fileID: 11400000, guid: 6528ab928a6b95ff0904143756b44abd, type: 2}
   m_Extensions: []
   m_Group: String Table
   references:
