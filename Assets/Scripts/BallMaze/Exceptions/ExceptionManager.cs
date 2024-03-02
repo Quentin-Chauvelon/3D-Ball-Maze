@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BallMaze.UI;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -19,6 +20,31 @@ namespace BallMaze
     }
 
 
+    /// <summary>
+    /// Class that represents an action that will be shown to the user when an exception occurs
+    /// </summary>
+    public class ExceptionAction
+    {
+        public string name;
+        public int priority;
+        public Action clickCallback;
+    }
+
+
+    /// <summary>
+    /// Class taht represents an exception object containing all the information about the exception
+    /// </summary>
+    public class ExceptionObject
+    {
+        public string friendlyMessage;
+        public string message;
+        public string stackTrace;
+        public ExceptionAction action;
+        public bool sentToSupport;
+        public DateTime date;
+    }
+
+
     public class ExceptionManager : MonoBehaviour
     {
         // Singleton pattern
@@ -35,8 +61,47 @@ namespace BallMaze
             }
         }
 
+
         // Boolean to check if an exception is currently being displayed
         public static bool isError = false;
+
+        private ExceptionObject _currentException;
+
+        private Dictionary<ExceptionActionType, ExceptionAction> _actions = new Dictionary<ExceptionActionType, ExceptionAction>
+        {
+            {
+                ExceptionActionType.Resume,
+                new ExceptionAction {
+                    name = "Resume",
+                    priority = 1,
+                    clickCallback = () => {  }
+                }
+            },
+            {
+                ExceptionActionType.RestartGame,
+                new ExceptionAction {
+                    name = "Restart Game",
+                    priority = 100,
+                    clickCallback = () => { throw new NotImplementedException(); }
+                }
+            },
+            {
+                ExceptionActionType.BackToMainMenu,
+                new ExceptionAction {
+                    name = "Back to Main Menu",
+                    priority = 80,
+                    clickCallback = () => { UIManager.Instance.UIViews[UIViewType.MainMenu].Show(); }
+                }
+            },
+            {
+                ExceptionActionType.BackToLevels,
+                new ExceptionAction {
+                    name = "Back to Levels",
+                    priority = 50,
+                    clickCallback = () => { UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection].Show(); }
+                }
+            }
+        };
 
 
         private void Awake()
@@ -54,8 +119,24 @@ namespace BallMaze
         public static void ShowExceptionMessage(Exception e, string message, ExceptionActionType action = ExceptionActionType.BackToMainMenu)
         {
             isError = true;
-            Debug.Log(message);
 
+            // If the new exception has a lower priority than the current one, don't display it
+            if (Instance._currentException != null && (Instance._actions[action].priority <= Instance._currentException.action.priority))
+            {
+                return;
+            }
+
+            Instance._currentException = new ExceptionObject
+            {
+                friendlyMessage = string.IsNullOrEmpty(message) ? e.Message : message,
+                message = message,
+                stackTrace = e.StackTrace,
+                action = Instance._actions[action],
+                sentToSupport = false,
+                date = DateTime.Now
+            };
+
+            (UIManager.Instance.UIViews[UIViewType.Exception] as ExceptionView).UpdateException(Instance._currentException);
             UIManager.Instance.UIViews[UIViewType.Exception].Show();
         }
 
@@ -78,7 +159,9 @@ namespace BallMaze
         /// </summary>
         public void ActionButtonClicked()
         {
-            throw new NotImplementedException();
+            isError = false;
+
+            _currentException.action.clickCallback();
         }
 
 
@@ -86,10 +169,17 @@ namespace BallMaze
         /// Sends the current error to the support with the given additional information
         /// </summary>
         /// <param name="additionalInformation"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void SendErrorToSupport(string additionalInformation)
         {
-            throw new NotImplementedException();
+            // If the exception has already been sent to the support, don't send it again
+            if (_currentException.sentToSupport)
+            {
+                return;
+            }
+
+            _currentException.sentToSupport = true;
+
+            throw new NotImplementedException("SendErrorToSupport via email");
         }
     }
 }

@@ -70,5 +70,13 @@ namespace BallMaze.UI
         {
             GUIUtility.systemCopyBuffer = _errorStackTraceTextField.text;
         }
+
+
+        public void UpdateException(ExceptionObject exception)
+        {
+            _errorStackTraceTextField.value = exception.stackTrace;
+
+            (UIManager.Instance.UIViews[UIViewType.ExceptionSendToSupport] as ExceptionSendToSupportView).UpdateException(exception);
+        }
     }
 }

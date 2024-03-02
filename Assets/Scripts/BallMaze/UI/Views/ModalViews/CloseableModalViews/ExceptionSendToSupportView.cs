@@ -111,5 +111,11 @@ namespace BallMaze.UI
                 _additionalInformationTextField.AddToClassList("text-field__placeholder-active");
             }
         }
+
+
+        public void UpdateException(ExceptionObject exception)
+        {
+            _errorMessageLabel.text = $"Error: {exception.friendlyMessage}";
+        }
     }
 }

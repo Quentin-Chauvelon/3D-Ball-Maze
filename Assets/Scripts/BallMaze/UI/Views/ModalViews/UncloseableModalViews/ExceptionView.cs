@@ -66,5 +66,14 @@ namespace BallMaze.UI
 
             base.Hide();
         }
+
+
+        public void UpdateException(ExceptionObject exception)
+        {
+            _errorMessageLabel.text = exception.friendlyMessage;
+            _actionButton.text = exception.action.name;
+
+            (UIManager.Instance.UIViews[UIViewType.ExceptionDetails] as ExceptionDetailsView).UpdateException(exception);
+        }
     }
 }
