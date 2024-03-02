@@ -13,6 +13,13 @@ using Unity.VisualScripting;
 
 namespace BallMaze
 {
+    public class PopulateLevelSelectionException : Exception
+    {
+        public PopulateLevelSelectionException() { }
+        public PopulateLevelSelectionException(string message) : base(message) { }
+        public PopulateLevelSelectionException(string message, Exception inner) : base(message, inner) { }
+    }
+
     public class DefaultLevelSelection
     {
         // Last time the default level files were checked for modification
@@ -169,16 +176,23 @@ namespace BallMaze
             }
             else
             {
-                // if the file has been checked in the last 5 minutes, don't check it again
-                if (_lastDefaultLevelFilesModifiedCheck.DateInTimeframe(300))
+                try
                 {
-                    _forceDownload = true;
-                    ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError");
+                    // if the file has been checked in the last 5 minutes, don't check it again
+                    if (_lastDefaultLevelFilesModifiedCheck.DateInTimeframe(300))
+                    {
+                        _forceDownload = true;
+                        throw new PopulateLevelSelectionException($"Couldn't populate level selection view.\nlevelsSelection = {levelsSelection},\nlevelsSelection.levels.Length = {levelsSelection.levels.Length},\n_lastDefaultLevelFilesModifiedCheck = {_lastDefaultLevelFilesModifiedCheck}");
+                    }
+                    else
+                    {
+                        // Display no internet message and call LoadDefaultLevelSelection() when the player goes back online
+                        _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI(LoadDefaultLevelSelection);
+                    }
                 }
-                else
+                catch (PopulateLevelSelectionException e)
                 {
-                    // Display no internet message and call LoadDefaultLevelSelection() when the player goes back online
-                    _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI(LoadDefaultLevelSelection);
+                    ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "LevelSelectionLoadingCheckInternetGenericError");
                 }
             }
         }

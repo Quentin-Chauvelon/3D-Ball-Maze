@@ -30,13 +30,17 @@ namespace BallMaze
             // Wait for Unity Gaming Services to initialize
             if (GameManager.Instance.editorIsWebGL)
             {
-                bool result = await InitializeUnityServices.Initialize();
-                if (!result)
+                try
                 {
-                    Debug.Log("Couldn't initialize Unity Services, game unable to load");
-                    GameUnableToLoad();
+                    await InitializeUnityServices.Initialize();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Failed to initialize Unity Services, game unable to load");
+                    GameUnableToLoad(e);
                     return;
                 }
+
                 Debug.Log("Unity Services have been initialized, game starting");
             }
 
@@ -57,16 +61,23 @@ namespace BallMaze
             );
 
             // If the position of the task that completed first is 1, it means it's the timeout task
-            if (position == 1)
+            try
             {
-                Debug.Log("Couldn't initialize services, game unable to load");
-                GameUnableToLoad();
+                if (position == 1)
+                {
+                    Debug.Log("Couldn't initialize services, game unable to load");
+                    throw new Exception("Initialization timed out");
+                }
+                else
+                {
+                    Debug.Log("Services have been initialized, game launching");
+                    _loadingScreenUIView.Hide();
+                    GameManager.Instance.StartGame();
+                }
             }
-            else
+            catch (Exception e)
             {
-                Debug.Log("Services have been initialized, game launching");
-                _loadingScreenUIView.Hide();
-                GameManager.Instance.StartGame();
+                GameUnableToLoad(e);
             }
         }
 
@@ -78,9 +89,9 @@ namespace BallMaze
         }
 
 
-        private void GameUnableToLoad()
+        private void GameUnableToLoad(Exception e)
         {
-            ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "UnableToStartGame", ExceptionAction.RestartGame);
+            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "UnableToStartGame", ExceptionAction.RestartGame);
             _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             return;
         }

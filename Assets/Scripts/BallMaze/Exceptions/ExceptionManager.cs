@@ -51,7 +51,7 @@ namespace BallMaze
         /// </summary>
         /// <param name="message">The message to display</param>
         /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
-        public static void ShowExceptionMessage(string message, ExceptionAction action = ExceptionAction.BackToMainMenu)
+        public static void ShowExceptionMessage(Exception e, string message, ExceptionAction action = ExceptionAction.BackToMainMenu)
         {
             isError = true;
             Debug.Log(message);
@@ -67,9 +67,9 @@ namespace BallMaze
         /// <param name="table">The localization table to use</param>
         /// <param name="key">The localization key of the message</param>
         /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
-        public static void ShowExceptionMessage(string table, string key, ExceptionAction action = ExceptionAction.BackToMainMenu)
+        public static void ShowExceptionMessage(Exception e, string table, string key, ExceptionAction action = ExceptionAction.BackToMainMenu)
         {
-            ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString(table, key), action);
+            ShowExceptionMessage(e, LocalizationSettings.StringDatabase.GetLocalizedString(table, key), action);
         }
 
 
@@ -83,7 +83,7 @@ namespace BallMaze
 
 
         /// <summary>
-        /// 
+        /// Sends the current error to the support with the given additional information
         /// </summary>
         /// <param name="additionalInformation"></param>
         /// <exception cref="NotImplementedException"></exception>

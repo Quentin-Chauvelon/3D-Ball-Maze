@@ -9,21 +9,12 @@ public class InitializeUnityServices : MonoBehaviour
     private static readonly string ENVIRONMENT = "development";
 
 
-    public static async UniTask<bool> Initialize()
+    public static async UniTask Initialize()
     {
-        try
-        {
-            var options = new InitializationOptions();
-            options.SetEnvironmentName(ENVIRONMENT);
+        var options = new InitializationOptions();
+        options.SetEnvironmentName(ENVIRONMENT);
 
-            await UnityServices.InitializeAsync(options);
-            Debug.Log("Unity Services initialized");
-            return true;
-        }
-        catch (Exception exception)
-        {
-            Debug.LogError($"Failed to initialize Unity Services: {exception}");
-            return false;
-        }
+        await UnityServices.InitializeAsync(options);
+        Debug.Log("Unity Services initialized");
     }
 }

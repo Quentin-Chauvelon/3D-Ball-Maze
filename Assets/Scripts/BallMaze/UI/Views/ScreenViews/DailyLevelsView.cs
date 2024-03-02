@@ -162,9 +162,16 @@ namespace BallMaze.UI
             // Furthermore, since this method is called at midnight utc, the UI might not be displayed if the user is not in the daily levels view
             // And so, we don't want to display the error if the UI is not displayed
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
-            if (isEnabled && !_areDailyLevelsLoaded)
+            try
             {
-                DisplayDefaultDailyLevelsLoadingException();
+                if (isEnabled && !_areDailyLevelsLoaded)
+                {
+                    throw new CouldNotLoadLevelException("No daily levels loaded");
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayDefaultDailyLevelsLoadingException(e);
                 return;
             }
 
@@ -184,9 +191,16 @@ namespace BallMaze.UI
             // Furthermore, since this method is called at midnight utc, the UI might not be displayed if the user is not in the daily levels view
             // And so, we don't want to display the error if the UI is not displayed
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
-            if (isEnabled && !_areDailyLevelsLoaded)
+            try
             {
-                DisplayDefaultDailyLevelsLoadingException();
+                if (isEnabled && !_areDailyLevelsLoaded)
+                {
+                    throw new CouldNotLoadLevelException("No daily levels loaded");
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayDefaultDailyLevelsLoadingException(e);
                 return;
             }
 
@@ -224,9 +238,16 @@ namespace BallMaze.UI
             // Furthermore, since this method is called at midnight utc, the UI might not be displayed if the user is not in the daily levels view
             // And so, we don't want to display the error if the UI is not displayed
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
-            if (isEnabled && !_areDailyLevelsLoaded)
+            try
             {
-                DisplayDefaultDailyLevelsLoadingException();
+                if (isEnabled && !_areDailyLevelsLoaded)
+                {
+                    throw new CouldNotLoadLevelException("No daily levels loaded");
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayDefaultDailyLevelsLoadingException(e);
                 return;
             }
 
@@ -265,10 +286,9 @@ namespace BallMaze.UI
         /// <summary>
         /// Displays the exception UI with the default daily levels loading error message.
         /// </summary>
-        private void DisplayDefaultDailyLevelsLoadingException()
+        private void DisplayDefaultDailyLevelsLoadingException(Exception e)
         {
-            Debug.Log("No daily levels loaded");
-            ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionAction.BackToMainMenu);
+            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionAction.BackToMainMenu);
         }
     }
 }

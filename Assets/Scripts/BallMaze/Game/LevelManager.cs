@@ -1,3 +1,4 @@
+using System;
 using BallMaze.Events;
 using System.ComponentModel;
 using System.IO;
@@ -44,6 +45,14 @@ namespace BallMaze
     }
 
 
+    public class LevelException : Exception
+    {
+        public LevelException() { }
+        public LevelException(string message) : base(message) { }
+        public LevelException(string message, Exception inner) : base(message, inner) { }
+    }
+
+
     public class LevelManager : MonoBehaviour
     {
         public static string levelToLoad = "";
@@ -77,11 +86,18 @@ namespace BallMaze
                 Directory.CreateDirectory(LEVELS_PATH);
             }
 
-            // If the maze or ball gameobjects don't exist, there is an error
-            if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
+            // If the maze or ball gameobjects don't exist, throw an error
+            try
             {
-                _levelState = LevelState.Error;
-                ExceptionManager.ShowExceptionMessage("ExceptionMessagesTable", "LevelLoadingTryAgainGenericError", ExceptionAction.BackToLevels);
+                if (!GameObject.Find("Maze") || !GameObject.Find("Ball"))
+                {
+                    _levelState = LevelState.Error;
+                    throw new LevelException($"Maze or Ball not found.\nMaze = {GameObject.Find("Maze")},\nBall = {GameObject.Find("Ball")}");
+                }
+            }
+            catch (LevelException e)
+            {
+                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "LevelLoadingTryAgainGenericError", ExceptionAction.RestartGame);
                 return;
             }
 
