@@ -91,7 +91,7 @@ namespace BallMaze
 
         private void GameUnableToLoad(Exception e)
         {
-            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "UnableToStartGame", ExceptionAction.RestartGame);
+            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "UnableToStartGame", ExceptionActionType.RestartGame);
             _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             return;
         }

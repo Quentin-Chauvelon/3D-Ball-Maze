@@ -97,7 +97,7 @@ namespace BallMaze
             }
             catch (LevelException e)
             {
-                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "LevelLoadingTryAgainGenericError", ExceptionAction.RestartGame);
+                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "LevelLoadingTryAgainGenericError", ExceptionActionType.RestartGame);
                 return;
             }
 

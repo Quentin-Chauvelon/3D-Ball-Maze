@@ -288,7 +288,7 @@ namespace BallMaze.UI
         /// </summary>
         private void DisplayDefaultDailyLevelsLoadingException(Exception e)
         {
-            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionAction.BackToMainMenu);
+            ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionActionType.BackToMainMenu);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BallMaze
     /// <summary>
     /// Possible actions to display to the player when an exception occurs
     /// </summary>
-    public enum ExceptionAction
+    public enum ExceptionActionType
     {
         Resume,
         RestartGame,
@@ -51,7 +51,7 @@ namespace BallMaze
         /// </summary>
         /// <param name="message">The message to display</param>
         /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
-        public static void ShowExceptionMessage(Exception e, string message, ExceptionAction action = ExceptionAction.BackToMainMenu)
+        public static void ShowExceptionMessage(Exception e, string message, ExceptionActionType action = ExceptionActionType.BackToMainMenu)
         {
             isError = true;
             Debug.Log(message);
@@ -67,7 +67,7 @@ namespace BallMaze
         /// <param name="table">The localization table to use</param>
         /// <param name="key">The localization key of the message</param>
         /// <param name="action">Defines what buttons to display to the user. Default: BackToMainMenu</param>
-        public static void ShowExceptionMessage(Exception e, string table, string key, ExceptionAction action = ExceptionAction.BackToMainMenu)
+        public static void ShowExceptionMessage(Exception e, string table, string key, ExceptionActionType action = ExceptionActionType.BackToMainMenu)
         {
             ShowExceptionMessage(e, LocalizationSettings.StringDatabase.GetLocalizedString(table, key), action);
         }

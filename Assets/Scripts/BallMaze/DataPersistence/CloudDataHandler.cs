@@ -65,7 +65,7 @@ namespace BallMaze
             catch (Exception e)
             {
                 error = true;
-                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionAction.RestartGame);
+                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionActionType.RestartGame);
                 _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             }
 
@@ -238,31 +238,31 @@ namespace BallMaze
             switch (exceptionType)
             {
                 case CloudSaveExceptionType.Load:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadGenericError", ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.LoadRateLimited:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadRateLimitedError", ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadRateLimitedError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Save:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveGenericError", ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.SaveRateLimited:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveRateLimitedError", ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveRateLimitedError", ExceptionActionType.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Delete:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteGenericError", ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteGenericError", ExceptionActionType.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.DeleteRateLimited:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError", ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 default:
-                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
             }
