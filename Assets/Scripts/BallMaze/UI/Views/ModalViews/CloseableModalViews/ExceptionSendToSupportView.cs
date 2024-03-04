@@ -72,7 +72,7 @@ namespace BallMaze.UI
 
             _sendButton.clicked += () =>
             {
-                ExceptionManager.Instance.SendErrorToSupport(_additionalInformationTextField.text);
+                ExceptionManager.Instance.SendErrorToSupport(_isPlaceHolderActive ? "" : _additionalInformationTextField.text);
             };
         }
 

@@ -4,6 +4,11 @@ using BallMaze.UI;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using Unity.Services.Core;
+using Unity.Services.CloudCode;
+using Unity.VisualScripting;
+using System.Xml;
+using Unity.Services.Authentication;
 
 
 namespace BallMaze
@@ -32,7 +37,7 @@ namespace BallMaze
 
 
     /// <summary>
-    /// Class taht represents an exception object containing all the information about the exception
+    /// Class that represents an exception object containing all the information about the exception
     /// </summary>
     public class ExceptionObject
     {
@@ -41,6 +46,7 @@ namespace BallMaze
         public string stackTrace;
         public ExceptionAction action;
         public bool sentToSupport;
+        public string additionalInformation;
         public DateTime date;
     }
 
@@ -104,6 +110,22 @@ namespace BallMaze
         };
 
 
+        /// <summary>
+        /// Class that represents an exception that can be sent to the ExceptionSendToSupport Cloud Code module
+        /// </summary>
+        [Serializable]
+        private class CloudCodeExceptionObject
+        {
+            public string playerId;
+            public string friendlyMessage;
+            public string message;
+            public string stackTrace;
+            public bool sentToSupport;
+            public string additionalInformation;
+            public DateTime date;
+        }
+
+
         private void Awake()
         {
             _instance = this;
@@ -133,6 +155,7 @@ namespace BallMaze
                 stackTrace = e.StackTrace,
                 action = Instance._actions[action],
                 sentToSupport = false,
+                additionalInformation = "",
                 date = DateTime.Now
             };
 
@@ -169,7 +192,7 @@ namespace BallMaze
         /// Sends the current error to the support with the given additional information
         /// </summary>
         /// <param name="additionalInformation"></param>
-        public void SendErrorToSupport(string additionalInformation)
+        public async void SendErrorToSupport(string additionalInformation)
         {
             // If the exception has already been sent to the support, don't send it again
             if (_currentException.sentToSupport)
@@ -178,8 +201,24 @@ namespace BallMaze
             }
 
             _currentException.sentToSupport = true;
+            _currentException.additionalInformation = additionalInformation;
 
-            throw new NotImplementedException("SendErrorToSupport via email");
+            var cloudCodeException = new
+            {
+                playerId = AuthenticationService.Instance.PlayerId,
+                friendlyMessage = _currentException.friendlyMessage,
+                message = _currentException.message,
+                stackTrace = _currentException.stackTrace,
+                sentToSupport = _currentException.sentToSupport,
+                additionalInformation = _currentException.additionalInformation,
+                date = _currentException.date
+            };
+
+            try
+            {
+                string result = await CloudCodeService.Instance.CallModuleEndpointAsync("ExceptionSendToSupport", "ExceptionSendEmailToSupport", new Dictionary<string, object>() { { "exception", cloudCodeException } });
+            }
+            catch { }
         }
     }
 }
