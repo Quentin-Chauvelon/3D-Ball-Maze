@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 using Debug = UnityEngine.Debug;
 
@@ -191,6 +192,17 @@ namespace BallMaze
                     defaultLevelSelection.LoadDefaultLevelSelection();
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Restart the game
+        /// </summary>
+        public void RestartGame()
+        {
+            SceneManager.LoadScene(0);
+
+            GameObject.Find("LevelManager").GetComponent<LevelManager>().QuitLevel();
         }
 
 

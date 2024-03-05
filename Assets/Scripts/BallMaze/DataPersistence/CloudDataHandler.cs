@@ -65,8 +65,7 @@ namespace BallMaze
             catch (Exception e)
             {
                 error = true;
-                Debug.LogWarning(e);
-                ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveGenericError"), ExceptionManager.ExceptionAction.RestartGame);
+                ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionActionType.RestartGame);
                 _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
             }
 
@@ -236,36 +235,34 @@ namespace BallMaze
         /// <param name="exception"></param>
         private void DisplayCloudSaveException(Exception exception, CloudSaveExceptionType exceptionType = CloudSaveExceptionType.Generic)
         {
-            Debug.LogWarning(exception);
-
             switch (exceptionType)
             {
                 case CloudSaveExceptionType.Load:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveLoadGenericError"), ExceptionManager.ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.LoadRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveLoadRateLimitedError"), ExceptionManager.ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveLoadRateLimitedError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Save:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveSaveGenericError"), ExceptionManager.ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.SaveRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveSaveRateLimitedError"), ExceptionManager.ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveSaveRateLimitedError", ExceptionActionType.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.Delete:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveDeleteGenericError"), ExceptionManager.ExceptionAction.Resume);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteGenericError", ExceptionActionType.Resume);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 case CloudSaveExceptionType.DeleteRateLimited:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError"), ExceptionManager.ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveDeleteRateLimitedError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
                 default:
-                    ExceptionManager.ShowExceptionMessage(LocalizationSettings.StringDatabase.GetLocalizedString("ExceptionMessagesTable", "CloudSaveGenericError"), ExceptionManager.ExceptionAction.RestartGame);
+                    ExceptionManager.ShowExceptionMessage(exception, "ExceptionMessagesTable", "CloudSaveGenericError", ExceptionActionType.RestartGame);
                     _ = InternetManager.Instance.CheckIsOnlineAndDisplayUI();
                     break;
             }
