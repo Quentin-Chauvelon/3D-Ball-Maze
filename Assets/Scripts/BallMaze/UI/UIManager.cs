@@ -82,6 +82,11 @@ namespace BallMaze.UI
 
             _mainUIDocument = GetComponent<UIDocument>();
             SetupViews();
+
+            // Hide the default views on start because if the game is restarted (GameManager.RestartGame()), there are still visible but we want to hide them
+            _uiViews[UIViewType.Permanent].Hide();
+            _uiViews[UIViewType.Background].Hide();
+            Hide(_uiViews[UIViewType.MainMenu]);
         }
 
 

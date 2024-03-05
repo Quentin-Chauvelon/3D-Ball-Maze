@@ -88,7 +88,7 @@ namespace BallMaze
                 new ExceptionAction {
                     name = "Restart Game",
                     priority = 100,
-                    clickCallback = () => { throw new NotImplementedException(); }
+                    clickCallback = () => { GameManager.Instance.RestartGame(); }
                 }
             },
             {
