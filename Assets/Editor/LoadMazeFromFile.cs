@@ -15,6 +15,7 @@ public class LoadMazeFromFile : EditorWindow
     private TextField _id;
 
     private Button _loadButton;
+    private Button _clearMazeButton;
 
     private Dictionary<int, Obstacle> _obstacles = new Dictionary<int, Obstacle>();
 
@@ -41,6 +42,9 @@ public class LoadMazeFromFile : EditorWindow
 
         _loadButton = loadMazeFromFileUXML.Query<Button>("LoadButton");
         _loadButton.clicked += LoadMaze;
+
+        _clearMazeButton = loadMazeFromFileUXML.Query<Button>("ClearMazeButton");
+        _clearMazeButton.clicked += ClearMaze;
     }
 
 
@@ -198,6 +202,19 @@ public class LoadMazeFromFile : EditorWindow
         else
         {
             Debug.LogWarning($"Could not find obstacle with id {obstacleId} to position {transform.name} over.");
+        }
+    }
+
+
+    private void ClearMaze()
+    {
+        GameObject maze = GameObject.Find("Maze");
+        if (maze)
+        {
+            while (maze.transform.childCount > 0)
+            {
+                DestroyImmediate(maze.transform.GetChild(0).gameObject);
+            }
         }
     }
 }

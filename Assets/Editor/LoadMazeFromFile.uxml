@@ -5,5 +5,6 @@
         <ui:TextField picking-mode="Ignore" label="File Name" name="FileName" style="width: auto;" />
         <ui:TextField picking-mode="Ignore" label="Level Id" name="Id" style="width: auto;" />
         <ui:Button text="Load Maze From File" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadButton" style="margin-top: 10px;" />
+        <ui:Button text="Clear Maze" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ClearMazeButton" style="margin-top: 10px;" />
     </ui:VisualElement>
 </ui:UXML>
