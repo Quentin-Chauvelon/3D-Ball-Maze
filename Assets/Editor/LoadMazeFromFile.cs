@@ -58,7 +58,7 @@ public class LoadMazeFromFile : EditorWindow
             }
         }
 
-        Level level = JsonUtility.FromJson<Level>(jsonData);
+        Level level = JsonConvert.DeserializeObject<Level>(jsonData);
 
         GameObject maze = GameObject.Find("Maze");
         if (!maze)

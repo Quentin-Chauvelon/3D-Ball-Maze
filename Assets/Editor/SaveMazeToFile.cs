@@ -202,8 +202,9 @@ namespace AssetsEditor
             level.times[1] = float.Parse(_star2Time.value);
             level.times[2] = float.Parse(_star3Time.value);
 
-            string serializedJsonData = JsonUtility.ToJson(level, false);
-            string serializedJsonDataPretty = JsonUtility.ToJson(level, true);
+            // Serialize a compact version of the level and a pretty version
+            string serializedJsonData = JsonConvert.SerializeObject(level);
+            string serializedJsonDataPretty = JsonConvert.SerializeObject(level, Formatting.Indented);
 
             File.WriteAllText(Path.Combine(Application.persistentDataPath, "levels", _fileName.value + ".json"), serializedJsonData);
             File.WriteAllText(Path.Combine(Application.persistentDataPath, "levels", _fileName.value + "_pretty.json"), serializedJsonDataPretty);
