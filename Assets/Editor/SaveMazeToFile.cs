@@ -5,6 +5,9 @@ using UnityExtensionMethods;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using BallMaze.Obstacles;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 
 namespace AssetsEditor
@@ -14,7 +17,7 @@ namespace AssetsEditor
         [SerializeField]
         private VisualTreeAsset _visualTreeAsset = default;
         private TextField _fileName;
-        private TextField _id;
+        private TextField _levelId;
         private TextField _name;
         private TextField _description;
         private EnumField _difficulty;
@@ -30,7 +33,16 @@ namespace AssetsEditor
 
         private GameObject _maze;
 
-        
+        private int _id = 0;
+        private int Id
+        {
+            get => _id++;
+            set => _id = value;
+        }
+
+        private Dictionary<int, Obstacle> _obstacles = new Dictionary<int, Obstacle>();
+
+
         [MenuItem("Utilities/Save Maze To File", false, 20)]
         public static void OpenSaveMazeWindow()
         {
@@ -49,7 +61,7 @@ namespace AssetsEditor
             root.Add(saveMazeToFileUXML);
 
             _fileName = saveMazeToFileUXML.Query<TextField>("FileName");
-            _id = saveMazeToFileUXML.Query<TextField>("Id");
+            _levelId = saveMazeToFileUXML.Query<TextField>("Id");
             _name = saveMazeToFileUXML.Query<TextField>("Name");
             _description = saveMazeToFileUXML.Query<TextField>("Description");
             _difficulty = saveMazeToFileUXML.Query<EnumField>("Difficulty");
@@ -75,10 +87,12 @@ namespace AssetsEditor
             Debug.Log("Saving: Started for file: " + _fileName.value);
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
+            Id = 0;
+
             _maze = GameObject.Find("Maze");
             Level level = new Level();
 
-            level.id = _id.value;
+            level.id = _levelId.value;
             level.name = _name.value;
             level.description = _description.value;
             level.difficulty = (Difficulty)_difficulty.value;
@@ -86,117 +100,55 @@ namespace AssetsEditor
 
             level.startPosition = _maze.transform.Find("Start").position;
 
-            level.targets = new Target[_maze.transform.Find("Targets").childCount];
-            foreach (Transform targetObject in _maze.transform.Find("Targets"))
+            // Floor tiles
+            level.floors = new Floor[_maze.transform.Find("Floors").childCount];
+            for (int i = 0; i < _maze.transform.Find("Floors").childCount; i++)
             {
-                Target target = new Target();
-                target.id = 1;
-                target.p = targetObject.position;
-                target.r = targetObject.rotation.eulerAngles;
+                Transform floorGameObject = _maze.transform.Find("Floors").GetChild(i);
 
-                level.targets[targetObject.GetSiblingIndex()] = target;
+                // Create the floor object that will be serialized from the GameObject
+                Floor floor = new Floor(Id, floorGameObject.position);
+
+                // Add the floor to the level structure
+                level.floors[i] = floor;
+
+                // Add the floor to the obstacles dictionary, this is done so that we can find the id of this obstacle
+                // if there is another obstacle on top of it (e.g. a wall).
+                _obstacles[floor.id] = floor;
             }
 
-            level.floorTiles = new FloorTile[_maze.transform.Find("FloorTiles").childCount];
-            foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
-            {
-                FloorTile floorTile = new FloorTile();
-                floorTile.id = floorTileObject.GetSiblingIndex();
-                floorTile.p = floorTileObject.position;
-
-                level.floorTiles[floorTileObject.GetSiblingIndex()] = floorTile;
-            }
-
+            // Walls
             level.walls = new Wall[_maze.transform.Find("Walls").childCount];
-            foreach (Transform wallObject in _maze.transform.Find("Walls"))
+            for (int i = 0; i < _maze.transform.Find("Walls").childCount; i++)
             {
-                Wall wall = new Wall();
-                Vector3 wallRoundedPosition = wallObject.position.Round();
+                Transform wallGameObject = _maze.transform.Find("Walls").GetChild(i);
 
-                foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
-                {
-                    if (wallRoundedPosition == floorTileObject.position)
-                    {
-                        wall.id = floorTileObject.GetSiblingIndex();
-                        break;
-                    }
-                }
+                Wall wall = new Wall(Id, GetObstacleIdUnderObstacle(wallGameObject), GetObstacleCardinalDirection(ObstacleType.Wall, wallGameObject));
 
-                // If the x position doesn't have a decimal part, the wall is either facing north or south
-                if ((wallObject.position.x - Math.Truncate(wallObject.position.x)).AlmostEquals(0, 0.05))
-                {
-                    // If the z position is 0.45 less than the rounded value (position of the floor), the wall is facing south, otherwise it is facing north (+0.45)
-                    if ((Mathf.Round(wallObject.position.z) - wallObject.position.z).AlmostEquals(0.45f))
-                    {
-                        wall.d = Direction.North;
-                    }
-                    else
-                    {
-                        wall.d = Direction.South;
-                    }
-                }
-                // If the x position doesn't have a decimal part, the wall is either facing west or east
-                else
-                {
-                    // If the x position is 0.45 less than the rounded value (position of the floor), the wall is facing east, otherwise it is facing west (+0.45)
-                    if ((Mathf.Round(wallObject.position.x) - wallObject.position.x).AlmostEquals(0.45f))
-                    {
-                        wall.d = Direction.East;
-                    }
-                    else
-                    {
-                        wall.d = Direction.West;
-                    }
+                level.walls[i] = wall;
 
-                }
-
-                level.walls[wallObject.GetSiblingIndex()] = wall;
+                // No need to add the wall to the obstacles dictionary as no other obstacle can be on top of it.
+                // And so, its id will never be needed by other obstacles.
             }
 
+            // Corners
             level.corners = new Corner[_maze.transform.Find("Corners").childCount];
-            foreach (Transform cornerObject in _maze.transform.Find("Corners"))
+            for (int i = 0; i < _maze.transform.Find("Corners").childCount; i++)
             {
-                Corner corner = new Corner();
-                Vector3 cornerRoundedPosition = cornerObject.position.Round();
+                Transform cornerGameObject = _maze.transform.Find("Corners").GetChild(i);
 
-                foreach (Transform floorTileObject in _maze.transform.Find("FloorTiles"))
-                {
-                    if (cornerRoundedPosition == floorTileObject.position)
-                    {
-                        corner.id = floorTileObject.GetSiblingIndex();
-                        break;
-                    }
-                }
+                Corner corner = new Corner(Id, GetObstacleIdUnderObstacle(cornerGameObject), GetObstacleCardinalDirection(ObstacleType.Corner, cornerGameObject));
 
-                // If the z position is 0.45 less than the rounded value (position of the floor), the corner is facing north, otherwise it is facing south (+0.45)
-                if ((Mathf.Round(cornerObject.position.z) - cornerObject.position.z).AlmostEquals(0.45f))
-                {
-                    // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing north-east, otherwise it is facing north-west (+0.45)
-                    if ((Mathf.Round(cornerObject.position.x) - cornerObject.position.x).AlmostEquals(0.45f))
-                    {
-                        corner.d = Direction.NorthEast;
-                    }
-                    else
-                    {
-                        corner.d = Direction.NorthWest;
-                    }
-                }
-                else
-                {
-                    // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing south-east, otherwise it is facing south-west (+0.45)
-                    if ((Mathf.Round(cornerObject.position.x) - cornerObject.position.x).AlmostEquals(0.45f))
-                    {
-                        corner.d = Direction.SouthEast;
-                    }
-                    else
-                    {
-                        corner.d = Direction.SouthWest;
-                    }
-                }
-
-                level.corners[cornerObject.GetSiblingIndex()] = corner;
+                level.corners[i] = corner;
             }
 
+
+            // Target
+            Transform targetGameObject = _maze.transform.Find("FlagTargets").GetChild(0);
+            FlagTarget flagTarget = new FlagTarget(Id, GetObstacleIdUnderObstacle(targetGameObject), GetObstacleCardinalDirection(ObstacleType.FlagTarget, targetGameObject));
+            level.target = flagTarget;
+
+            // Times
             level.times = new float[3];
             level.times[0] = float.Parse(_star1Time.value);
             level.times[1] = float.Parse(_star2Time.value);
@@ -224,7 +176,7 @@ namespace AssetsEditor
 
             if (!_maze.transform.Find("Start"))
             {
-                
+
                 new GameObject("Start").transform.SetParent(_maze.transform);
             }
 
@@ -251,6 +203,74 @@ namespace AssetsEditor
             if (!_maze.transform.Find("Obstacles"))
             {
                 new GameObject("Obstacles").transform.SetParent(_maze.transform);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the obstacle under the given obstacle
+        /// </summary>
+        private int GetObstacleIdUnderObstacle(Transform transform)
+        {
+            // Round the position to match the position of the floor (because a floor is centered on its 1x1 tile
+            // while some obstacles like wall are 1x0.2 and on the edge of the tile)
+            Vector3 roundedPosition = transform.position.Round();
+
+            foreach (KeyValuePair<int, Obstacle> obstacleEntry in _obstacles)
+            {
+                if (obstacleEntry.Value is IAbsolutelyPositionnable && roundedPosition == ((IAbsolutelyPositionnable)obstacleEntry.Value).position)
+                {
+                    return obstacleEntry.Key;
+                }
+            }
+
+            Debug.LogWarning($"No obstacle found under {transform.name}!");
+            return 0;
+        }
+
+
+        private CardinalDirection GetObstacleCardinalDirection(ObstacleType obstacleType, Transform transform)
+        {
+            switch (obstacleType)
+            {
+                case ObstacleType.Wall:
+                    // If the x position doesn't have a decimal part, the wall is either facing north or south
+                    if ((transform.position.x - Math.Truncate(transform.position.x)).AlmostEquals(0, 0.05))
+                    {
+                        // If the z position is 0.45 less than the rounded value (position of the floor), the wall is facing south, otherwise it is facing north (+0.45)
+                        return (Mathf.Round(transform.position.z) - transform.position.z).AlmostEquals(0.45f)
+                            ? CardinalDirection.North
+                            : CardinalDirection.South;
+                    }
+                    // If the x position doesn't have a decimal part, the wall is either facing west or east
+                    else
+                    {
+                        // If the x position is 0.45 less than the rounded value (position of the floor), the wall is facing east, otherwise it is facing west (+0.45)
+                        return (Mathf.Round(transform.position.x) - transform.position.x).AlmostEquals(0.45f)
+                            ? CardinalDirection.East
+                            : CardinalDirection.West;
+                    }
+
+                case ObstacleType.Corner:
+                    // If the z position is 0.45 less than the rounded value (position of the floor), the corner is facing north, otherwise it is facing south (+0.45)
+                    if ((Mathf.Round(transform.position.z) - transform.position.z).AlmostEquals(0.45f))
+                    {
+                        // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing north-east, otherwise it is facing north-west (+0.45)
+                        return (Mathf.Round(transform.position.x) - transform.position.x).AlmostEquals(0.45f)
+                            ? CardinalDirection.North
+                            : CardinalDirection.West;
+                    }
+                    else
+                    {
+                        // If the x position is 0.45 less than the rounded value (position of the floor), the corner is facing south-east, otherwise it is facing south-west (+0.45)
+                        return (Mathf.Round(transform.position.x) - transform.position.x).AlmostEquals(0.45f)
+                            ? CardinalDirection.East
+                            : CardinalDirection.South;
+                    }
+
+                default:
+                    Debug.LogWarning($"Unable to find direction for obstacle {transform.name} (type: {obstacleType})");
+                    return CardinalDirection.North;
             }
         }
     }

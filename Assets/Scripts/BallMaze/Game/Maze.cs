@@ -1,3 +1,4 @@
+using BallMaze.Obstacles;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,8 @@ namespace BallMaze
         private LevelLoader _levelLoader;
 
         public GameObject start;
-        public List<GameObject> targets;
-        public List<GameObject> floorTiles;
-        public List<GameObject> walls;
-        public List<GameObject> corners;
-        public List<GameObject> obstacles;
+
+        public Dictionary<GameObject, Obstacle> obstacles { get; private set; } = new Dictionary<GameObject, Obstacle>();
 
 
         void Awake()
@@ -44,13 +42,13 @@ namespace BallMaze
             }
 
             // Create all container objects
-            GameObject targetsContainer = new GameObject("Targets");
-            GameObject floorTilesContainer = new GameObject("FloorTiles");
+            GameObject flagTargetsContainer = new GameObject("FlagTargets");
+            GameObject floorsContainer = new GameObject("Floors");
             GameObject wallsContainer = new GameObject("Walls");
             GameObject cornersContainer = new GameObject("Corners");
             GameObject obstaclesContainer = new GameObject("Obstacles");
-            targetsContainer.transform.SetParent(_maze.transform);
-            floorTilesContainer.transform.SetParent(_maze.transform);
+            flagTargetsContainer.transform.SetParent(_maze.transform);
+            floorsContainer.transform.SetParent(_maze.transform);
             wallsContainer.transform.SetParent(_maze.transform);
             cornersContainer.transform.SetParent(_maze.transform);
             obstaclesContainer.transform.SetParent(_maze.transform);
@@ -60,120 +58,124 @@ namespace BallMaze
             start.transform.position = level.startPosition;
             start.transform.SetParent(_maze.transform);
 
-            // Create all the targets
-            foreach (Target target in level.targets)
+            foreach (Floor floor in level.floors)
             {
-                GameObject targetObject = (GameObject)Instantiate(Resources.Load("Level/Targets/Target" + target.id.ToString()));
-                targetObject.name = "Target";
-                targetObject.transform.position = target.p;
-                targetObject.transform.rotation = Quaternion.Euler(target.r);
-                targetObject.transform.SetParent(targetsContainer.transform);
+                // Use CreatePrimitive for simple objects (such as floor tiles and walls) because after benchmarking it,
+                // it appears to be twice as fast as instantiating a prefab (700ms vs 1.5s for 10k objects)
+                GameObject floorGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floorGameObject.name = "Floor";
+                floorGameObject.transform.localScale = new Vector3(1, 0.1f, 1);
+                floorGameObject.transform.position = floor.position;
+                floorGameObject.transform.SetParent(floorsContainer.transform);
 
-                targets.Add(targetObject);
+                obstacles[floorGameObject] = floor;
             }
 
-            // Create all the floor tiles
-            foreach (FloorTile floorTile in level.floorTiles)
-            {
-                // Use CreatePrimitive for simple objects (such as floor tiles and walls) because after running some tests
-                // It appears to be twice as fast as instantiating a prefab (700ms vs 1.5s for 10k objects)
-                GameObject floorTileObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                floorTileObject.name = "Floor";
-                floorTileObject.transform.localScale = new Vector3(1, 0.1f, 1);
-                floorTileObject.transform.position = floorTile.p;
-                floorTileObject.transform.SetParent(floorTilesContainer.transform);
-
-                floorTiles.Add(floorTileObject);
-            }
-
-            // Create all the walls
+            // Walls
             foreach (Wall wall in level.walls)
             {
-                GameObject wallObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                wallObject.name = "Wall";
+                GameObject wallGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                wallGameObject.name = "Wall";
 
                 // Adapt the wall's scale to the direction it's facing (equivalent to rotating the wall)
-                if (wall.d == Direction.North || wall.d == Direction.South)
+                if (wall.direction == CardinalDirection.North || wall.direction == CardinalDirection.South)
                 {
-                    wallObject.transform.localScale = new Vector3(1, 0.5f, 0.1f);
+                    wallGameObject.transform.localScale = new Vector3(1, 0.5f, 0.1f);
                 }
                 else
                 {
-                    wallObject.transform.localScale = new Vector3(0.1f, 0.5f, 1);
+                    wallGameObject.transform.localScale = new Vector3(0.1f, 0.5f, 1);
                 }
 
-                // Find the floor tile the wall is on
-                foreach (FloorTile floorTile in level.floorTiles)
+                Vector3 offset = Vector3.zero;
+                // Add an offset to move the wall to the correct position based on the direction it's facing
+                switch (wall.direction)
                 {
-                    if (wall.id == floorTile.id)
-                    {
-                        wallObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
+                    case CardinalDirection.North:
+                        offset = new Vector3(0, 0, -0.45f);
                         break;
-                    }
-                }
-
-                // Move the wall to the correct position based on the direction it's facing
-                switch (wall.d)
-                {
-                    case Direction.North:
-                        wallObject.transform.position -= new Vector3(0, 0, 0.45f);
+                    case CardinalDirection.East:
+                        offset = new Vector3(-0.45f, 0, 0);
                         break;
-                    case Direction.East:
-                        wallObject.transform.position -= new Vector3(0.45f, 0, 0);
+                    case CardinalDirection.South:
+                        offset = new Vector3(0, 0, 0.45f);
                         break;
-                    case Direction.South:
-                        wallObject.transform.position += new Vector3(0, 0, 0.45f);
+                    case CardinalDirection.West:
+                        offset = new Vector3(0.45f, 0, 0);
                         break;
-                    case Direction.West:
-                        wallObject.transform.position += new Vector3(0.45f, 0, 0);
+                    default:
+                        Debug.LogWarning($"Invalid wall direction {wall.direction} for wall {wall.id}.");
                         break;
                 }
 
-                wallObject.transform.SetParent(wallsContainer.transform);
+                PositionObstacleOverObstacleFromId(wallGameObject.transform, wall.obstacleId, offset + new Vector3(0, 0.2f, 0));
 
-                walls.Add(wallObject);
+                wallGameObject.transform.SetParent(wallsContainer.transform);
+
+                obstacles[wallGameObject] = wall;
             }
 
-            // Create all the corners
+            // Corners
             foreach (Corner corner in level.corners)
             {
-                GameObject cornerObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cornerObject.name = "Corner";
-                cornerObject.transform.localScale = new Vector3(0.1f, 0.5f, 0.1f);
+                GameObject cornerGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cornerGameObject.name = "Corner";
+                cornerGameObject.transform.localScale = new Vector3(0.1f, 0.5f, 0.1f);
 
-                // Find the floor tile the corner is on
-                foreach (FloorTile floorTile in level.floorTiles)
+                Vector3 offset = Vector3.zero;
+                // Add an offset to move the wall to the correct position based on the direction it's facing
+                switch (corner.direction)
                 {
-                    if (corner.id == floorTile.id)
-                    {
-                        cornerObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
+                    case CardinalDirection.North:
+                        offset = new Vector3(-0.45f, 0, -0.45f);
                         break;
-                    }
-                }
-
-                // Move the corner to the correct position based on the direction it's facing
-                switch (corner.d)
-                {
-                    case Direction.NorthEast:
-                        cornerObject.transform.position -= new Vector3(0.45f, 0, 0.45f);
+                    case CardinalDirection.East:
+                        offset = new Vector3(-0.45f, 0, 0.45f);
                         break;
-                    case Direction.SouthEast:
-                        cornerObject.transform.position += new Vector3(-0.45f, 0, 0.45f);
+                    case CardinalDirection.South:
+                        offset = new Vector3(0.45f, 0, 0.45f);
                         break;
-                    case Direction.SouthWest:
-                        cornerObject.transform.position += new Vector3(0.45f, 0, 0.45f);
+                    case CardinalDirection.West:
+                        offset = new Vector3(0.45f, 0, -0.45f);
                         break;
-                    case Direction.NorthWest:
-                        cornerObject.transform.position += new Vector3(0.45f, 0, -0.45f);
+                    default:
+                        Debug.LogWarning($"Invalid wall direction {corner.direction} for wall {corner.id}.");
                         break;
                 }
 
-                cornerObject.transform.SetParent(cornersContainer.transform);
+                PositionObstacleOverObstacleFromId(cornerGameObject.transform, corner.obstacleId, offset + new Vector3(0, 0.2f, 0));
 
-                corners.Add(cornerObject);
+                cornerGameObject.transform.SetParent(cornersContainer.transform);
+
+                obstacles[cornerGameObject] = corner;
             }
 
+            // Target
+            GameObject targetGameObject = (GameObject)Instantiate(Resources.Load("Level/Targets/FlagTarget"));
+            targetGameObject.name = "Target";
+
+            PositionObstacleOverObstacleFromId(targetGameObject.transform, level.target.obstacleId, new Vector3(0, 0.4f, 0));
+
+            targetGameObject.transform.SetParent(flagTargetsContainer.transform);
+
+            obstacles[targetGameObject] = level.target;
+
             return true;
+        }
+
+
+        private void PositionObstacleOverObstacleFromId(Transform transform, int obstacleId, Vector3 offset)
+        {
+            foreach (KeyValuePair<GameObject, Obstacle> obstacle in obstacles)
+            {
+                if (obstacle.Value.id == obstacleId)
+                {
+                    transform.position = obstacle.Key.transform.position + offset;
+                    return;
+                }
+            }
+
+            Debug.LogWarning($"Could not find obstacle with id {obstacleId} to position {transform.name} over.");
         }
 
 
