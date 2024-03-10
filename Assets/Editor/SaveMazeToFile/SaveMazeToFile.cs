@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 
-namespace AssetsEditor
+namespace BallMaze.Editor
 {
     public class SaveMazeToFile : EditorWindow
     {
@@ -56,7 +56,7 @@ namespace AssetsEditor
             VisualElement root = rootVisualElement;
 
             // Instantiate UXML
-            _visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/SaveMazeToFile.uxml");
+            _visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/SaveMazeToFile/SaveMazeToFile.uxml");
             VisualElement saveMazeToFileUXML = _visualTreeAsset.Instantiate();
             root.Add(saveMazeToFileUXML);
 
