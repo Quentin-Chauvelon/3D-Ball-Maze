@@ -27,7 +27,7 @@ public class LoadMazeFromFile : EditorWindow
         VisualElement root = rootVisualElement;
 
         // Instantiate UXML
-        _visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/LoadMazeFromFile.uxml");
+        _visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/LoadMazeFromFile/LoadMazeFromFile.uxml");
         VisualElement loadMazeFromFileUXML = _visualTreeAsset.Instantiate();
         root.Add(loadMazeFromFileUXML);
 
