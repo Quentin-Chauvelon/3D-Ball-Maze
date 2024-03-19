@@ -82,12 +82,14 @@ namespace BallMaze.Editor
             GameObject floorsContainer = new GameObject("Floors");
             GameObject wallsContainer = new GameObject("Walls");
             GameObject cornersContainer = new GameObject("Corners");
-            GameObject obstaclesContainer = new GameObject("Obstacles");
+            GameObject absolutelyPositionnableObstaclesContainer = new GameObject("AbsolutelyPositionnableObstacles");
+            GameObject relativelyPositionnableObstaclesContainer = new GameObject("RelativelyPositionnableObstacles");
             flagTargetsContainer.transform.SetParent(maze.transform);
             floorsContainer.transform.SetParent(maze.transform);
             wallsContainer.transform.SetParent(maze.transform);
             cornersContainer.transform.SetParent(maze.transform);
-            obstaclesContainer.transform.SetParent(maze.transform);
+            absolutelyPositionnableObstaclesContainer.transform.SetParent(maze.transform);
+            relativelyPositionnableObstaclesContainer.transform.SetParent(maze.transform);
 
             GameObject start = new GameObject("Start");
             start.transform.position = level.startPosition;

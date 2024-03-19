@@ -200,9 +200,14 @@ namespace BallMaze.Editor
                 new GameObject("Corners").transform.SetParent(_maze.transform);
             }
 
-            if (!_maze.transform.Find("Obstacles"))
+            if (!_maze.transform.Find("AbsolutelyPositionnableObstacles"))
             {
-                new GameObject("Obstacles").transform.SetParent(_maze.transform);
+                new GameObject("AbsolutelyPositionnableObstacles").transform.SetParent(_maze.transform);
+            }
+
+            if (!_maze.transform.Find("RelativelyPositionnableObstacles"))
+            {
+                new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
             }
         }
 

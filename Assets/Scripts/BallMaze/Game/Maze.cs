@@ -46,12 +46,14 @@ namespace BallMaze
             GameObject floorsContainer = new GameObject("Floors");
             GameObject wallsContainer = new GameObject("Walls");
             GameObject cornersContainer = new GameObject("Corners");
-            GameObject obstaclesContainer = new GameObject("Obstacles");
+            GameObject absolutelyPositionnableObstaclesContainer = new GameObject("AbsolutelyPositionnableObstacles");
+            GameObject relativelyPositionnableObstaclesContainer = new GameObject("RelativelyPositionnableObstacles");
             flagTargetsContainer.transform.SetParent(_maze.transform);
             floorsContainer.transform.SetParent(_maze.transform);
             wallsContainer.transform.SetParent(_maze.transform);
             cornersContainer.transform.SetParent(_maze.transform);
-            obstaclesContainer.transform.SetParent(_maze.transform);
+            absolutelyPositionnableObstaclesContainer.transform.SetParent(_maze.transform);
+            relativelyPositionnableObstaclesContainer.transform.SetParent(_maze.transform);
 
             // Create the start object
             start = new GameObject("Start");
