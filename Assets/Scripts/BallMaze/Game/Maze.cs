@@ -168,5 +168,11 @@ namespace BallMaze
         {
             UpdateMazeOrientation(Quaternion.identity);
         }
+
+
+        public static UnityEngine.Object InstantiateResource(string path)
+        {
+            return Instantiate(Resources.Load(path));
+        }
     }
 }
