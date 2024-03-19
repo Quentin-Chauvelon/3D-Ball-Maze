@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 
 namespace BallMaze.Obstacles
@@ -22,6 +25,17 @@ namespace BallMaze.Obstacles
         {
             this.obstacleId = obstacleId;
             this.direction = direction;
+        }
+
+
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        {
+            GameObject flagTarget = (GameObject)Maze.InstantiateResource("Level/Targets/FlagTarget");
+            flagTarget.name = "Target";
+
+            PositionObstacleOverObstacleFromId(obstacles, flagTarget.transform, obstacleId, new Vector3(0, 0.065f, 0));
+
+            return flagTarget;
         }
     }
 }
