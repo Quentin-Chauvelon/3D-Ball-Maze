@@ -105,6 +105,20 @@ namespace BallMaze.Editor
                 _obstacles[floorGameObject] = floor;
             }
 
+            // Obstacles
+            foreach (Obstacle obstacle in level.obstacles)
+            {
+                if (obstacle is IAbsolutelyPositionnable)
+                {
+                    GameObject obstacleGameObject = obstacle.Render(_obstacles);
+                    obstacleGameObject.transform.SetParent(absolutelyPositionnableObstaclesContainer.transform);
+                    _obstacles[obstacleGameObject] = obstacle;
+                }
+                else if (obstacle is IRelativelyPositionnable)
+                {
+                    obstacle.Render(_obstacles).transform.SetParent(relativelyPositionnableObstaclesContainer.transform);
+                }
+            }
 
             // Walls
             foreach (Wall wall in level.walls)

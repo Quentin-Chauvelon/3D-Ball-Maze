@@ -67,6 +67,22 @@ namespace BallMaze
                 obstacles[floorGameObject] = floor;
             }
 
+            // Obstacles
+            foreach (Obstacle obstacle in level.obstacles)
+            {
+                if (obstacle is IAbsolutelyPositionnable)
+                {
+                    GameObject obstacleGameObject = obstacle.Render(obstacles);
+                    obstacleGameObject.transform.SetParent(absolutelyPositionnableObstaclesContainer.transform);
+                    obstacles[obstacleGameObject] = obstacle;
+                }
+                else if (obstacle is IRelativelyPositionnable)
+                {
+                    GameObject obstacleGameObject = obstacle.Render(obstacles);
+                    obstacleGameObject.transform.SetParent(relativelyPositionnableObstaclesContainer.transform);
+                    obstacles[obstacleGameObject] = obstacle;
+                }
+            }
 
             // Walls
             foreach (Wall wall in level.walls)

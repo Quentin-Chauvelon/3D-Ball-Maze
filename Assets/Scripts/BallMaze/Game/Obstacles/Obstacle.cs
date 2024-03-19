@@ -14,7 +14,15 @@ namespace BallMaze.Obstacles
         Floor,
         Wall,
         Corner,
-        FlagTarget
+        FlagTarget,
+        CorneredRail,
+        Rail,
+        HalfSphere,
+        HalfCylinder,
+        Tunnel,
+        Spikes,
+        Wedge,
+        FloorHole
     }
 
 

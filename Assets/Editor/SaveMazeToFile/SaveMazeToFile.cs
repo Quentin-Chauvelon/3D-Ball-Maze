@@ -117,6 +117,73 @@ namespace BallMaze.Editor
                 _obstacles[floor.id] = floor;
             }
 
+            // Absolutely positionnable obstacles
+            // These obstacles have to be computed first as they are used by other obstacles (walls, corners...)
+            level.obstacles = new Obstacle[_maze.transform.Find("AbsolutelyPositionnableObstacles").childCount + _maze.transform.Find("RelativelyPositionnableObstacles").childCount];
+            for (int i = 0; i < _maze.transform.Find("AbsolutelyPositionnableObstacles").childCount; i++)
+            {
+                Transform obstacleGameObject = _maze.transform.Find("AbsolutelyPositionnableObstacles").GetChild(i);
+
+                Obstacle obstacle = null;
+                if (obstacleGameObject.name.Contains("CorneredRail"))
+                {
+                    obstacle = new CorneredRail(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                }
+                else if (obstacleGameObject.name.Contains("Rail"))
+                {
+                    obstacle = new Rail(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                }
+                else if (obstacleGameObject.name.Contains("HalfSphere"))
+                {
+                    obstacle = new HalfSphere(Id, obstacleGameObject.position);
+                }
+                else if (obstacleGameObject.name.Contains("HalfCylinder"))
+                {
+                    obstacle = new HalfCylinder(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                }
+                else if (obstacleGameObject.name.Contains("Tunnel"))
+                {
+                    TunnelType tunnelType;
+                    if (obstacleGameObject.name.Contains("2WayTunnel"))
+                    {
+                        tunnelType = TunnelType.TwoWay;
+                    }
+                    else if (obstacleGameObject.name.Contains("2WayCornerTunnel"))
+                    {
+                        tunnelType = TunnelType.TwoWayCornered;
+                    }
+                    else if (obstacleGameObject.name.Contains("3WayTunnel"))
+                    {
+                        tunnelType = TunnelType.ThreeWay;
+                    }
+                    else
+                    {
+                        tunnelType = TunnelType.FourWay;
+                    }
+
+                    obstacle = new Tunnel(Id, tunnelType, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                }
+                else if (obstacleGameObject.name.Contains("Spikes"))
+                {
+                    obstacle = new Spikes(Id, GetObstacleIdUnderObstacle(obstacleGameObject));
+                }
+                else if (obstacleGameObject.name.Contains("Wedge"))
+                {
+                    obstacle = new Wedge(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90), (int)obstacleGameObject.localScale.z);
+                }
+                else if (obstacleGameObject.name.Contains("FloorHole"))
+                {
+                    obstacle = new FloorHole(Id, obstacleGameObject.position);
+                }
+
+                level.obstacles[i] = obstacle;
+
+                if (obstacle != null)
+                {
+                    _obstacles[obstacle.id] = obstacle;
+                }
+            }
+
             // Walls
             level.walls = new Wall[_maze.transform.Find("Walls").childCount];
             for (int i = 0; i < _maze.transform.Find("Walls").childCount; i++)
@@ -142,11 +209,17 @@ namespace BallMaze.Editor
                 level.corners[i] = corner;
             }
 
-
             // Target
             Transform targetGameObject = _maze.transform.Find("FlagTargets").GetChild(0);
             FlagTarget flagTarget = new FlagTarget(Id, GetObstacleIdUnderObstacle(targetGameObject), GetObstacleCardinalDirection(ObstacleType.FlagTarget, targetGameObject));
             level.target = flagTarget;
+
+            // Relatively positionnable obstacles
+            for (int i = 0; i < _maze.transform.Find("RelativelyPositionnableObstacles").childCount; i++)
+            {
+
+            }
+
 
             // Times
             level.times = new float[3];
@@ -180,14 +253,14 @@ namespace BallMaze.Editor
                 new GameObject("Start").transform.SetParent(_maze.transform);
             }
 
-            if (!_maze.transform.Find("Targets"))
+            if (!_maze.transform.Find("FlagTargets"))
             {
-                new GameObject("Targets").transform.SetParent(_maze.transform);
+                new GameObject("FlagTargets").transform.SetParent(_maze.transform);
             }
 
-            if (!_maze.transform.Find("FloorTiles"))
+            if (!_maze.transform.Find("Floors"))
             {
-                new GameObject("FloorTiles").transform.SetParent(_maze.transform);
+                new GameObject("Floors").transform.SetParent(_maze.transform);
             }
 
             if (!_maze.transform.Find("Walls"))
