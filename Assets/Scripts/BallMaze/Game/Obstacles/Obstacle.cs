@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BallMaze.Newtonsoft.Helpers;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace BallMaze.Obstacles
     /// Base class defining an obstacle
     /// </summary>
     [Serializable]
+    [JsonConverter(typeof(ObstacleConverter))]
     public abstract class Obstacle
     {
         [JsonProperty("o")]
