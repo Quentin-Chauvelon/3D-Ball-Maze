@@ -90,6 +90,10 @@ namespace BallMaze.Editor
             Id = 0;
 
             _maze = GameObject.Find("Maze");
+
+            // Move the maze to the origin because rotating the maze will do so around the origin, so we need the maze to be centered around (0, 0, 0)
+            MoveMazeToOrigin();
+
             Level level = new Level();
 
             level.id = _levelId.value;
@@ -220,7 +224,6 @@ namespace BallMaze.Editor
 
             }
 
-
             // Times
             level.times = new float[3];
             level.times[0] = float.Parse(_star1Time.value);
@@ -281,6 +284,46 @@ namespace BallMaze.Editor
             if (!_maze.transform.Find("RelativelyPositionnableObstacles"))
             {
                 new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
+            }
+        }
+
+
+        /// <summary>
+        /// Move the maze to the origin.
+        /// The maze needs to be centered around (0, 0, 0) because rotating the maze will do so around the origin and not the center of the maze.
+        /// </summary>
+        private void MoveMazeToOrigin()
+        {
+            // Include all renderers to get the total size of the maze in order to get the center
+            Renderer[] renderers = _maze.GetComponentsInChildren<Renderer>();
+            Bounds bounds = renderers[0].bounds;
+            for (var i = 1; i < renderers.Length; ++i)
+            {
+                bounds.Encapsulate(renderers[i].bounds);
+            }
+
+            // Invert the x and z axis otherwise it moves in the wrong direction
+            bounds.center = new Vector3(-bounds.center.x, bounds.center.y, -bounds.center.z);
+
+            // Since some obstacles are taller than others, the y bounds is not reliable.
+            // Thus, we set the center to the first floor's y position, or 0 if there are no floors
+            if (_maze.transform.Find("Floors").childCount > 0)
+            {
+                bounds.center = new Vector3(bounds.center.x, _maze.transform.Find("Floors").GetChild(0).transform.position.y, bounds.center.z);
+            }
+            else
+            {
+                bounds.center = new Vector3(bounds.center.x, 0, bounds.center.z);
+            }
+
+            // Offset all obstacles by the bounds center value so that the maze is centered around (0, 0, 0)
+            _maze.transform.Find("Start").position += bounds.center;
+            foreach (Transform child in _maze.transform)
+            {
+                foreach (Transform obstacle in child)
+                {
+                    obstacle.position += bounds.center;
+                }
             }
         }
 
