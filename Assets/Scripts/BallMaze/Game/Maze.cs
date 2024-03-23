@@ -41,6 +41,8 @@ namespace BallMaze
                 return false;
             }
 
+            obstacles.Clear();
+
             // Create all container objects
             GameObject flagTargetsContainer = new GameObject("FlagTargets");
             GameObject floorsContainer = new GameObject("Floors");
