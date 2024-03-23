@@ -124,7 +124,7 @@ namespace BallMaze.UI
         {
             UIManager.Instance.Show(UIViewType.Playing);
 
-            GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
+            LevelManager.Instance.LoadLevel(id);
         }
 
 

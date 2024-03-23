@@ -39,7 +39,7 @@ namespace BallMaze.UI
 
             _quitButton.clickable.clicked += () =>
             {
-                GameObject.Find("LevelManager").GetComponent<LevelManager>().QuitLevel();
+                LevelManager.Instance.QuitLevel();
                 Hide();
                 UIManager.Instance.Show(UIViewType.MainMenu);
             };

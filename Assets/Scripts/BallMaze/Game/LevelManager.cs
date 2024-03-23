@@ -55,6 +55,20 @@ namespace BallMaze
 
     public class LevelManager : MonoBehaviour
     {
+        // Singleton pattern
+        private static LevelManager _instance;
+        public static LevelManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Debug.LogError("LevelManager is null!");
+                }
+                return _instance;
+            }
+        }
+
         public static string levelToLoad = "";
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";

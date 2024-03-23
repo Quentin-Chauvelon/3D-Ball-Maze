@@ -202,7 +202,7 @@ namespace BallMaze
         {
             SceneManager.LoadScene(0);
 
-            GameObject.Find("LevelManager").GetComponent<LevelManager>().QuitLevel();
+            LevelManager.Instance.QuitLevel();
         }
 
 
