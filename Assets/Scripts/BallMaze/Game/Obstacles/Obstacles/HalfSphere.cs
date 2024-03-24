@@ -13,6 +13,8 @@ namespace BallMaze.Obstacles
 
         public override bool canRespawnOn => false;
 
+        public override bool canRollOn => true;
+
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
@@ -31,7 +33,7 @@ namespace BallMaze.Obstacles
 
             halfsphere.transform.position = position;
 
-            halfsphere.transform.Find("HalfSphere_Base").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            halfsphere.transform.Find("HalfSphere_Floor").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
             halfsphere.transform.Find("HalfSphere_Sphere").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
 
             return halfsphere;

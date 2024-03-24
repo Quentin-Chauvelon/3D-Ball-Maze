@@ -23,6 +23,8 @@ namespace BallMaze.Obstacles
 
         public override bool canRespawnOn => true;
 
+        public override bool canRollOn => true;
+
         public override bool canKill => false;
 
         public Vector3 position { get; set; }

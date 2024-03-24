@@ -43,6 +43,9 @@ namespace BallMaze.Obstacles
         public abstract bool canRespawnOn { get; }
 
         [JsonIgnore]
+        public abstract bool canRollOn { get; }
+
+        [JsonIgnore]
         public abstract bool canKill { get; }
 
 

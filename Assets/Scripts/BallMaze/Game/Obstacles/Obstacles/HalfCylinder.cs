@@ -13,6 +13,8 @@ namespace BallMaze.Obstacles
 
         public override bool canRespawnOn => true;
 
+        public override bool canRollOn => true;
+
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
@@ -46,7 +48,7 @@ namespace BallMaze.Obstacles
                     break;
             }
 
-            halfcylinder.transform.Find("HalfCylinder_Base").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            halfcylinder.transform.Find("HalfCylinder_Floor").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
             halfcylinder.transform.Find("HalfCylinder_Cylinder").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
 
             return halfcylinder;

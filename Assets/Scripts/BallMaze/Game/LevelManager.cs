@@ -6,6 +6,7 @@ using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
+using BallMaze.Obstacles;
 
 
 namespace BallMaze
@@ -76,14 +77,34 @@ namespace BallMaze
         public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
 
         private LevelState _levelState;
+        public LevelState LevelState
+        {
+            get { return _levelState; }
+        }
 
         private Controls _controls;
+
         private Maze _maze;
+        public Maze Maze
+        {
+            get { return _maze; }
+        }
+
         private Ball _ball;
         private CameraManager _camera;
 
+        private GameObject _lastRespawnableObstacle;
+
         [SerializeField]
         private Config _config;
+
+
+        private void Awake()
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
 
         // Start is called before the first frame update
         void Start()
@@ -212,7 +233,7 @@ namespace BallMaze
         }
 
 
-        private void PauseLevel()
+        public void PauseLevel()
         {
             _controls.DisableAndHideControls();
 
@@ -227,12 +248,14 @@ namespace BallMaze
             ResumeLevel();
         }
 
-        
-        private void ResetLevel()
+
+        public void ResetLevel()
         {
             _levelState = LevelState.WaitingToStart;
 
             _controls.DisableAndShowControls();
+
+            _lastRespawnableObstacle = null;
 
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
@@ -287,11 +310,43 @@ namespace BallMaze
 
 
         /// <summary>
+        /// Get the obstacle from the GameObject the ball collided with.
+        /// The GameObject can be the obstacle itself or one of its parents :
+        /// If the GameObject is a primitive obstacle (eg: floor), the obstacle is the GameObject itself.
+        /// If the GameObject is a prefab or a mesh (eg: rail), the obstacle is the GameObject's parent.
+        /// If the GameObject is a prefab containing a mesh (eg: flag target), the obstacle is the GameObject's parent's parent.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
+        public GameObject GetObstacleGameObjectFromBallCollision(GameObject gameObject)
+        {
+            if (gameObject.transform.parent.parent.name == "Maze")
+            {
+                return gameObject;
+            }
+            else if (gameObject.transform.parent.parent.parent.name == "Maze")
+            {
+                return gameObject.transform.parent.gameObject;
+            }
+            else if (gameObject.transform.parent.parent.parent.parent.name == "Maze")
+            {
+                return gameObject.transform.parent.parent.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
         /// Quit the level and resets everything.
         /// </summary>
         public void QuitLevel()
         {
             PauseLevel();
+
+            _lastRespawnableObstacle = null;
 
             _ball.SetBallVisible(false);
             _ball.FreezeBall(true);

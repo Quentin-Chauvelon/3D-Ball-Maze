@@ -12,6 +12,8 @@ namespace BallMaze.Obstacles
 
         public override bool canRespawnOn => false;
 
+        public override bool canRollOn => false;
+
         public override bool canKill => true;
 
         public int obstacleId { get; set; }
