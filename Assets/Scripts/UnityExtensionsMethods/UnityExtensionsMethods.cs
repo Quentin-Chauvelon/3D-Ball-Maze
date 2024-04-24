@@ -86,9 +86,9 @@ namespace UnityExtensionMethods
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool AlmostEquals(this float a, float b)
+        public static bool AlmostEquals(this float a, float b, float epsilon = 0.0001f)
         {
-            return Mathf.Approximately(a, b);
+            return Math.Abs(a - b) < epsilon;
         }
 
         
