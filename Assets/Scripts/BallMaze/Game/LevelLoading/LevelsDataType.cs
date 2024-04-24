@@ -47,7 +47,7 @@ namespace BallMaze
         public string id;
         public string name;
         public string description;
-        public Difficulty difficulty;
+        public DailyLevelDifficulty difficulty;
         public LevelType levelType;
 
         public Vector3 startPosition;
@@ -59,16 +59,6 @@ namespace BallMaze
         public Obstacle[] obstacles;
 
         public float[] times;
-    }
-
-
-    public enum Difficulty
-    {
-        VeryEasy,
-        Easy,
-        Medium,
-        Hard,
-        Extreme
     }
 
 

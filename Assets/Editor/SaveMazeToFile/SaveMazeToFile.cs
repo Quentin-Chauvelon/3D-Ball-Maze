@@ -99,7 +99,7 @@ namespace BallMaze.Editor
             level.id = _levelId.value;
             level.name = _name.value;
             level.description = _description.value;
-            level.difficulty = (Difficulty)_difficulty.value;
+            level.difficulty = (DailyLevelDifficulty)_difficulty.value;
             level.levelType = (LevelType)_levelType.value;
 
             level.startPosition = _maze.transform.Find("Start").position;

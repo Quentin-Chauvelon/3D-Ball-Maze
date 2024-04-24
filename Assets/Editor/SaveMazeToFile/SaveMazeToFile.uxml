@@ -6,7 +6,7 @@
         <ui:TextField picking-mode="Ignore" label="Level Id" name="Id" style="width: auto;" />
         <ui:TextField picking-mode="Ignore" label="Level Name" name="Name" style="width: auto;" />
         <ui:TextField picking-mode="Ignore" label="Description" name="Description" style="width: auto;" />
-        <ui:EnumField label="Difficulty" type="BallMaze.Difficulty, Assembly-CSharp" name="Difficulty" />
+        <ui:EnumField label="Difficulty" type="BallMaze.DailyLevelDifficulty, Assembly-CSharp" name="Difficulty" />
         <ui:EnumField label="Level Type" type="BallMaze.LevelType, Assembly-CSharp" name="LevelType" />
         <ui:Label tabindex="-1" text="Level times" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LevelTimes" style="-unity-font-style: bold; margin-top: 20px; margin-right: 0; margin-bottom: 5px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:TextField picking-mode="Ignore" label="Star 1 Time" name="Star1Time" style="width: auto;" />
