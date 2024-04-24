@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using BallMaze.Obstacles;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
 
 
 namespace BallMaze.Editor
@@ -230,6 +231,8 @@ namespace BallMaze.Editor
             level.times[1] = float.Parse(_star2Time.value);
             level.times[2] = float.Parse(_star3Time.value);
 
+            CleanLevelObject(level);
+
             // Serialize a compact version of the level and a pretty version
             string serializedJsonData = JsonConvert.SerializeObject(level);
             string serializedJsonDataPretty = JsonConvert.SerializeObject(level, Formatting.Indented);
@@ -285,6 +288,19 @@ namespace BallMaze.Editor
             {
                 new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
             }
+        }
+
+
+        /// <summary>
+        /// Clean the maze object by removing all obstacles with issues
+        /// (eg: a wall not on top of a floor)
+        /// </summary>
+        private void CleanLevelObject(Level level)
+        {
+            // Filter all relatively positionnable obstacles that are not on top of an other obstacle
+            level.walls = level.walls.Where(obstacle => !(obstacle is IRelativelyPositionnable) || ((IRelativelyPositionnable)obstacle).obstacleId >= 0).ToArray();
+            level.corners = level.corners.Where(obstacle => !(obstacle is IRelativelyPositionnable) || ((IRelativelyPositionnable)obstacle).obstacleId >= 0).ToArray();
+            level.obstacles = level.obstacles.Where(obstacle => !(obstacle is IRelativelyPositionnable) || ((IRelativelyPositionnable)obstacle).obstacleId >= 0).ToArray();
         }
 
 
@@ -346,7 +362,7 @@ namespace BallMaze.Editor
             }
 
             Debug.LogWarning($"No obstacle found under {transform.name}!");
-            return 0;
+            return -1;
         }
 
 
