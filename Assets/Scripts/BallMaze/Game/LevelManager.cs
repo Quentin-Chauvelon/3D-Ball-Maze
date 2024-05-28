@@ -140,6 +140,8 @@ namespace BallMaze
             _ball = GameObject.Find("Ball").GetComponent<Ball>();
             _camera = Camera.main.GetComponent<CameraManager>();
 
+            _maze.InitMaze();
+
             if (_config.setLevelToLoad)
             {
                 levelToLoad = _config.levelToLoad;
@@ -182,10 +184,7 @@ namespace BallMaze
             if (levelToLoad != "")
             {
                 // If a maze is already loaded, clear it
-                if (_maze.IsMazeLoaded())
-                {
-                    ClearMaze();
-                }
+                ClearMaze();
 
                 bool result = _maze.BuildMaze(levelType, levelId);
                 if (!result)
@@ -194,6 +193,8 @@ namespace BallMaze
                     _levelState = LevelState.Error;
                     return;
                 }
+
+                Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap);
 
                 // Fit the maze in the camera's perspective
                 _camera.FitMazeInPerspective(_maze.GetMazeBounds());
@@ -259,6 +260,7 @@ namespace BallMaze
 
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
+            
             // Move the ball to the start position
             if (_maze.start)
             {

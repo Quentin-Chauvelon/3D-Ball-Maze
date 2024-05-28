@@ -17,13 +17,13 @@ namespace BallMaze
         public GameObject start;
 
         // A list of all the obstacles of the maze
-        private Obstacle[] _obstaclesList;
+        public Obstacle[] obstaclesList;
 
         // A dictionary that associates each obstacle GameObject to its corresponding Obstacle object
         public Dictionary<GameObject, Obstacle> obstacles = new Dictionary<GameObject, Obstacle>();
 
         // This represents a 2D map of the level and allows to easily get adjacents obstacles for example
-        private int[,] _obstaclesTypesMap;
+        public int[,] obstaclesTypesMap;
 
 
         void Awake()
@@ -31,6 +31,25 @@ namespace BallMaze
             _maze = GameObject.Find("Maze");
 
             _levelLoader = GetComponent<LevelLoader>();
+        }
+
+
+        /// <summary>
+        /// Initialize the obstacles containers. Must be called once at the beginning of the game.
+        /// </summary>
+        public void InitMaze()
+        {
+            // Create all container objects
+            new GameObject("FlagTargets").transform.SetParent(_maze.transform);
+            new GameObject("Floors").transform.SetParent(_maze.transform);
+            new GameObject("Walls").transform.SetParent(_maze.transform);
+            new GameObject("Corners").transform.SetParent(_maze.transform);
+            new GameObject("AbsolutelyPositionnableObstacles").transform.SetParent(_maze.transform);
+            new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
+
+            // Create the start object
+            start = new GameObject("Start");
+            start.transform.SetParent(_maze.transform);
         }
 
 
@@ -43,8 +62,8 @@ namespace BallMaze
         public bool BuildMaze(LevelType levelType, string levelId)
         {
             obstacles.Clear();
-            _obstaclesList = null;
-            _obstaclesTypesMap = null;
+            obstaclesList = null;
+            obstaclesTypesMap = null;
 
             Level level = _levelLoader.DeserializeLevel(levelType, levelId);
             if (level == null)
@@ -52,32 +71,15 @@ namespace BallMaze
                 return false;
             }
 
-            _obstaclesList = new Obstacle[level.nbObstacles];
-            _obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
+            obstaclesList = new Obstacle[level.nbObstacles];
+            obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
 
-            // Create all container objects
-            GameObject flagTargetsContainer = new GameObject("FlagTargets");
-            GameObject floorsContainer = new GameObject("Floors");
-            GameObject wallsContainer = new GameObject("Walls");
-            GameObject cornersContainer = new GameObject("Corners");
-            GameObject absolutelyPositionnableObstaclesContainer = new GameObject("AbsolutelyPositionnableObstacles");
-            GameObject relativelyPositionnableObstaclesContainer = new GameObject("RelativelyPositionnableObstacles");
-            flagTargetsContainer.transform.SetParent(_maze.transform);
-            floorsContainer.transform.SetParent(_maze.transform);
-            wallsContainer.transform.SetParent(_maze.transform);
-            cornersContainer.transform.SetParent(_maze.transform);
-            absolutelyPositionnableObstaclesContainer.transform.SetParent(_maze.transform);
-            relativelyPositionnableObstaclesContainer.transform.SetParent(_maze.transform);
-
-            // Create the start object
-            start = new GameObject("Start");
-            start.transform.position = level.startPosition;
-            start.transform.SetParent(_maze.transform);
+            _maze.transform.Find("Start").position = level.startPosition;
 
             foreach (Floor floor in level.floors)
             {
-                _obstaclesList[floor.id] = floor;
-                AddObstacleToTypesMap(_obstaclesTypesMap, floor);
+                obstaclesList[floor.id] = floor;
+                AddObstacleToTypesMap(obstaclesTypesMap, floor);
             }
 
             // Obstacles
@@ -85,35 +87,33 @@ namespace BallMaze
             {
                 if (obstacle is IAbsolutelyPositionnable)
                 {
-                    _obstaclesList[obstacle.id] = obstacle;
-                    AddObstacleToTypesMap(_obstaclesTypesMap, obstacle);
+                    obstaclesList[obstacle.id] = obstacle;
+                    AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
                 }
                 else if (obstacle is IRelativelyPositionnable)
                 {
-                    _obstaclesList[obstacle.id] = obstacle;
-                    AddObstacleToTypesMap(_obstaclesTypesMap, obstacle);
+                    obstaclesList[obstacle.id] = obstacle;
+                    AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
                 }
             }
 
             // Walls
             foreach (Wall wall in level.walls)
             {
-                _obstaclesList[wall.id] = wall;
-                AddObstacleToTypesMap(_obstaclesTypesMap, wall);
+                obstaclesList[wall.id] = wall;
+                AddObstacleToTypesMap(obstaclesTypesMap, wall);
             }
 
             // Corners
             foreach (Corner corner in level.corners)
             {
-                _obstaclesList[corner.id] = corner;
-                AddObstacleToTypesMap(_obstaclesTypesMap, corner);
+                obstaclesList[corner.id] = corner;
+                AddObstacleToTypesMap(obstaclesTypesMap, corner);
             }
 
             // Target
-            _obstaclesList[level.target.id] = level.target;
-            AddObstacleToTypesMap(_obstaclesTypesMap, level.target);
-
-            RenderAllObstacles(_obstaclesList, obstacles, _obstaclesTypesMap);
+            obstaclesList[level.target.id] = level.target;
+            AddObstacleToTypesMap(obstaclesTypesMap, level.target);
 
             return true;
         }
@@ -121,6 +121,15 @@ namespace BallMaze
 
         public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
+            GameObject maze = GameObject.Find("Maze");
+
+            Transform flagTargetsContainer = maze.transform.Find("FlagTargets");
+            Transform floorsContainer = maze.transform.Find("Floors");
+            Transform wallsContainer = maze.transform.Find("Walls");
+            Transform cornersContainer = maze.transform.Find("Corners");
+            Transform absolutelyPositionnableObstaclesContainer = maze.transform.Find("AbsolutelyPositionnableObstacles");
+            Transform relativelyPositionnableObstaclesContainer = maze.transform.Find("RelativelyPositionnableObstacles");
+
             foreach (Obstacle obstacle in obstaclesList)
             {
                 GameObject obstacleGameObject = obstacle.Render(obstacles, obstaclesTypesMap);
@@ -128,40 +137,31 @@ namespace BallMaze
                 switch (obstacle.obstacleType)
                 {
                     case ObstacleType.Floor:
-                        obstacleGameObject.transform.SetParent(GameObject.Find("Floors").transform);
+                        obstacleGameObject.transform.SetParent(floorsContainer);
                         break;
                     case ObstacleType.Wall:
-                        obstacleGameObject.transform.SetParent(GameObject.Find("Walls").transform);
+                        obstacleGameObject.transform.SetParent(wallsContainer);
                         break;
                     case ObstacleType.Corner:
-                        obstacleGameObject.transform.SetParent(GameObject.Find("Corners").transform);
+                        obstacleGameObject.transform.SetParent(cornersContainer);
                         break;
                     case ObstacleType.FlagTarget:
-                        obstacleGameObject.transform.SetParent(GameObject.Find("FlagTargets").transform);
+                        obstacleGameObject.transform.SetParent(flagTargetsContainer);
                         break;
                     default:
                         if (obstacle is IAbsolutelyPositionnable)
                         {
-                            obstacleGameObject.transform.SetParent(GameObject.Find("AbsolutelyPositionnableObstacles").transform);
+                            obstacleGameObject.transform.SetParent(absolutelyPositionnableObstaclesContainer);
                         }
                         else if (obstacle is IRelativelyPositionnable)
                         {
-                            obstacleGameObject.transform.SetParent(GameObject.Find("RelativelyPositionnableObstacles").transform);
+                            obstacleGameObject.transform.SetParent(relativelyPositionnableObstaclesContainer);
                         }
                         break;
                 }
 
                 obstacles[obstacleGameObject] = obstacle;
             }
-        }
-
-
-        /// <summary>
-        /// Returns a boolen indicating if a maze is already loaded.
-        /// </summary>
-        public bool IsMazeLoaded()
-        {
-            return _maze.transform.childCount > 0;
         }
 
 
@@ -188,10 +188,13 @@ namespace BallMaze
         /// </summary>
         public void ClearMaze()
         {
-            // Loop through all the maze's children and delete them
+            // Loop through all the obstacles and delete them
             foreach (Transform transform in gameObject.transform)
             {
-                Destroy(transform.gameObject);
+                foreach (Transform child in transform)
+                {
+                    Destroy(child.gameObject);
+                }
             }
 
             ResetMazeOrientation();
