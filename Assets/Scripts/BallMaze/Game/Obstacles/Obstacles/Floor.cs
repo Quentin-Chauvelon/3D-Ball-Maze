@@ -27,7 +27,7 @@ namespace BallMaze.Obstacles
         }
 
 
-        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
             // Use CreatePrimitive for simple objects (such as floor tiles and walls) because after benchmarking it,
             // it appears to be twice as fast as instantiating a prefab (700ms vs 1.5s for 10k objects)

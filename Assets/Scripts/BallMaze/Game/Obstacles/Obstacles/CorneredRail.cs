@@ -31,16 +31,57 @@ namespace BallMaze.Obstacles
         }
 
 
-        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/CorneredRail.fbx", typeof(GameObject)));
-            corneredRail.name = "CorneredRail";
+            GameObject corneredRail;
+            int railDirection = (int)direction;
 
+            Maze.GetPositionInTypesMap(obstaclesTypesMap, this, out int x, out int y);
+
+            // Get the adjacent obstacles in the direction of the cornered rail and the direction 90 degrees to the right
+            ObstacleType firstEndObstacleType = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, direction);
+            ObstacleType lastEndObstacleType = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, (CardinalDirection)(railDirection + 1));
+
+            bool isFirstEndRail = firstEndObstacleType == ObstacleType.Rail || firstEndObstacleType == ObstacleType.CorneredRail;
+            bool isLastEndRail = lastEndObstacleType == ObstacleType.Rail || lastEndObstacleType == ObstacleType.CorneredRail;
+
+            // Load the correct rail model based on the adjacent obstacles
+            if (isFirstEndRail && isLastEndRail)
+            {
+                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail0Connections.fbx", typeof(GameObject)));
+            }
+            else if (!isFirstEndRail && !isLastEndRail)
+            {
+                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail2Connections.fbx", typeof(GameObject)));
+            }
+            else if (isFirstEndRail && !isLastEndRail)
+            {
+                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsRight.fbx", typeof(GameObject)));
+
+                // Update the direction of the rail, otherwise the model will be not rotated properly
+                railDirection += 1;
+            }
+            else
+            {
+                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsLeft.fbx", typeof(GameObject)));
+            }
+
+            corneredRail.name = "CorneredRail";
             corneredRail.transform.position = position;
-            corneredRail.transform.rotation = Quaternion.Euler(0, (int)direction * 90, 0);
+            corneredRail.transform.rotation = Quaternion.Euler(0, railDirection * 90, 0);
 
             corneredRail.transform.Find("CorneredRail_InteriorRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
             corneredRail.transform.Find("CorneredRail_ExteriorRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
+
+            // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible
+            if (!GameManager.DEBUG)
+            {
+                corneredRail.transform.Find("CorneredRail_InteriorRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
+                corneredRail.transform.Find("CorneredRail_ExteriorRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
+                corneredRail.transform.Find("CorneredRail_Floor1").GetComponent<MeshRenderer>().enabled = false;
+                corneredRail.transform.Find("CorneredRail_Floor2").GetComponent<MeshRenderer>().enabled = false;
+                corneredRail.transform.Find("CorneredRail_Floor3").GetComponent<MeshRenderer>().enabled = false;
+            }
 
             return corneredRail;
         }

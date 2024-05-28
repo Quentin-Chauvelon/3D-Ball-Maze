@@ -43,7 +43,7 @@ namespace BallMaze.Obstacles
         }
 
 
-        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
             GameObject tunnel;
             switch (tunnelType)

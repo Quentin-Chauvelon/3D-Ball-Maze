@@ -23,7 +23,8 @@ namespace BallMaze.Obstacles
         Tunnel,
         Spikes,
         Wedge,
-        FloorHole
+        FloorHole,
+        Undefined
     }
 
 
@@ -55,8 +56,13 @@ namespace BallMaze.Obstacles
         }
 
 
-        public abstract GameObject Render(Dictionary<GameObject, Obstacle> obstacles);
+        public abstract GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap);
 
+
+        public void OnObstacleCollision()
+        {
+            Debug.Log($"Obstacle collision {id}");
+        }
 
 
         /// <summary>

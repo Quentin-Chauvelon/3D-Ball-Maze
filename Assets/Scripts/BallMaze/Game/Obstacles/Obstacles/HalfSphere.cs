@@ -26,7 +26,7 @@ namespace BallMaze.Obstacles
         }
 
 
-        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
             GameObject halfsphere = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/HalfSphere.fbx", typeof(GameObject)));
             halfsphere.name = "HalfSphere";

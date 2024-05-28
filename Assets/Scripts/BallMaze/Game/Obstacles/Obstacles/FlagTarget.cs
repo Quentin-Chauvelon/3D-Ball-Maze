@@ -30,7 +30,7 @@ namespace BallMaze.Obstacles
         }
 
 
-        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles)
+        public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
             GameObject flagTarget = (GameObject)Maze.InstantiateResource("Level/Targets/FlagTarget");
             flagTarget.name = "Target";

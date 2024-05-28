@@ -20,7 +20,14 @@ namespace BallMaze.Editor
         private Button _loadButton;
         private Button _clearMazeButton;
 
+        // A list of all the obstacles of the maze
+        private Obstacle[] _obstaclesList;
+
+        // A dictionary that associates each obstacle GameObject to its corresponding Obstacle object
         private Dictionary<GameObject, Obstacle> _obstacles = new Dictionary<GameObject, Obstacle>();
+
+        // This represents a 2D map of the level and allows to easily get adjacents obstacles for example
+        private int[,] _obstaclesTypesMap;
 
 
         [MenuItem("Utilities/Load Maze From File", false, 21)]
@@ -57,6 +64,8 @@ namespace BallMaze.Editor
         private void LoadMaze()
         {
             _obstacles.Clear();
+            _obstaclesList = null;
+            _obstaclesTypesMap = null;
 
             Debug.Log("Loading: Loading level " + _id.value + " from file: " + _fileName.value);
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -74,11 +83,16 @@ namespace BallMaze.Editor
 
             Level level = JsonConvert.DeserializeObject<Level>(jsonData);
 
+            _obstaclesList = new Obstacle[level.nbObstacles];
+            _obstaclesTypesMap = Maze.InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
+
             GameObject maze = GameObject.Find("Maze");
             if (!maze)
             {
                 maze = new GameObject("Maze");
             }
+
+            ClearMaze();
 
             GameObject flagTargetsContainer = new GameObject("FlagTargets");
             GameObject floorsContainer = new GameObject("Floors");
@@ -100,9 +114,8 @@ namespace BallMaze.Editor
             // Floor tiles
             foreach (Floor floor in level.floors)
             {
-                GameObject floorGameObject = floor.Render(_obstacles);
-                floorGameObject.transform.SetParent(floorsContainer.transform);
-                _obstacles[floorGameObject] = floor;
+                _obstaclesList[floor.id] = floor;
+                Maze.AddObstacleToTypesMap(_obstaclesTypesMap, floor);
             }
 
             // Obstacles
@@ -110,30 +123,35 @@ namespace BallMaze.Editor
             {
                 if (obstacle is IAbsolutelyPositionnable)
                 {
-                    GameObject obstacleGameObject = obstacle.Render(_obstacles);
-                    obstacleGameObject.transform.SetParent(absolutelyPositionnableObstaclesContainer.transform);
-                    _obstacles[obstacleGameObject] = obstacle;
+                    _obstaclesList[obstacle.id] = obstacle;
+                    Maze.AddObstacleToTypesMap(_obstaclesTypesMap, obstacle);
                 }
                 else if (obstacle is IRelativelyPositionnable)
                 {
-                    obstacle.Render(_obstacles).transform.SetParent(relativelyPositionnableObstaclesContainer.transform);
+                    _obstaclesList[obstacle.id] = obstacle;
+                    Maze.AddObstacleToTypesMap(_obstaclesTypesMap, obstacle);
                 }
             }
 
             // Walls
             foreach (Wall wall in level.walls)
             {
-                wall.Render(_obstacles).transform.SetParent(wallsContainer.transform);
+                _obstaclesList[wall.id] = wall;
+                Maze.AddObstacleToTypesMap(_obstaclesTypesMap, wall);
             }
 
             // Corners
             foreach (Corner corner in level.corners)
             {
-                corner.Render(_obstacles).transform.SetParent(cornersContainer.transform);
+                _obstaclesList[corner.id] = corner;
+                Maze.AddObstacleToTypesMap(_obstaclesTypesMap, corner);
             }
 
             // Target
-            level.target.Render(_obstacles).transform.SetParent(flagTargetsContainer.transform);
+            _obstaclesList[level.target.id] = level.target;
+            Maze.AddObstacleToTypesMap(_obstaclesTypesMap, level.target);
+
+            Maze.RenderAllObstacles(_obstaclesList, _obstacles, _obstaclesTypesMap);
 
             stopwatch.Stop();
             Debug.Log("Loading: Done (" + stopwatch.ElapsedMilliseconds.ToString() + "ms)");

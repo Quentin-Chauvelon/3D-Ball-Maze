@@ -40,6 +40,8 @@ namespace BallMaze
             }
         }
 
+        public static bool DEBUG = false;
+
         private GameState _gameState;
 
         private DateTime _lastUnfocus;

@@ -9,6 +9,7 @@ using BallMaze.Obstacles;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using Cysharp.Threading.Tasks.Triggers;
 
 
 namespace BallMaze.Editor
@@ -93,7 +94,9 @@ namespace BallMaze.Editor
             _maze = GameObject.Find("Maze");
 
             // Move the maze to the origin because rotating the maze will do so around the origin, so we need the maze to be centered around (0, 0, 0)
-            MoveMazeToOrigin();
+            Bounds bounds = GetMazeBounds();
+
+            MoveMazeToOrigin(bounds);
 
             Level level = new Level();
 
@@ -102,6 +105,7 @@ namespace BallMaze.Editor
             level.description = _description.value;
             level.difficulty = (DailyLevelDifficulty)_difficulty.value;
             level.levelType = (LevelType)_levelType.value;
+            level.mazeSize = bounds.size;
 
             level.startPosition = _maze.transform.Find("Start").position;
 
@@ -112,7 +116,7 @@ namespace BallMaze.Editor
                 Transform floorGameObject = _maze.transform.Find("Floors").GetChild(i);
 
                 // Create the floor object that will be serialized from the GameObject
-                Floor floor = new Floor(Id, floorGameObject.position);
+                Floor floor = new Floor(Id, floorGameObject.position.RoundXZ(0.5f));
 
                 // Add the floor to the level structure
                 level.floors[i] = floor;
@@ -132,19 +136,19 @@ namespace BallMaze.Editor
                 Obstacle obstacle = null;
                 if (obstacleGameObject.name.Contains("CorneredRail"))
                 {
-                    obstacle = new CorneredRail(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                    obstacle = new CorneredRail(Id, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
                 }
                 else if (obstacleGameObject.name.Contains("Rail"))
                 {
-                    obstacle = new Rail(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                    obstacle = new Rail(Id, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
                 }
                 else if (obstacleGameObject.name.Contains("HalfSphere"))
                 {
-                    obstacle = new HalfSphere(Id, obstacleGameObject.position);
+                    obstacle = new HalfSphere(Id, obstacleGameObject.position.RoundXZ(0.5f));
                 }
                 else if (obstacleGameObject.name.Contains("HalfCylinder"))
                 {
-                    obstacle = new HalfCylinder(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                    obstacle = new HalfCylinder(Id, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
                 }
                 else if (obstacleGameObject.name.Contains("Tunnel"))
                 {
@@ -166,7 +170,7 @@ namespace BallMaze.Editor
                         tunnelType = TunnelType.FourWay;
                     }
 
-                    obstacle = new Tunnel(Id, tunnelType, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
+                    obstacle = new Tunnel(Id, tunnelType, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
                 }
                 else if (obstacleGameObject.name.Contains("Spikes"))
                 {
@@ -174,11 +178,11 @@ namespace BallMaze.Editor
                 }
                 else if (obstacleGameObject.name.Contains("Wedge"))
                 {
-                    obstacle = new Wedge(Id, obstacleGameObject.position, (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90), (int)obstacleGameObject.localScale.z);
+                    obstacle = new Wedge(Id, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90), (int)obstacleGameObject.localScale.z);
                 }
                 else if (obstacleGameObject.name.Contains("FloorHole"))
                 {
-                    obstacle = new FloorHole(Id, obstacleGameObject.position);
+                    obstacle = new FloorHole(Id, obstacleGameObject.position.RoundXZ(0.5f));
                 }
 
                 level.obstacles[i] = obstacle;
@@ -190,6 +194,7 @@ namespace BallMaze.Editor
             }
 
             // Walls
+            FilterInvalidObstacles(_maze.transform.Find("Walls"));
             level.walls = new Wall[_maze.transform.Find("Walls").childCount];
             for (int i = 0; i < _maze.transform.Find("Walls").childCount; i++)
             {
@@ -204,6 +209,7 @@ namespace BallMaze.Editor
             }
 
             // Corners
+            FilterInvalidObstacles(_maze.transform.Find("Corners"));
             level.corners = new Corner[_maze.transform.Find("Corners").childCount];
             for (int i = 0; i < _maze.transform.Find("Corners").childCount; i++)
             {
@@ -215,23 +221,26 @@ namespace BallMaze.Editor
             }
 
             // Target
+            FilterInvalidObstacles(_maze.transform.Find("FlagTargets"));
             Transform targetGameObject = _maze.transform.Find("FlagTargets").GetChild(0);
             FlagTarget flagTarget = new FlagTarget(Id, GetObstacleIdUnderObstacle(targetGameObject), GetObstacleCardinalDirection(ObstacleType.FlagTarget, targetGameObject));
             level.target = flagTarget;
 
             // Relatively positionnable obstacles
+            FilterInvalidObstacles(_maze.transform.Find("RelativelyPositionnableObstacles"));
             for (int i = 0; i < _maze.transform.Find("RelativelyPositionnableObstacles").childCount; i++)
             {
 
             }
+
+            // The last id is equal to the number of obstacles
+            level.nbObstacles = Id;
 
             // Times
             level.times = new float[3];
             level.times[0] = float.Parse(_star1Time.value);
             level.times[1] = float.Parse(_star2Time.value);
             level.times[2] = float.Parse(_star3Time.value);
-
-            CleanLevelObject(level);
 
             // Serialize a compact version of the level and a pretty version
             string serializedJsonData = JsonConvert.SerializeObject(level);
@@ -305,19 +314,29 @@ namespace BallMaze.Editor
 
 
         /// <summary>
+        /// Delete all children of the given parent which are considered to be invalid obstacles (eg: a wall not on top of a floor)
+        /// </summary>
+        /// <param name="parent"></param>
+        private void FilterInvalidObstacles(Transform parent)
+        {
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                Transform gameObject = parent.GetChild(i);
+
+                if (GetObstacleIdUnderObstacle(gameObject) == -1)
+                {
+                    DestroyImmediate(gameObject.gameObject);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Move the maze to the origin.
         /// The maze needs to be centered around (0, 0, 0) because rotating the maze will do so around the origin and not the center of the maze.
         /// </summary>
-        private void MoveMazeToOrigin()
+        private void MoveMazeToOrigin(Bounds bounds)
         {
-            // Include all renderers to get the total size of the maze in order to get the center
-            Renderer[] renderers = _maze.GetComponentsInChildren<Renderer>();
-            Bounds bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; ++i)
-            {
-                bounds.Encapsulate(renderers[i].bounds);
-            }
-
             // Invert the x and z axis otherwise it moves in the wrong direction
             bounds.center = new Vector3(-bounds.center.x, bounds.center.y, -bounds.center.z);
 
@@ -345,19 +364,49 @@ namespace BallMaze.Editor
 
 
         /// <summary>
+        /// Returns the bounds of the maze
+        /// </summary>
+        /// <returns></returns>
+        private Bounds GetMazeBounds()
+        {
+            // Include all renderers to get the total size of the maze in order to get the center
+            Renderer[] renderers = _maze.GetComponentsInChildren<Renderer>();
+            Bounds bounds = renderers[0].bounds;
+            for (var i = 1; i < renderers.Length; ++i)
+            {
+                bounds.Encapsulate(renderers[i].bounds);
+            }
+
+            return bounds;
+        }
+
+
+        /// <summary>
         /// Gets the obstacle under the given obstacle
+        /// Returns the id of the obstacle under the given obstacle if found, -1 otherwise
         /// </summary>
         private int GetObstacleIdUnderObstacle(Transform transform)
         {
-            // Round the position to match the position of the floor (because a floor is centered on its 1x1 tile
-            // while some obstacles like wall are 1x0.2 and on the edge of the tile)
-            Vector3 roundedPosition = transform.position.Round();
+            Vector3 roundedPosition = transform.position.RoundXZ(0.5f);
 
             foreach (KeyValuePair<int, Obstacle> obstacleEntry in _obstacles)
             {
-                if (obstacleEntry.Value is IAbsolutelyPositionnable && roundedPosition == ((IAbsolutelyPositionnable)obstacleEntry.Value).position)
+
+                if (obstacleEntry.Value is IAbsolutelyPositionnable)
                 {
-                    return obstacleEntry.Key;
+                    Vector3 obstaclePosition = ((IAbsolutelyPositionnable)obstacleEntry.Value).position;
+
+                    float range = 0.5f + float.Epsilon;
+
+                    // If the obstacle position is withing a relative range of less than 0.5 on the x and z axis,
+                    // then the given transform is on top of the current obstacle
+                    if (roundedPosition.x >= obstaclePosition.x - range &&
+                        roundedPosition.x <= obstaclePosition.x + range &&
+                        roundedPosition.z >= obstaclePosition.z - range &&
+                        roundedPosition.z <= obstaclePosition.z + range)
+                    {
+                        return obstacleEntry.Key;
+                    }
                 }
             }
 
@@ -404,6 +453,26 @@ namespace BallMaze.Editor
                             ? CardinalDirection.East
                             : CardinalDirection.South;
                     }
+
+                case ObstacleType.FlagTarget:
+                    switch (transform.rotation.eulerAngles.y % 360)
+                    {
+                        case 0:
+                            return CardinalDirection.South;
+                        case 90:
+                        case -270:
+                            return CardinalDirection.West;
+                        case 180:
+                        case -180:
+                            return CardinalDirection.North;
+                        case 270:
+                        case -90:
+                            return CardinalDirection.East;
+                        default:
+                            Debug.LogWarning($"Unable to find direction for obstacle {transform.name} (type: {obstacleType})");
+                            return CardinalDirection.North;
+                    }
+
 
                 default:
                     Debug.LogWarning($"Unable to find direction for obstacle {transform.name} (type: {obstacleType})");

@@ -49,6 +49,8 @@ namespace BallMaze
         public string description;
         public DailyLevelDifficulty difficulty;
         public LevelType levelType;
+        public int nbObstacles;
+        public Vector3 mazeSize;
 
         public Vector3 startPosition;
 
