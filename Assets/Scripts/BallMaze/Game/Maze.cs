@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.TestTools.CodeCoverage;
 using UnityEngine;
 using UnityExtensionMethods;
 
@@ -15,6 +16,9 @@ namespace BallMaze
         private LevelLoader _levelLoader;
 
         public GameObject start;
+
+        // The y level at which the player loses when the ball falls. Calculated when the maze is built
+        public float voidYLevel = -10f;
 
         // A list of all the obstacles of the maze
         public Obstacle[] obstaclesList;
@@ -39,6 +43,12 @@ namespace BallMaze
         /// </summary>
         public void InitMaze()
         {
+            // Delete the maze if it already exists before loading (from the editor for example)
+            foreach (Transform transform in _maze.transform)
+            {
+                Destroy(transform.gameObject);
+            }
+
             // Create all container objects
             new GameObject("FlagTargets").transform.SetParent(_maze.transform);
             new GameObject("Floors").transform.SetParent(_maze.transform);
@@ -47,7 +57,7 @@ namespace BallMaze
             new GameObject("AbsolutelyPositionnableObstacles").transform.SetParent(_maze.transform);
             new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
 
-            // Create the start object
+            // Get the start object if it already exists or create a new one
             start = new GameObject("Start");
             start.transform.SetParent(_maze.transform);
         }
@@ -70,6 +80,14 @@ namespace BallMaze
             {
                 return false;
             }
+
+            // Update the void level based on the maze size. The formula uses trigonometry (a = c * sin(α)) and then multiplies by 5
+            // to have a margin and negative to have the void level below the maze
+            voidYLevel = level.mazeSize.x > level.mazeSize.z
+            ? level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f
+            : level.mazeSize.z / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f;
+            Debug.Log(level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad));
+            Debug.Log($"Void level: {voidYLevel}");
 
             obstaclesList = new Obstacle[level.nbObstacles];
             obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));

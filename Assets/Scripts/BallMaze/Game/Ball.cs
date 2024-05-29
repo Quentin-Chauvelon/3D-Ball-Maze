@@ -1,5 +1,6 @@
 using BallMaze.Obstacles;
 using Microsoft.Unity.VisualStudio.Editor;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,9 +26,16 @@ namespace BallMaze
         {
             if (LevelManager.Instance.LevelState == LevelState.Playing)
             {
+                // If the ball is below the void level, the player has lost
+                if (gameObject.transform.position.y <= LevelManager.Instance.Maze.voidYLevel)
+                {
+                    LevelManager.Instance.Lost();
+                    return;
+                }
+
                 if (_lastHitObstacle != null)
                 {
-                    // Check if the ball clipped through an obstacle and move bac on top if it did
+                    // Check if the ball clipped through an obstacle and move it back on top if it did
                     MoveBallOnObstacle();
                 }
             }
@@ -110,6 +118,12 @@ namespace BallMaze
 
             // Get the obstacle exact size
             Renderer[] renderers = _lastHitObstacle.GetComponentsInChildren<Renderer>();
+
+            if (renderers.Length == 0)
+            {
+                return;
+            }
+
             Bounds bounds = renderers[0].bounds;
             for (var i = 1; i < renderers.Length; ++i)
             {

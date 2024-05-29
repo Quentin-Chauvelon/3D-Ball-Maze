@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
 using BallMaze.Obstacles;
+using BallMaze.UI;
 
 
 namespace BallMaze
@@ -260,7 +261,7 @@ namespace BallMaze
 
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
-            
+
             // Move the ball to the start position
             if (_maze.start)
             {
@@ -282,6 +283,8 @@ namespace BallMaze
                 PauseLevel();
 
                 _levelState = LevelState.Won;
+
+                UIManager.Instance.Show(UIViewType.LevelCompleted);
             }
         }
 
@@ -289,13 +292,15 @@ namespace BallMaze
         /// <summary>
         /// Player lost the level. Either by falling off the maze or by hitting a killing obstacle.
         /// </summary>
-        private void Lost()
+        public void Lost()
         {
             if (_levelState == LevelState.Playing)
             {
                 PauseLevel();
 
                 _levelState = LevelState.Lost;
+
+                UIManager.Instance.Show(UIViewType.LevelFailed);
             }
         }
 
@@ -308,6 +313,30 @@ namespace BallMaze
             MazeEvents.targetReached -= TargetReached;
 
             _maze.ClearMaze();
+        }
+
+
+        public void HandleBallCollision(Collision other)
+        {
+            _lastRespawnableObstacle = other.gameObject;
+
+            Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
+
+            if (obstacle.canKill)
+            {
+                Lost();
+            }
+        }
+
+
+        public void HandleBallTrigger(Collider other)
+        {
+            Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
+
+            if (obstacle.obstacleType == ObstacleType.FlagTarget)
+            {
+                MazeEvents.targetReached?.Invoke();
+            }
         }
 
 
