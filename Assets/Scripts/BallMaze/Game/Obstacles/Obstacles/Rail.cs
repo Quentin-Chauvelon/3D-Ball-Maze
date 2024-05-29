@@ -104,8 +104,21 @@ namespace BallMaze.Obstacles
             // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible
             if (!GameManager.DEBUG)
             {
-                rail.transform.Find("StraightRail_LeftRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
-                rail.transform.Find("StraightRail_RightRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
+                // If the rail is the 2 connections rail, there are 4 hitboxes to remove
+                if (!isFirstEndRail && !isLastEndRail)
+                {
+                    rail.transform.Find("StraightRail_LeftRail_HitBox1").GetComponent<MeshRenderer>().enabled = false;
+                    rail.transform.Find("StraightRail_LeftRail_HitBox2").GetComponent<MeshRenderer>().enabled = false;
+                    rail.transform.Find("StraightRail_RightRail_HitBox1").GetComponent<MeshRenderer>().enabled = false;
+                    rail.transform.Find("StraightRail_RightRail_HitBox2").GetComponent<MeshRenderer>().enabled = false;
+                }
+                // Otherwise, there is only 2
+                else
+                {
+                    rail.transform.Find("StraightRail_LeftRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
+                    rail.transform.Find("StraightRail_RightRail_HitBox").GetComponent<MeshRenderer>().enabled = false;
+                }
+
                 rail.transform.Find("StraightRail_Floor1").GetComponent<MeshRenderer>().enabled = false;
                 rail.transform.Find("StraightRail_Floor2").GetComponent<MeshRenderer>().enabled = false;
             }

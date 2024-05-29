@@ -24,6 +24,8 @@ namespace BallMaze.Obstacles
         Spikes,
         Wedge,
         FloorHole,
+        KillFloor,
+        KillWall,
         Undefined
     }
 

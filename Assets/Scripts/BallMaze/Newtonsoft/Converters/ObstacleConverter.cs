@@ -69,6 +69,12 @@ namespace BallMaze.Newtonsoft.Helpers
                         case ObstacleType.FloorHole:
                             existingValue = new FloorHole(lJContainer["id"].Value<int>(), lJContainer["p"].ToObject<Vector3>(new JsonSerializer { Converters = { new Vector3Converter() } })); ;
                             break;
+                        case ObstacleType.KillFloor:
+                            existingValue = new KillFloor(lJContainer["id"].Value<int>(), lJContainer["p"].ToObject<Vector3>(new JsonSerializer { Converters = { new Vector3Converter() } })); ;
+                            break;
+                        case ObstacleType.KillWall:
+                            existingValue = new KillWall(lJContainer["id"].Value<int>(), lJContainer["oId"].Value<int>(), (CardinalDirection)lJContainer["d"].Value<int>());
+                            break;
                         default:
                             throw new JsonSerializationException($"Unknown obstacle type {obstacleType}");
                     }

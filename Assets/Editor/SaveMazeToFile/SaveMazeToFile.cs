@@ -109,6 +109,9 @@ namespace BallMaze.Editor
 
             level.startPosition = _maze.transform.Find("Start").position;
 
+            int nbAbsolutelyPositionnableObstacles = _maze.transform.Find("AbsolutelyPositionnableObstacles").childCount;
+            int nbRelativelyPositionnableObstacles = _maze.transform.Find("RelativelyPositionnableObstacles").childCount;
+
             // Floor tiles
             level.floors = new Floor[_maze.transform.Find("Floors").childCount];
             for (int i = 0; i < _maze.transform.Find("Floors").childCount; i++)
@@ -128,8 +131,8 @@ namespace BallMaze.Editor
 
             // Absolutely positionnable obstacles
             // These obstacles have to be computed first as they are used by other obstacles (walls, corners...)
-            level.obstacles = new Obstacle[_maze.transform.Find("AbsolutelyPositionnableObstacles").childCount + _maze.transform.Find("RelativelyPositionnableObstacles").childCount];
-            for (int i = 0; i < _maze.transform.Find("AbsolutelyPositionnableObstacles").childCount; i++)
+            level.obstacles = new Obstacle[nbAbsolutelyPositionnableObstacles + nbRelativelyPositionnableObstacles];
+            for (int i = 0; i < nbAbsolutelyPositionnableObstacles; i++)
             {
                 Transform obstacleGameObject = _maze.transform.Find("AbsolutelyPositionnableObstacles").GetChild(i);
 
@@ -172,10 +175,6 @@ namespace BallMaze.Editor
 
                     obstacle = new Tunnel(Id, tunnelType, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90));
                 }
-                else if (obstacleGameObject.name.Contains("Spikes"))
-                {
-                    obstacle = new Spikes(Id, GetObstacleIdUnderObstacle(obstacleGameObject));
-                }
                 else if (obstacleGameObject.name.Contains("Wedge"))
                 {
                     obstacle = new Wedge(Id, obstacleGameObject.position.RoundXZ(0.5f), (CardinalDirection)(obstacleGameObject.rotation.eulerAngles.y % 360 / 90), (int)obstacleGameObject.localScale.z);
@@ -183,6 +182,10 @@ namespace BallMaze.Editor
                 else if (obstacleGameObject.name.Contains("FloorHole"))
                 {
                     obstacle = new FloorHole(Id, obstacleGameObject.position.RoundXZ(0.5f));
+                }
+                else if (obstacleGameObject.name.Contains("KillFloor"))
+                {
+                    obstacle = new KillFloor(Id, obstacleGameObject.position.RoundXZ(0.5f));
                 }
 
                 level.obstacles[i] = obstacle;
@@ -228,9 +231,27 @@ namespace BallMaze.Editor
 
             // Relatively positionnable obstacles
             FilterInvalidObstacles(_maze.transform.Find("RelativelyPositionnableObstacles"));
-            for (int i = 0; i < _maze.transform.Find("RelativelyPositionnableObstacles").childCount; i++)
+            for (int i = 0; i < nbRelativelyPositionnableObstacles; i++)
             {
+                Transform obstacleGameObject = _maze.transform.Find("RelativelyPositionnableObstacles").GetChild(i);
 
+                Obstacle obstacle = null;
+                if (obstacleGameObject.name.Contains("KillWall"))
+                {
+                    obstacle = new KillWall(Id, GetObstacleIdUnderObstacle(obstacleGameObject), GetObstacleCardinalDirection(ObstacleType.Wall, obstacleGameObject));
+                }
+                else if (obstacleGameObject.name.Contains("Spikes"))
+                {
+                    obstacle = new Spikes(Id, GetObstacleIdUnderObstacle(obstacleGameObject));
+                }
+
+                // Add the relatively positionnable obstacles after all the absolutely positionnable obstacles
+                level.obstacles[nbAbsolutelyPositionnableObstacles + i] = obstacle;
+
+                if (obstacle != null)
+                {
+                    _obstacles[obstacle.id] = obstacle;
+                }
             }
 
             // The last id is equal to the number of obstacles

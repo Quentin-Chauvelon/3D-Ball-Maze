@@ -32,7 +32,7 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject flagTarget = (GameObject)Maze.InstantiateResource("Level/Targets/FlagTarget");
+            GameObject flagTarget = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/FlagTarget.prefab", typeof(GameObject)));
             flagTarget.name = "Target";
 
             PositionObstacleOverObstacleFromId(obstacles, flagTarget.transform, obstacleId, new Vector3(0, 0.065f, 0));
