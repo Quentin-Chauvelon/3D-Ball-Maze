@@ -55,15 +55,15 @@ namespace BallMaze
             switch(levelType)
             {
                 case LevelType.Default:
-                    path = Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_FILE_NAME);
+                    path = Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_FILE_NAME);
                     break;
 
                 case LevelType.DailyLevel:
-                    path = Path.Combine(LevelManager.LEVELS_PATH, "dailyLevels.json");
+                    path = Path.Combine(LevelManager.Instance.LEVELS_PATH, "dailyLevels.json");
                     break;
 
                 case LevelType.UserCreated:
-                    path = Path.Combine(LevelManager.LEVELS_PATH, levelId + ".json");
+                    path = Path.Combine(LevelManager.Instance.LEVELS_PATH, levelId + ".json");
                     break;
 
                 default:

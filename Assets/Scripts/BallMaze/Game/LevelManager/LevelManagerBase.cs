@@ -1,80 +1,18 @@
-using System;
 using BallMaze.Events;
-using System.IO;
-using UnityEngine;
-using UnityEngine.EventSystems;
 using BallMaze.Obstacles;
 using BallMaze.UI;
-
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BallMaze
 {
-    /// <summary>
-    /// The possible states of the level.
-    /// </summary>
-    public enum LevelState
+    public abstract class LevelManagerBase
     {
-        Loading,
-        WaitingToStart,
-        Playing,
-        Paused,
-        Won,
-        Lost,
-        Error
-    }
+        public abstract LevelType levelType { get; }
 
+        public abstract string LEVELS_PATH { get; }
 
-    public enum LevelType
-    {
-        Default,
-        DailyLevel,
-        RankedLevel,
-        UserCreated
-    }
-
-
-    public enum DailyLevelDifficulty
-    {
-        Unknown,
-        VeryEasy,
-        Easy,
-        Medium,
-        Hard,
-        Extreme
-    }
-
-
-    public class LevelException : Exception
-    {
-        public LevelException() { }
-        public LevelException(string message) : base(message) { }
-        public LevelException(string message, Exception inner) : base(message, inner) { }
-    }
-
-
-    public class LevelManager : MonoBehaviour
-    {
-        // Singleton pattern
-        private static LevelManager _instance;
-        public static LevelManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    Debug.LogError("LevelManager is null!");
-                }
-                return _instance;
-            }
-        }
-
-        public static string levelToLoad = "";
-        public static LevelType levelType = LevelType.Default;
-        public static string LEVELS_PATH = "";
-        public const string DEFAULT_LEVELS_FILE_NAME = "defaultLevels.json";
-        public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
-
-        private LevelState _levelState;
+        protected LevelState _levelState;
         public LevelState LevelState
         {
             get { return _levelState; }
@@ -89,35 +27,18 @@ namespace BallMaze
         }
 
         private Ball _ball;
+
         private CameraManager _camera;
+
+        protected abstract bool _isSecondChanceEnabled { get; }
+        private bool _usedSecondChance = false;
 
         private GameObject _lastRespawnableObstacle;
 
-        [SerializeField]
-        private Config _config;
 
-
-        private void Awake()
+        public void Start()
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            _levelState = LevelState.Loading;
-            _controls = GetComponent<Controls>();
-
-            // Get the path to the levels folder
-            LEVELS_PATH = Path.Combine(Application.persistentDataPath, "levels");
-
-            // If the levels folder doesn't exist, create it
-            if (!Directory.Exists(LEVELS_PATH))
-            {
-                Directory.CreateDirectory(LEVELS_PATH);
-            }
+            _controls = GameObject.Find("LevelManager").GetComponent<Controls>();
 
             // If the maze or ball gameobjects don't exist, throw an error
             try
@@ -140,16 +61,11 @@ namespace BallMaze
 
             _maze.InitMaze();
 
-            if (_config.setLevelToLoad)
-            {
-                levelToLoad = _config.levelToLoad;
-            }
-
             SettingsEvents.UpdatedStartMethod += ResetLevel;
         }
 
-        // Update is called once per frame
-        void Update()
+
+        public void Update()
         {
             switch (_levelState)
             {
@@ -180,32 +96,35 @@ namespace BallMaze
         }
 
 
+
         /// <summary>
         /// Loads the the given level.
         /// </summary>
         /// <param name="level">The level to load</param>
         public void LoadLevel(string levelId)
         {
-            if (levelToLoad != "")
+            if (LevelManager.levelToLoad != "")
             {
                 // If a maze is already loaded, clear it
                 ClearMaze();
-
-                bool result = _maze.BuildMaze(levelType, levelId);
-                if (!result)
-                {
-                    // No need to display the error message as it is already handled in the LevelLoader class
-                    _levelState = LevelState.Error;
-                    return;
-                }
-
-                Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap);
-
-                // Fit the maze in the camera's perspective
-                _camera.FitMazeInPerspective(_maze.GetMazeBounds());
-
-                ListenToTargetTrigger();
             }
+
+            LevelManager.levelToLoad = levelId;
+
+            bool result = _maze.BuildMaze(levelType, levelId);
+            if (!result)
+            {
+                // No need to display the error message as it is already handled in the LevelLoader class
+                _levelState = LevelState.Error;
+                return;
+            }
+
+            Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap);
+
+            // Fit the maze in the camera's perspective
+            _camera.FitMazeInPerspective(_maze.GetMazeBounds());
+
+            ListenToTargetTrigger();
 
             ResetLevel();
 
@@ -266,10 +185,12 @@ namespace BallMaze
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
 
+            _usedSecondChance = false;
+
             // Move the ball to the start position
-            if (_maze.start)
+            if (_maze.start != null)
             {
-                _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(transform.position));
+                _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(Vector3.zero));
             }
 
             _maze.ResetMazeOrientation();
@@ -302,9 +223,19 @@ namespace BallMaze
             {
                 PauseLevel();
 
-                _levelState = LevelState.Lost;
+                if (_isSecondChanceEnabled && !_usedSecondChance)
+                {
+                    _usedSecondChance = true;
 
-                UIManager.Instance.Show(UIViewType.LevelFailed);
+                    UIManager.Instance.Show(UIViewType.SecondChance);
+                }
+                else
+                {
+                    _levelState = LevelState.Lost;
+
+                    UIManager.Instance.Show(UIViewType.LevelFailed);
+                }
+
             }
         }
 
@@ -314,6 +245,10 @@ namespace BallMaze
         /// </summary>
         private void ClearMaze()
         {
+            LevelManager.levelToLoad = "";
+
+            _lastRespawnableObstacle = null;
+
             MazeEvents.targetReached -= TargetReached;
 
             _maze.ClearMaze();
@@ -375,13 +310,11 @@ namespace BallMaze
 
 
         /// <summary>
-        /// Quit the level and resets everything.
+        /// Quit the level and reset everything.
         /// </summary>
         public void QuitLevel()
         {
             PauseLevel();
-
-            _lastRespawnableObstacle = null;
 
             _ball.SetBallVisible(false);
             _ball.FreezeBall(true);
@@ -395,6 +328,21 @@ namespace BallMaze
         private void OnDestroy()
         {
             QuitLevel();
+        }
+
+
+        /// <summary>
+        /// Reset the level manager when switching mode
+        /// </summary>
+        protected void ResetLevelManager()
+        {
+            // Reset properties
+            _levelState = LevelState.Loading;
+            _usedSecondChance = false;
+
+            // Update the UI to match the selected mode
+            ((PauseView)UIManager.Instance.UIViews[UIViewType.Pause]).SwitchLevelTypeSource(levelType);
+            ((LevelFailedView)UIManager.Instance.UIViews[UIViewType.LevelFailed]).SwitchLevelTypeSource(levelType);
         }
     }
 }

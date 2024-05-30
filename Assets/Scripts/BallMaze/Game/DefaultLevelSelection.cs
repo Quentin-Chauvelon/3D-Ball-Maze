@@ -80,7 +80,7 @@ namespace BallMaze
         {
             // Populate the level selection view once at the very beggining so that even we don't have to wait for the ping to finish to load the levels
             // because the ping can take a long time if the player doesn't have internet
-            if (File.Exists(Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
+            if (File.Exists(Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
             {
                 PopulateLevelSelectionView();
             }
@@ -127,7 +127,7 @@ namespace BallMaze
             }
 
             // If we have no internet but the file has been downloaded before, use the downloaded file (which may be outdated)
-            if (File.Exists(Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
+            if (File.Exists(Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
             {
                 PopulateLevelSelectionView();
             }
@@ -151,9 +151,9 @@ namespace BallMaze
         {
             // Download defaultLevelsSelection.json file containing information about the default levels to populate the level selection view (id, name, times)
             // It contains the same information as the defaultLevels.json file but with less data for faster download
-            bool success = await FileManager.DownloadFile(FileManager.URL + "levels/" + LevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME, Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME));
+            bool success = await FileManager.DownloadFile(FileManager.URL + "levels/" + DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME, Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME));
             // Download defaultLevels.json file containing all the information about each default level (id, name, obstacles position, times...)
-            success = success && await FileManager.DownloadFile(FileManager.URL + "levels/" + LevelManager.DEFAULT_LEVELS_FILE_NAME, Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_FILE_NAME));
+            success = success && await FileManager.DownloadFile(FileManager.URL + "levels/" + DefaultLevelsLevelManager.DEFAULT_LEVELS_FILE_NAME, Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_FILE_NAME));
 
             if (success)
             {

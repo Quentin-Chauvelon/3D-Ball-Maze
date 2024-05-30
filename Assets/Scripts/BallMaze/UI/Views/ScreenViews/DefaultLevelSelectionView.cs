@@ -138,6 +138,8 @@ namespace BallMaze.UI
         {
             UIManager.Instance.Show(UIViewType.Playing);
 
+            LevelManager.SwitchMode(LevelType.Default);
+
             LevelManager.Instance.LoadLevel(id);
         }
 

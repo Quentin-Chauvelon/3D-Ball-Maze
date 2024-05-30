@@ -119,7 +119,7 @@ namespace BallMaze.UI
         /// <summary>
         /// Change the UI layout based on the level type the user is playing
         /// </summary>
-        private void SwitchLevelTypeSource(LevelType levelType)
+        public void SwitchLevelTypeSource(LevelType levelType)
         {
             switch (levelType)
             {

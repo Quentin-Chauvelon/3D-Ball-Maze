@@ -128,6 +128,8 @@ namespace BallMaze.UI
 
         private void DailyLevelClicked(DailyLevelDifficulty difficulty)
         {
+            LevelManager.SwitchMode(LevelType.DailyLevel);
+
             Debug.Log($"Daily level {difficulty} clicked");
             throw new NotImplementedException("Implement DailyLevelClicked method to start the daily level with the selected difficulty");
         }
