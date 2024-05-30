@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -35,7 +36,13 @@ namespace BallMaze.Obstacles
             floor.name = "Floor";
             floor.transform.localScale = new Vector3(1, 0.1f, 1);
             floor.transform.position = position;
-            floor.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+
+            // If the game is in play mode (not run from an editor script), get the material from the loaded asset bundle
+            // This can't be done outside play mode since the asset bundle hasn't been loaded yet
+            if (Application.isPlaying)
+            {
+                floor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
 
             return floor;
         }

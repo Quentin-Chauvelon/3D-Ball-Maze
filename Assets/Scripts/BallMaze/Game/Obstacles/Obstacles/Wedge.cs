@@ -35,15 +35,31 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject wedge = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Wedge.fbx", typeof(GameObject)));
+            GameObject wedge;
+
+            if (Application.isPlaying)
+            {
+                wedge = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/wedge.fbx");
+            }
+            else
+            {
+#if UNITY_EDITOR
+                wedge = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Wedge.fbx", typeof(GameObject)));
+#else
+            return null;
+#endif
+            }
+
             wedge.name = "Wedge";
 
+            wedge.transform.position = position;
             wedge.transform.localScale = new Vector3(100, 100, height);
             wedge.transform.rotation = Quaternion.Euler(-90, (int)direction * 90, 0);
 
-            wedge.transform.position = position;
-
-            wedge.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                wedge.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
 
             return wedge;
         }

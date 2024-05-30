@@ -85,6 +85,11 @@ MonoBehaviour:
       r\xE9essayer..."
     m_Metadata:
       m_Items: []
+  - m_Id: 47082377925238784
+    m_Localized: "Erreur lors du chargement des obstacles. Merci de v\xE9rifier votre
+      connexion internet et r\xE9essayer..."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

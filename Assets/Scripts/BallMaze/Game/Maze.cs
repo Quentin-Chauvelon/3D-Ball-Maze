@@ -1,11 +1,9 @@
 using BallMaze.Obstacles;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.TestTools.CodeCoverage;
+using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityExtensionMethods;
 
 
 namespace BallMaze
@@ -28,6 +26,12 @@ namespace BallMaze
 
         // This represents a 2D map of the level and allows to easily get adjacents obstacles for example
         public int[,] obstaclesTypesMap;
+
+        private AssetBundle _obstaclesAssetBundle;
+        private AssetBundleCreateRequest _obstaclesAssetBundleCreateRequest;
+
+        // Map all obstacles names with the associated loaded game object
+        private Dictionary<string, UnityEngine.Object> _obstaclesGameObjects = new Dictionary<string, UnityEngine.Object>();
 
 
         void Awake()
@@ -60,6 +64,11 @@ namespace BallMaze
             // Get the start object if it already exists or create a new one
             start = new GameObject("Start");
             start.transform.SetParent(_maze.transform);
+
+            // Load the obstacles asset bundle so that obstacles can then be created
+            _obstaclesAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "ObstaclesAssetBundle", "obstacles"));
+            _obstaclesAssetBundleCreateRequest.completed += OnObstacleAssetBundleLoaded;
+
         }
 
 
@@ -151,6 +160,11 @@ namespace BallMaze
             foreach (Obstacle obstacle in obstaclesList)
             {
                 GameObject obstacleGameObject = obstacle.Render(obstacles, obstaclesTypesMap);
+
+                if (obstacleGameObject == null)
+                {
+                    continue;
+                }
 
                 switch (obstacle.obstacleType)
                 {
@@ -416,6 +430,71 @@ namespace BallMaze
             }
 
             return obstacle;
+        }
+
+
+        /// <summary>
+        /// Save the obstacles asset bundle once it's loaded
+        /// </summary>
+        /// <param name="_"></param>
+        private void OnObstacleAssetBundleLoaded(AsyncOperation _)
+        {
+            _obstaclesAssetBundle = _obstaclesAssetBundleCreateRequest.assetBundle;
+
+            if (_obstaclesAssetBundle == null)
+            {
+                ExceptionManager.ShowExceptionMessage(new Exception($"Failed to load obstacles asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+                return;
+            }
+
+            foreach (string obstacleName in _obstaclesAssetBundle.GetAllAssetNames())
+            {
+                _obstaclesGameObjects[obstacleName] = _obstaclesAssetBundle.LoadAsset<UnityEngine.Object>(obstacleName);
+            }
+        }
+
+
+        /// <summary>
+        /// Return an instance of the gameobject at the given path. The gameobject must be in the obstacles asset bundle.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public GameObject GetObstacleGameObjectFromPath(string path)
+        {
+            if (_obstaclesGameObjects.ContainsKey(path))
+            {
+                Debug.Log("Found obstacle at path: " + path);
+                return Instantiate((GameObject)_obstaclesGameObjects[path]);
+            }
+
+            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+            return null;
+        }
+
+
+        /// <summary>
+        /// Return the material at the given path. The material must be in the obstacles asset bundle.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public Material GetObstacleMaterialFromPath(string path)
+        {
+            if (_obstaclesGameObjects.ContainsKey(path))
+            {
+                return (Material)_obstaclesGameObjects[path];
+            }
+
+            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+            return null;
+        }
+
+
+        private void OnDestroy()
+        {
+            if (_obstaclesAssetBundle != null)
+            {
+                _obstaclesAssetBundle.Unload(true);
+            }
         }
     }
 }

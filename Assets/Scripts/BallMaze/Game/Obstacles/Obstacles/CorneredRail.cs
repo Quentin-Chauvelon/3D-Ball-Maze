@@ -45,33 +45,66 @@ namespace BallMaze.Obstacles
             bool isFirstEndRail = firstEndObstacleType == ObstacleType.Rail || firstEndObstacleType == ObstacleType.CorneredRail;
             bool isLastEndRail = lastEndObstacleType == ObstacleType.Rail || lastEndObstacleType == ObstacleType.CorneredRail;
 
-            // Load the correct rail model based on the adjacent obstacles
-            if (isFirstEndRail && isLastEndRail)
+            if (Application.isPlaying)
             {
-                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail0Connections.fbx", typeof(GameObject)));
-            }
-            else if (!isFirstEndRail && !isLastEndRail)
-            {
-                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail2Connections.fbx", typeof(GameObject)));
-            }
-            else if (isFirstEndRail && !isLastEndRail)
-            {
-                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsRight.fbx", typeof(GameObject)));
+                // Load the correct rail model based on the adjacent obstacles
+                if (isFirstEndRail && isLastEndRail)
+                {
+                    corneredRail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/corneredrail0connections.fbx");
+                }
+                else if (!isFirstEndRail && !isLastEndRail)
+                {
+                    corneredRail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/corneredrail2connections.fbx");
+                }
+                else if (isFirstEndRail && !isLastEndRail)
+                {
+                    corneredRail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/corneredrail1connectionsright.fbx");
 
-                // Update the direction of the rail, otherwise the model will be not rotated properly
-                railDirection += 1;
+                    // Update the direction of the rail, otherwise the model will be not rotated properly
+                    railDirection += 1;
+                }
+                else
+                {
+                    corneredRail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/corneredrail1connectionsleft.fbx");
+                }
             }
             else
             {
-                corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsLeft.fbx", typeof(GameObject)));
+#if UNITY_EDITOR
+                // Load the correct rail model based on the adjacent obstacles
+                if (isFirstEndRail && isLastEndRail)
+                {
+                    corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail0Connections.fbx", typeof(GameObject)));
+                }
+                else if (!isFirstEndRail && !isLastEndRail)
+                {
+                    corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail2Connections.fbx", typeof(GameObject)));
+                }
+                else if (isFirstEndRail && !isLastEndRail)
+                {
+                    corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsRight.fbx", typeof(GameObject)));
+
+                    // Update the direction of the rail, otherwise the model will be not rotated properly
+                    railDirection += 1;
+                }
+                else
+                {
+                    corneredRail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsLeft.fbx", typeof(GameObject)));
+                }
+#else
+            return null;
+#endif
             }
 
             corneredRail.name = "CorneredRail";
             corneredRail.transform.position = position;
             corneredRail.transform.rotation = Quaternion.Euler(0, railDirection * 90, 0);
 
-            corneredRail.transform.Find("CorneredRail_InteriorRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
-            corneredRail.transform.Find("CorneredRail_ExteriorRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                corneredRail.transform.Find("CorneredRail_InteriorRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+                corneredRail.transform.Find("CorneredRail_ExteriorRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+            }
 
             // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible
             if (!GameManager.DEBUG)

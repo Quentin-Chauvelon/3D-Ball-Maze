@@ -34,17 +34,17 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            wall.name = "Wall";
+            GameObject killWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            killWall.name = "Wall";
 
             // Adapt the wall's scale to the direction it's facing (equivalent to rotating the wall)
             if (direction == CardinalDirection.North || direction == CardinalDirection.South)
             {
-                wall.transform.localScale = new Vector3(1, 0.5f, 0.1f);
+                killWall.transform.localScale = new Vector3(1, 0.5f, 0.1f);
             }
             else
             {
-                wall.transform.localScale = new Vector3(0.1f, 0.5f, 1);
+                killWall.transform.localScale = new Vector3(0.1f, 0.5f, 1);
             }
 
             Vector3 offset = Vector3.zero;
@@ -68,11 +68,14 @@ namespace BallMaze.Obstacles
                     break;
             }
 
-            PositionObstacleOverObstacleFromId(obstacles, wall.transform, obstacleId, offset + new Vector3(0, 0.2f, 0));
+            PositionObstacleOverObstacleFromId(obstacles, killWall.transform, obstacleId, offset + new Vector3(0, 0.2f, 0));
 
-            wall.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Kill.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                killWall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/killwall.mat");
+            }
 
-            return wall;
+            return killWall;
         }
     }
 }

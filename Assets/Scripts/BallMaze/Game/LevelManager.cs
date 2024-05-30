@@ -1,11 +1,8 @@
 using System;
 using BallMaze.Events;
-using System.ComponentModel;
 using System.IO;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Localization.Settings;
 using BallMaze.Obstacles;
 using BallMaze.UI;
 
@@ -168,6 +165,13 @@ namespace BallMaze
                     break;
 
                 case LevelState.Playing:
+                    // If the player presses R, restart the level
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        ResetLevel();
+                        return;
+                    }
+
                     _maze.UpdateMazeOrientation(_controls.GetControlsOrientation());
                     _ball.AddForce(_controls.GetRawControlsDirection());
 

@@ -31,13 +31,17 @@ namespace BallMaze.Obstacles
         {
             // Use CreatePrimitive for simple objects (such as floor tiles and walls) because after benchmarking it,
             // it appears to be twice as fast as instantiating a prefab (700ms vs 1.5s for 10k objects)
-            GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            floor.name = "KillFloor";
-            floor.transform.localScale = new Vector3(1, 0.1f, 1);
-            floor.transform.position = position;
-            floor.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Kill.mat", typeof(Material));
+            GameObject killFloor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            killFloor.name = "KillFloor";
+            killFloor.transform.localScale = new Vector3(1, 0.1f, 1);
+            killFloor.transform.position = position;
 
-            return floor;
+            if (Application.isPlaying)
+            {
+                killFloor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/killfloor.mat");
+            }
+
+            return killFloor;
         }
     }
 }

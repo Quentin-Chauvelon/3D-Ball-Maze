@@ -28,15 +28,32 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject halfsphere = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/HalfSphere.fbx", typeof(GameObject)));
-            halfsphere.name = "HalfSphere";
+            GameObject halfSphere;
 
-            halfsphere.transform.position = position;
+            if (Application.isPlaying)
+            {
+                halfSphere = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/halfsphere.fbx");
+            }
+            else
+            {
+#if UNITY_EDITOR
+                halfSphere = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/HalfSphere.fbx", typeof(GameObject)));
+#else
+                Debug.LogError("Cannot instantiate HalfSphere");
+                return null;
+#endif
+            }
 
-            halfsphere.transform.Find("HalfSphere_Floor").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
-            halfsphere.transform.Find("HalfSphere_Sphere").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            halfSphere.name = "HalfSphere";
+            halfSphere.transform.position = position;
 
-            return halfsphere;
+            if (Application.isPlaying)
+            {
+                halfSphere.transform.Find("HalfSphere_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                halfSphere.transform.Find("HalfSphere_Sphere").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
+
+            return halfSphere;
         }
     }
 }

@@ -74,32 +74,64 @@ namespace BallMaze.Obstacles
                     break;
             }
 
-            // Load the correct rail model based on the adjacents obstacles
-            if (isFirstEndRail && isLastEndRail)
+            if (Application.isPlaying)
             {
-                rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail0Connections.prefab", typeof(GameObject)));
-            }
-            else if (!isFirstEndRail && !isLastEndRail)
-            {
-                rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail2Connections.fbx", typeof(GameObject)));
+                // Load the correct rail model based on the adjacents obstacles
+                if (isFirstEndRail && isLastEndRail)
+                {
+                    rail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/straightrail0connections.prefab");
+                }
+                else if (!isFirstEndRail && !isLastEndRail)
+                {
+                    rail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/straightrail2connections.fbx");
+                }
+                else
+                {
+                    rail = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/rails/straightrail1connections.fbx");
+
+                    // Rotate the rail 180 degrees if it is connected to something other than a rail towards the south
+                    if (isFirstEndRail)
+                    {
+                        rail.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                    }
+                }
             }
             else
             {
-                rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail1Connections.fbx", typeof(GameObject)));
-
-                // Rotate the rail 180 degrees if it is connected to something other than a rail towards the south
-                if (isFirstEndRail)
+#if UNITY_EDITOR
+                // Load the correct rail model based on the adjacents obstacles
+                if (isFirstEndRail && isLastEndRail)
                 {
-                    rail.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                    rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail0Connections.prefab", typeof(GameObject)));
                 }
+                else if (!isFirstEndRail && !isLastEndRail)
+                {
+                    rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail2Connections.fbx", typeof(GameObject)));
+                }
+                else
+                {
+                    rail = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Rails/StraightRail1Connections.fbx", typeof(GameObject)));
+
+                    // Rotate the rail 180 degrees if it is connected to something other than a rail towards the south
+                    if (isFirstEndRail)
+                    {
+                        rail.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                    }
+                }
+#else
+                return null;
+#endif
             }
 
             rail.name = "Rail";
             rail.transform.position = position + new Vector3(0, 0, 0);
             rail.transform.rotation *= rotationIncrement;
 
-            rail.transform.Find("StraightRail_LeftRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
-            rail.transform.Find("StraightRail_RightRail").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/Rail/Rail.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                rail.transform.Find("StraightRail_LeftRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+                rail.transform.Find("StraightRail_RightRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+            }
 
             // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible
             if (!GameManager.DEBUG)

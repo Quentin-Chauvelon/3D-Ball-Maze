@@ -70,7 +70,10 @@ namespace BallMaze.Obstacles
 
             PositionObstacleOverObstacleFromId(obstacles, wall.transform, obstacleId, offset + new Vector3(0, 0.2f, 0));
 
-            wall.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                wall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
 
             return wall;
         }

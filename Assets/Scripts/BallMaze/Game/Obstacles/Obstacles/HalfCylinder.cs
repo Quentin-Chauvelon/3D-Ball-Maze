@@ -31,27 +31,44 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject halfcylinder = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/HalfCylinder.fbx", typeof(GameObject)));
-            halfcylinder.name = "HalfCylinder";
+            GameObject halfCylinder;
 
-            halfcylinder.transform.position = position;
+            if (Application.isPlaying)
+            {
+                halfCylinder = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/halfcylinder.fbx");
+            }
+            else
+            {
+#if UNITY_EDITOR
+                halfCylinder = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/HalfCylinder.fbx", typeof(GameObject)));
+#else
+                            return null;
+#endif
+            }
+
+            halfCylinder.name = "HalfCylinder";
+
+            halfCylinder.transform.position = position;
 
             switch (direction)
             {
                 case CardinalDirection.North:
                 case CardinalDirection.South:
-                    halfcylinder.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    halfCylinder.transform.rotation = Quaternion.Euler(0, 0, 0);
                     break;
                 case CardinalDirection.East:
                 case CardinalDirection.West:
-                    halfcylinder.transform.rotation = Quaternion.Euler(0, 90, 0);
+                    halfCylinder.transform.rotation = Quaternion.Euler(0, 90, 0);
                     break;
             }
 
-            halfcylinder.transform.Find("HalfCylinder_Floor").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
-            halfcylinder.transform.Find("HalfCylinder_Cylinder").GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            if (Application.isPlaying)
+            {
+                halfCylinder.transform.Find("HalfCylinder_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                halfCylinder.transform.Find("HalfCylinder_Cylinder").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
 
-            return halfcylinder;
+            return halfCylinder;
         }
     }
 }

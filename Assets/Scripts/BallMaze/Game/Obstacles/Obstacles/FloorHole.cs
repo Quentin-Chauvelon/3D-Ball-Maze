@@ -28,14 +28,31 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject floorhole = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/FloorHole.fbx", typeof(GameObject)));
-            floorhole.name = "FloorHole";
+            GameObject floorHole;
 
-            floorhole.transform.position = position;
+            if (Application.isPlaying)
+            {
+                floorHole = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/floorhole.fbx");
+            }
+            else
+            {
+#if UNITY_EDITOR
+                floorHole = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/FloorHole.fbx", typeof(GameObject)));
+#else
+                            Debug.LogError("Cannot instantiate HalfSphere");
+                            return null;
+#endif
+            }
 
-            floorhole.GetComponent<MeshRenderer>().material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Art/Materials/Obstacles/BaseObstacle.mat", typeof(Material));
+            floorHole.name = "FloorHole";
+            floorHole.transform.position = position;
 
-            return floorhole;
+            if (Application.isPlaying)
+            {
+                floorHole.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+            }
+
+            return floorHole;
         }
     }
 }
