@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Networking;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
-using UnityEditor.PackageManager.Requests;
-using System.Linq;
 using UnityExtensionMethods;
 
 
@@ -26,6 +23,10 @@ namespace BallMaze.UI
         private VisualElement[] _dailyLevelsStreakDays = new VisualElement[7];
         private Label _dailyLevelsUpdatesInLabel;
 
+        // Adressable handle to load the default level selection template
+        private AsyncOperationHandle<VisualTreeAsset> _defaultLevelSelectionTemplateHandle;
+        private VisualTreeAsset _levelSelectionTemplate;
+
 
         public DailyLevelsView(VisualElement root) : base(root)
         {
@@ -33,6 +34,9 @@ namespace BallMaze.UI
             _dailyLevelsStreak = 0;
 
             _dailyLevelsButtonClickAction = new Dictionary<DailyLevelDifficulty, Action>();
+
+            _defaultLevelSelectionTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("DefaultLevelSelectionTemplate");
+            _defaultLevelSelectionTemplateHandle.Completed += DefaultLevelSelectionTemplateHandleCompleted;
         }
 
 
@@ -66,7 +70,11 @@ namespace BallMaze.UI
             // Start by emptying the daily levels view
             EmptyDailyLevelsView();
 
+#if UNITY_EDITOR
             VisualTreeAsset levelSelectionTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/UXML/Templates/DefaultLevelSelectionTemplate.uxml");
+#else
+            VisualTreeAsset levelSelectionTemplate = _levelSelectionTemplate;
+#endif
 
             foreach (DailyLevelDifficulty difficulty in Enum.GetValues(typeof(DailyLevelDifficulty)))
             {
@@ -289,6 +297,27 @@ namespace BallMaze.UI
         private void DisplayDefaultDailyLevelsLoadingException(Exception e)
         {
             ExceptionManager.ShowExceptionMessage(e, "ExceptionMessagesTable", "DailyLevelsLoadingCheckInternetGenericError", ExceptionActionType.BackToMainMenu);
+        }
+
+
+        private void DefaultLevelSelectionTemplateHandleCompleted(AsyncOperationHandle<VisualTreeAsset> operation)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                _levelSelectionTemplate = operation.Result;
+            }
+            else
+            {
+                ExceptionManager.ShowExceptionMessage(operation.OperationException, $"Couldn't load default level selection template: {operation.OperationException}");
+            }
+            _defaultLevelSelectionTemplateHandle.Completed -= DefaultLevelSelectionTemplateHandleCompleted;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            Addressables.Release(_defaultLevelSelectionTemplateHandle);
         }
     }
 }
