@@ -78,7 +78,7 @@ namespace BallMaze.UI
 
             _tryAgainButton.clicked += () =>
             {
-                // TODO: restart the level
+                LevelManager.Instance.ResetLevel();
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
         }

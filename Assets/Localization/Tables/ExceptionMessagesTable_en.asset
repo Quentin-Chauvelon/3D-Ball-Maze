@@ -79,6 +79,11 @@ MonoBehaviour:
       checking your internet connection and try again...
     m_Metadata:
       m_Items: []
+  - m_Id: 47082377925238784
+    m_Localized: Failed to load obstacles. Please, try checking your internet connection
+      and try again...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

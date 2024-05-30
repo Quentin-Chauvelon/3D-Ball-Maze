@@ -1,9 +1,5 @@
 using BallMaze.UI;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
@@ -39,6 +35,8 @@ namespace BallMaze
                 return _instance;
             }
         }
+
+        public static bool DEBUG = false;
 
         private GameState _gameState;
 
@@ -202,7 +200,7 @@ namespace BallMaze
         {
             SceneManager.LoadScene(0);
 
-            GameObject.Find("LevelManager").GetComponent<LevelManager>().QuitLevel();
+            LevelManager.Instance.QuitLevel();
         }
 
 

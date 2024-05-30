@@ -86,9 +86,9 @@ namespace UnityExtensionMethods
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool AlmostEquals(this float a, float b)
+        public static bool AlmostEquals(this float a, float b, float epsilon = 0.0001f)
         {
-            return Mathf.Approximately(a, b);
+            return Math.Abs(a - b) < epsilon;
         }
 
         
@@ -106,16 +106,54 @@ namespace UnityExtensionMethods
 
 
         /// <summary>
-        /// Rounds each component of the given vector.
+        /// Rounds each component of the given vector to the nearest integer.
+        /// If a nearest value is provided, it will round to the nearest multiple of that value. For
+        /// example, if nearest is 0.5, it will round to the nearest half.
         /// </summary>
         /// <param name="vector3"></param>
         /// <returns></returns>
-        public static Vector3 Round(this Vector3 vector3)
+        public static Vector3 Round(this Vector3 vector3, float nearest = 1f)
+        {
+            if (nearest == 1f)
+            {
+                return new Vector3(
+                    Mathf.Round(vector3.x),
+                    Mathf.Round(vector3.y),
+                    Mathf.Round(vector3.z)
+                );
+            }
+            else
+            {
+                // Dividing then multiplying by nearest will round to the nearest multiple of nearest
+                return new Vector3(
+                    Mathf.Round(vector3.x / nearest) * nearest,
+                    Mathf.Round(vector3.y / nearest) * nearest,
+                    Mathf.Round(vector3.z / nearest) * nearest
+                );
+            }
+        }
+
+
+        /// <summary>
+        /// Similar to Round, but only rounds the X and Z components of the vector.
+        /// </summary>
+        /// <param name="vector3"></param>
+        /// <param name="nearest"></param>
+        /// <returns></returns>
+        public static Vector3 RoundXZ(this Vector3 vector3, float nearest = 1f)
+        {
+            Vector3 roundedVector3 = vector3.Round(nearest);
+
+            return new Vector3(roundedVector3.x, vector3.y, roundedVector3.z);
+        }
+
+
+        public static Vector3 Truncate(this Vector3 vector3)
         {
             return new Vector3(
-                Mathf.Round(vector3.x),
-                Mathf.Round(vector3.y),
-                Mathf.Round(vector3.z)
+                (float)Math.Truncate(vector3.x),
+                (float)Math.Truncate(vector3.y),
+                (float)Math.Truncate(vector3.z)
             );
         }
 

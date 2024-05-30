@@ -63,6 +63,10 @@ MonoBehaviour:
     m_Key: UnableToStartGame
     m_Metadata:
       m_Items: []
+  - m_Id: 47082377925238784
+    m_Key: ObstaclesAssetBundleLoadError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

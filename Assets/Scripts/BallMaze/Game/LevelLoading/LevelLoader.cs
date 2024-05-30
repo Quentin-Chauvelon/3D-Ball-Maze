@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
@@ -30,7 +31,7 @@ namespace BallMaze
                 string jsonData = GetLevelJsonAsString(levelType, levelId);
 
                 // Deserialize the json data
-                return JsonUtility.FromJson<Level>(jsonData);
+                return JsonConvert.DeserializeObject<Level>(jsonData);
             }
             catch (CouldNotLoadLevelException e)
             {

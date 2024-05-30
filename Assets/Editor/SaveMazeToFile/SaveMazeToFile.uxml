@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Editor/SaveMazeToFile.uss?fileID=7433441132597879392&amp;guid=a54f1f0180920db4fab678c4b39ab1ce&amp;type=3#SaveMazeToFile" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; margin-top: 5%; margin-right: 0; margin-bottom: 5%; margin-left: 5%;">
+        <ui:Label tabindex="-1" text="General" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GeneralLabel" style="-unity-font-style: bold; margin-top: 0; margin-right: 0; margin-bottom: 5px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:TextField picking-mode="Ignore" label="File Name" name="FileName" style="width: auto;" />
+        <ui:TextField picking-mode="Ignore" label="Level Id" name="Id" style="width: auto;" />
+        <ui:TextField picking-mode="Ignore" label="Level Name" name="Name" style="width: auto;" />
+        <ui:TextField picking-mode="Ignore" label="Description" name="Description" style="width: auto;" />
+        <ui:EnumField label="Difficulty" type="BallMaze.DailyLevelDifficulty, Assembly-CSharp" name="Difficulty" />
+        <ui:EnumField label="Level Type" type="BallMaze.LevelType, Assembly-CSharp" name="LevelType" />
+        <ui:Label tabindex="-1" text="Level times" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LevelTimes" style="-unity-font-style: bold; margin-top: 20px; margin-right: 0; margin-bottom: 5px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:TextField picking-mode="Ignore" label="Star 1 Time" name="Star1Time" style="width: auto;" />
+        <ui:TextField picking-mode="Ignore" label="Star 2 Time" name="Star2Time" style="width: auto;" />
+        <ui:TextField picking-mode="Ignore" label="Star 3 Time" name="Star3Time" style="width: auto;" />
+        <ui:Button text="Save Maze To File" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="margin-top: 10px;" />
+        <ui:Label tabindex="-1" text="Instantiate Maze Object" parse-escape-sequences="true" display-tooltip-when-elided="true" name="InstantiateMazeObject" style="-unity-font-style: bold; margin-top: 20px; margin-right: 0; margin-bottom: 5px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:Button text="Instantiate Maze Object" parse-escape-sequences="true" display-tooltip-when-elided="true" name="InstantiateMazeObjectButton" style="margin-top: 10px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,11 +1,10 @@
 using System;
 using BallMaze.Events;
-using System.ComponentModel;
 using System.IO;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Localization.Settings;
+using BallMaze.Obstacles;
+using BallMaze.UI;
 
 
 namespace BallMaze
@@ -55,6 +54,20 @@ namespace BallMaze
 
     public class LevelManager : MonoBehaviour
     {
+        // Singleton pattern
+        private static LevelManager _instance;
+        public static LevelManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Debug.LogError("LevelManager is null!");
+                }
+                return _instance;
+            }
+        }
+
         public static string levelToLoad = "";
         public static LevelType levelType = LevelType.Default;
         public static string LEVELS_PATH = "";
@@ -62,14 +75,34 @@ namespace BallMaze
         public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
 
         private LevelState _levelState;
+        public LevelState LevelState
+        {
+            get { return _levelState; }
+        }
 
         private Controls _controls;
+
         private Maze _maze;
+        public Maze Maze
+        {
+            get { return _maze; }
+        }
+
         private Ball _ball;
         private CameraManager _camera;
 
+        private GameObject _lastRespawnableObstacle;
+
         [SerializeField]
         private Config _config;
+
+
+        private void Awake()
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
 
         // Start is called before the first frame update
         void Start()
@@ -105,6 +138,8 @@ namespace BallMaze
             _ball = GameObject.Find("Ball").GetComponent<Ball>();
             _camera = Camera.main.GetComponent<CameraManager>();
 
+            _maze.InitMaze();
+
             if (_config.setLevelToLoad)
             {
                 levelToLoad = _config.levelToLoad;
@@ -130,6 +165,13 @@ namespace BallMaze
                     break;
 
                 case LevelState.Playing:
+                    // If the player presses R, restart the level
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        ResetLevel();
+                        return;
+                    }
+
                     _maze.UpdateMazeOrientation(_controls.GetControlsOrientation());
                     _ball.AddForce(_controls.GetRawControlsDirection());
 
@@ -147,10 +189,7 @@ namespace BallMaze
             if (levelToLoad != "")
             {
                 // If a maze is already loaded, clear it
-                if (_maze.IsMazeLoaded())
-                {
-                    ClearMaze();
-                }
+                ClearMaze();
 
                 bool result = _maze.BuildMaze(levelType, levelId);
                 if (!result)
@@ -159,6 +198,8 @@ namespace BallMaze
                     _levelState = LevelState.Error;
                     return;
                 }
+
+                Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap);
 
                 // Fit the maze in the camera's perspective
                 _camera.FitMazeInPerspective(_maze.GetMazeBounds());
@@ -198,7 +239,7 @@ namespace BallMaze
         }
 
 
-        private void PauseLevel()
+        public void PauseLevel()
         {
             _controls.DisableAndHideControls();
 
@@ -213,15 +254,18 @@ namespace BallMaze
             ResumeLevel();
         }
 
-        
-        private void ResetLevel()
+
+        public void ResetLevel()
         {
             _levelState = LevelState.WaitingToStart;
 
             _controls.DisableAndShowControls();
 
+            _lastRespawnableObstacle = null;
+
             _ball.SetBallVisible(true);
             _ball.FreezeBall(true);
+
             // Move the ball to the start position
             if (_maze.start)
             {
@@ -243,6 +287,8 @@ namespace BallMaze
                 PauseLevel();
 
                 _levelState = LevelState.Won;
+
+                UIManager.Instance.Show(UIViewType.LevelCompleted);
             }
         }
 
@@ -250,13 +296,15 @@ namespace BallMaze
         /// <summary>
         /// Player lost the level. Either by falling off the maze or by hitting a killing obstacle.
         /// </summary>
-        private void Lost()
+        public void Lost()
         {
             if (_levelState == LevelState.Playing)
             {
                 PauseLevel();
 
                 _levelState = LevelState.Lost;
+
+                UIManager.Instance.Show(UIViewType.LevelFailed);
             }
         }
 
@@ -272,12 +320,68 @@ namespace BallMaze
         }
 
 
+        public void HandleBallCollision(Collision other)
+        {
+            _lastRespawnableObstacle = other.gameObject;
+
+            Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
+
+            if (obstacle.canKill)
+            {
+                Lost();
+            }
+        }
+
+
+        public void HandleBallTrigger(Collider other)
+        {
+            Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
+
+            if (obstacle.obstacleType == ObstacleType.FlagTarget)
+            {
+                MazeEvents.targetReached?.Invoke();
+            }
+        }
+
+
+        /// <summary>
+        /// Get the obstacle from the GameObject the ball collided with.
+        /// The GameObject can be the obstacle itself or one of its parents :
+        /// If the GameObject is a primitive obstacle (eg: floor), the obstacle is the GameObject itself.
+        /// If the GameObject is a prefab or a mesh (eg: rail), the obstacle is the GameObject's parent.
+        /// If the GameObject is a prefab containing a mesh (eg: flag target), the obstacle is the GameObject's parent's parent.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
+        public GameObject GetObstacleGameObjectFromBallCollision(GameObject gameObject)
+        {
+            if (gameObject.transform.parent.parent.name == "Maze")
+            {
+                return gameObject;
+            }
+            else if (gameObject.transform.parent.parent.parent.name == "Maze")
+            {
+                return gameObject.transform.parent.gameObject;
+            }
+            else if (gameObject.transform.parent.parent.parent.parent.name == "Maze")
+            {
+                return gameObject.transform.parent.parent.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         /// <summary>
         /// Quit the level and resets everything.
         /// </summary>
         public void QuitLevel()
         {
             PauseLevel();
+
+            _lastRespawnableObstacle = null;
 
             _ball.SetBallVisible(false);
             _ball.FreezeBall(true);

@@ -1,9 +1,9 @@
-using JetBrains.Annotations;
+using BallMaze.Obstacles;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityExtensionMethods;
 
 
 namespace BallMaze
@@ -14,11 +14,24 @@ namespace BallMaze
         private LevelLoader _levelLoader;
 
         public GameObject start;
-        public List<GameObject> targets;
-        public List<GameObject> floorTiles;
-        public List<GameObject> walls;
-        public List<GameObject> corners;
-        public List<GameObject> obstacles;
+
+        // The y level at which the player loses when the ball falls. Calculated when the maze is built
+        public float voidYLevel = -10f;
+
+        // A list of all the obstacles of the maze
+        public Obstacle[] obstaclesList;
+
+        // A dictionary that associates each obstacle GameObject to its corresponding Obstacle object
+        public Dictionary<GameObject, Obstacle> obstacles = new Dictionary<GameObject, Obstacle>();
+
+        // This represents a 2D map of the level and allows to easily get adjacents obstacles for example
+        public int[,] obstaclesTypesMap;
+
+        private AssetBundle _obstaclesAssetBundle;
+        private AssetBundleCreateRequest _obstaclesAssetBundleCreateRequest;
+
+        // Map all obstacles names with the associated loaded game object
+        private Dictionary<string, UnityEngine.Object> _obstaclesGameObjects = new Dictionary<string, UnityEngine.Object>();
 
 
         void Awake()
@@ -30,6 +43,36 @@ namespace BallMaze
 
 
         /// <summary>
+        /// Initialize the obstacles containers. Must be called once at the beginning of the game.
+        /// </summary>
+        public void InitMaze()
+        {
+            // Delete the maze if it already exists before loading (from the editor for example)
+            foreach (Transform transform in _maze.transform)
+            {
+                Destroy(transform.gameObject);
+            }
+
+            // Create all container objects
+            new GameObject("FlagTargets").transform.SetParent(_maze.transform);
+            new GameObject("Floors").transform.SetParent(_maze.transform);
+            new GameObject("Walls").transform.SetParent(_maze.transform);
+            new GameObject("Corners").transform.SetParent(_maze.transform);
+            new GameObject("AbsolutelyPositionnableObstacles").transform.SetParent(_maze.transform);
+            new GameObject("RelativelyPositionnableObstacles").transform.SetParent(_maze.transform);
+
+            // Get the start object if it already exists or create a new one
+            start = new GameObject("Start");
+            start.transform.SetParent(_maze.transform);
+
+            // Load the obstacles asset bundle so that obstacles can then be created
+            _obstaclesAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "ObstaclesAssetBundle", "obstacles"));
+            _obstaclesAssetBundleCreateRequest.completed += OnObstacleAssetBundleLoaded;
+
+        }
+
+
+        /// <summary>
         /// Builds the maze matching the given level.
         /// </summary>
         /// <param name="levelType"></param>
@@ -37,152 +80,120 @@ namespace BallMaze
         /// <returns>A boolean indicating if the maze could be loaded</returns>
         public bool BuildMaze(LevelType levelType, string levelId)
         {
+            obstacles.Clear();
+            obstaclesList = null;
+            obstaclesTypesMap = null;
+
             Level level = _levelLoader.DeserializeLevel(levelType, levelId);
             if (level == null)
             {
                 return false;
             }
 
-            // Create all container objects
-            GameObject targetsContainer = new GameObject("Targets");
-            GameObject floorTilesContainer = new GameObject("FloorTiles");
-            GameObject wallsContainer = new GameObject("Walls");
-            GameObject cornersContainer = new GameObject("Corners");
-            GameObject obstaclesContainer = new GameObject("Obstacles");
-            targetsContainer.transform.SetParent(_maze.transform);
-            floorTilesContainer.transform.SetParent(_maze.transform);
-            wallsContainer.transform.SetParent(_maze.transform);
-            cornersContainer.transform.SetParent(_maze.transform);
-            obstaclesContainer.transform.SetParent(_maze.transform);
+            // Update the void level based on the maze size. The formula uses trigonometry (a = c * sin(α)) and then multiplies by 5
+            // to have a margin and negative to have the void level below the maze
+            voidYLevel = level.mazeSize.x > level.mazeSize.z
+            ? level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f
+            : level.mazeSize.z / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f;
+            Debug.Log(level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad));
+            Debug.Log($"Void level: {voidYLevel}");
 
-            // Create the start object
-            start = new GameObject("Start");
-            start.transform.position = level.startPosition;
-            start.transform.SetParent(_maze.transform);
+            obstaclesList = new Obstacle[level.nbObstacles];
+            obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
 
-            // Create all the targets
-            foreach (Target target in level.targets)
+            _maze.transform.Find("Start").position = level.startPosition;
+
+            foreach (Floor floor in level.floors)
             {
-                GameObject targetObject = (GameObject)Instantiate(Resources.Load("Level/Targets/Target" + target.id.ToString()));
-                targetObject.name = "Target";
-                targetObject.transform.position = target.p;
-                targetObject.transform.rotation = Quaternion.Euler(target.r);
-                targetObject.transform.SetParent(targetsContainer.transform);
-
-                targets.Add(targetObject);
+                obstaclesList[floor.id] = floor;
+                AddObstacleToTypesMap(obstaclesTypesMap, floor);
             }
 
-            // Create all the floor tiles
-            foreach (FloorTile floorTile in level.floorTiles)
+            // Obstacles
+            foreach (Obstacle obstacle in level.obstacles)
             {
-                // Use CreatePrimitive for simple objects (such as floor tiles and walls) because after running some tests
-                // It appears to be twice as fast as instantiating a prefab (700ms vs 1.5s for 10k objects)
-                GameObject floorTileObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                floorTileObject.name = "Floor";
-                floorTileObject.transform.localScale = new Vector3(1, 0.1f, 1);
-                floorTileObject.transform.position = floorTile.p;
-                floorTileObject.transform.SetParent(floorTilesContainer.transform);
-
-                floorTiles.Add(floorTileObject);
+                if (obstacle is IAbsolutelyPositionnable)
+                {
+                    obstaclesList[obstacle.id] = obstacle;
+                    AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
+                }
+                else if (obstacle is IRelativelyPositionnable)
+                {
+                    obstaclesList[obstacle.id] = obstacle;
+                    AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
+                }
             }
 
-            // Create all the walls
+            // Walls
             foreach (Wall wall in level.walls)
             {
-                GameObject wallObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                wallObject.name = "Wall";
-
-                // Adapt the wall's scale to the direction it's facing (equivalent to rotating the wall)
-                if (wall.d == Direction.North || wall.d == Direction.South)
-                {
-                    wallObject.transform.localScale = new Vector3(1, 0.5f, 0.1f);
-                }
-                else
-                {
-                    wallObject.transform.localScale = new Vector3(0.1f, 0.5f, 1);
-                }
-
-                // Find the floor tile the wall is on
-                foreach (FloorTile floorTile in level.floorTiles)
-                {
-                    if (wall.id == floorTile.id)
-                    {
-                        wallObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
-                        break;
-                    }
-                }
-
-                // Move the wall to the correct position based on the direction it's facing
-                switch (wall.d)
-                {
-                    case Direction.North:
-                        wallObject.transform.position -= new Vector3(0, 0, 0.45f);
-                        break;
-                    case Direction.East:
-                        wallObject.transform.position -= new Vector3(0.45f, 0, 0);
-                        break;
-                    case Direction.South:
-                        wallObject.transform.position += new Vector3(0, 0, 0.45f);
-                        break;
-                    case Direction.West:
-                        wallObject.transform.position += new Vector3(0.45f, 0, 0);
-                        break;
-                }
-
-                wallObject.transform.SetParent(wallsContainer.transform);
-
-                walls.Add(wallObject);
+                obstaclesList[wall.id] = wall;
+                AddObstacleToTypesMap(obstaclesTypesMap, wall);
             }
 
-            // Create all the corners
+            // Corners
             foreach (Corner corner in level.corners)
             {
-                GameObject cornerObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cornerObject.name = "Corner";
-                cornerObject.transform.localScale = new Vector3(0.1f, 0.5f, 0.1f);
-
-                // Find the floor tile the corner is on
-                foreach (FloorTile floorTile in level.floorTiles)
-                {
-                    if (corner.id == floorTile.id)
-                    {
-                        cornerObject.transform.position = floorTile.p + new Vector3(0, 0.2f, 0);
-                        break;
-                    }
-                }
-
-                // Move the corner to the correct position based on the direction it's facing
-                switch (corner.d)
-                {
-                    case Direction.NorthEast:
-                        cornerObject.transform.position -= new Vector3(0.45f, 0, 0.45f);
-                        break;
-                    case Direction.SouthEast:
-                        cornerObject.transform.position += new Vector3(-0.45f, 0, 0.45f);
-                        break;
-                    case Direction.SouthWest:
-                        cornerObject.transform.position += new Vector3(0.45f, 0, 0.45f);
-                        break;
-                    case Direction.NorthWest:
-                        cornerObject.transform.position += new Vector3(0.45f, 0, -0.45f);
-                        break;
-                }
-
-                cornerObject.transform.SetParent(cornersContainer.transform);
-
-                corners.Add(cornerObject);
+                obstaclesList[corner.id] = corner;
+                AddObstacleToTypesMap(obstaclesTypesMap, corner);
             }
+
+            // Target
+            obstaclesList[level.target.id] = level.target;
+            AddObstacleToTypesMap(obstaclesTypesMap, level.target);
 
             return true;
         }
 
 
-        /// <summary>
-        /// Returns a boolen indicating if a maze is already loaded.
-        /// </summary>
-        public bool IsMazeLoaded()
+        public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            return _maze.transform.childCount > 0;
+            GameObject maze = GameObject.Find("Maze");
+
+            Transform flagTargetsContainer = maze.transform.Find("FlagTargets");
+            Transform floorsContainer = maze.transform.Find("Floors");
+            Transform wallsContainer = maze.transform.Find("Walls");
+            Transform cornersContainer = maze.transform.Find("Corners");
+            Transform absolutelyPositionnableObstaclesContainer = maze.transform.Find("AbsolutelyPositionnableObstacles");
+            Transform relativelyPositionnableObstaclesContainer = maze.transform.Find("RelativelyPositionnableObstacles");
+
+            foreach (Obstacle obstacle in obstaclesList)
+            {
+                GameObject obstacleGameObject = obstacle.Render(obstacles, obstaclesTypesMap);
+
+                if (obstacleGameObject == null)
+                {
+                    continue;
+                }
+
+                switch (obstacle.obstacleType)
+                {
+                    case ObstacleType.Floor:
+                        obstacleGameObject.transform.SetParent(floorsContainer);
+                        break;
+                    case ObstacleType.Wall:
+                        obstacleGameObject.transform.SetParent(wallsContainer);
+                        break;
+                    case ObstacleType.Corner:
+                        obstacleGameObject.transform.SetParent(cornersContainer);
+                        break;
+                    case ObstacleType.FlagTarget:
+                        obstacleGameObject.transform.SetParent(flagTargetsContainer);
+                        break;
+                    default:
+                        if (obstacle is IAbsolutelyPositionnable)
+                        {
+                            obstacleGameObject.transform.SetParent(absolutelyPositionnableObstaclesContainer);
+                        }
+                        else if (obstacle is IRelativelyPositionnable)
+                        {
+                            obstacleGameObject.transform.SetParent(relativelyPositionnableObstaclesContainer);
+                        }
+                        break;
+                }
+
+                obstacles[obstacleGameObject] = obstacle;
+            }
         }
 
 
@@ -209,10 +220,13 @@ namespace BallMaze
         /// </summary>
         public void ClearMaze()
         {
-            // Loop through all the maze's children and delete them
+            // Loop through all the obstacles and delete them
             foreach (Transform transform in gameObject.transform)
             {
-                Destroy(transform.gameObject);
+                foreach (Transform child in transform)
+                {
+                    Destroy(child.gameObject);
+                }
             }
 
             ResetMazeOrientation();
@@ -235,6 +249,252 @@ namespace BallMaze
         public void ResetMazeOrientation()
         {
             UpdateMazeOrientation(Quaternion.identity);
+        }
+
+
+        public static UnityEngine.Object InstantiateResource(string path)
+        {
+            return Instantiate(Resources.Load(path));
+        }
+
+        /// <summary>
+        /// Initialize the obstacles types map with the given m and n size
+        /// By default, all values in the array are instantiated at -1
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int[,] InitObstaclesTypesMap(int m, int n)
+        {
+            int[,] obstaclesTypesMap = new int[m, n];
+
+            // Initialize all values of the obstacles types map to -1
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    obstaclesTypesMap[i, j] = -1;
+                }
+            }
+
+            return obstaclesTypesMap;
+        }
+
+
+        /// <summary>
+        /// Add the given obstacle to the obstacles types 2D map
+        /// </summary>
+        /// <param name="obstaclesTypesMap"></param>
+        /// <param name="obstacle"></param>
+        public static void AddObstacleToTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle)
+        {
+            // If the obstacle is not positionned absolutely, it is above another obstacle
+            // and thus we only want the obstacle under it
+            if (!(obstacle is IAbsolutelyPositionnable))
+            {
+                return;
+            }
+
+            GetPositionInTypesMap(obstaclesTypesMap, obstacle, out int x, out int z);
+
+            // Debug.Log($"position: {absolutelyPositionnable.position}");
+            // Debug.Log($"len0: {obstaclesTypesMap.GetLength(0)} len1: {obstaclesTypesMap.GetLength(1)} x: {x} z: {z}");
+            obstaclesTypesMap[x, z] = (int)obstacle.obstacleType;
+        }
+
+
+        /// <summary>
+        /// Return the x and y position of the obstacle in the types map
+        /// </summary>
+        /// <param name="obstaclesTypesMap"></param>
+        /// <param name="obstacle"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void GetPositionInTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle, out int x, out int y)
+        {
+            // If the obstacle is not positionned absolutely, it is above another obstacle
+            // and thus we only want the obstacle under it
+            if (!(obstacle is IAbsolutelyPositionnable))
+            {
+                x = 0;
+                y = 0;
+
+                return;
+            }
+
+            if (obstacle is IAbsolutelyPositionnable)
+            {
+                IAbsolutelyPositionnable absolutelyPositionnable = (IAbsolutelyPositionnable)obstacle;
+
+                // Translate the position of the obstacle to have the lower left point of the maze be at (0,0)
+                x = Mathf.FloorToInt(absolutelyPositionnable.position.x) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(0) / 2);
+                y = Mathf.FloorToInt(absolutelyPositionnable.position.z) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(1) / 2);
+
+                return;
+            }
+
+            x = 0;
+            y = 0;
+        }
+
+
+        /// <summary>
+        /// Print the obstacles types map to the console
+        /// </summary>
+        /// <param name="obstaclesTypesMap"></param>
+        public static void PrintTypesMap(int[,] obstaclesTypesMap)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            for (int i = 0; i < obstaclesTypesMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < obstaclesTypesMap.GetLength(1); j++)
+                {
+                    sb.Append(obstaclesTypesMap[i, j]);
+                    sb.Append(' ');
+                }
+
+                sb.AppendLine();
+            }
+
+            Debug.Log(sb.ToString());
+        }
+
+
+        public static ObstacleType GetAdjacentObstacleInDirection(int[,] obstaclesTypesMap, int x, int y, CardinalDirection direction)
+        {
+            switch (direction)
+            {
+                case CardinalDirection.North:
+
+                    if (y > 0)
+                    {
+                        return (ObstacleType)obstaclesTypesMap[x, y - 1];
+                    }
+
+                    break;
+
+                case CardinalDirection.East:
+
+                    if (x > 0)
+                    {
+                        return (ObstacleType)obstaclesTypesMap[x - 1, y];
+                    }
+
+                    break;
+
+                case CardinalDirection.South:
+
+                    if (y < obstaclesTypesMap.GetLength(1) - 1)
+                    {
+                        return (ObstacleType)obstaclesTypesMap[x, y + 1];
+                    }
+
+                    break;
+
+                case CardinalDirection.West:
+
+                    if (x < obstaclesTypesMap.GetLength(0) - 1)
+                    {
+                        return (ObstacleType)obstaclesTypesMap[x + 1, y];
+                    }
+
+                    break;
+            }
+
+            return ObstacleType.Undefined;
+        }
+
+
+        /// <summary>
+        /// Return the obstacle under the given obstacle (if it's relatively positionned)
+        /// </summary>
+        /// <param name="obstacles"></param>
+        /// <param name="obstacle"></param>
+        /// <returns></returns>
+        public static Obstacle GetObstacleIdUnderObstacle(Dictionary<GameObject, Obstacle> obstacles, Obstacle obstacle)
+        {
+            if (!(obstacle is IAbsolutelyPositionnable))
+            {
+                return obstacle;
+            }
+
+            IRelativelyPositionnable relativelyPositionnable = (IRelativelyPositionnable)obstacle;
+
+            foreach (KeyValuePair<GameObject, Obstacle> obstacleKeyValuePair in obstacles)
+            {
+                if (obstacleKeyValuePair.Value.id == relativelyPositionnable.obstacleId)
+                {
+                    return obstacleKeyValuePair.Value;
+                }
+            }
+
+            return obstacle;
+        }
+
+
+        /// <summary>
+        /// Save the obstacles asset bundle once it's loaded
+        /// </summary>
+        /// <param name="_"></param>
+        private void OnObstacleAssetBundleLoaded(AsyncOperation _)
+        {
+            _obstaclesAssetBundle = _obstaclesAssetBundleCreateRequest.assetBundle;
+
+            if (_obstaclesAssetBundle == null)
+            {
+                ExceptionManager.ShowExceptionMessage(new Exception($"Failed to load obstacles asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+                return;
+            }
+
+            foreach (string obstacleName in _obstaclesAssetBundle.GetAllAssetNames())
+            {
+                _obstaclesGameObjects[obstacleName] = _obstaclesAssetBundle.LoadAsset<UnityEngine.Object>(obstacleName);
+            }
+        }
+
+
+        /// <summary>
+        /// Return an instance of the gameobject at the given path. The gameobject must be in the obstacles asset bundle.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public GameObject GetObstacleGameObjectFromPath(string path)
+        {
+            if (_obstaclesGameObjects.ContainsKey(path))
+            {
+                Debug.Log("Found obstacle at path: " + path);
+                return Instantiate((GameObject)_obstaclesGameObjects[path]);
+            }
+
+            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+            return null;
+        }
+
+
+        /// <summary>
+        /// Return the material at the given path. The material must be in the obstacles asset bundle.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public Material GetObstacleMaterialFromPath(string path)
+        {
+            if (_obstaclesGameObjects.ContainsKey(path))
+            {
+                return (Material)_obstaclesGameObjects[path];
+            }
+
+            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+            return null;
+        }
+
+
+        private void OnDestroy()
+        {
+            if (_obstaclesAssetBundle != null)
+            {
+                _obstaclesAssetBundle.Unload(true);
+            }
         }
     }
 }

@@ -10,12 +10,13 @@ namespace BallMaze
         private FloatingJoystick _joystick;
         private Vector3 _lastJoystickPosition = Vector3.zero;
 
-        private const float MAX_ORIENTATION_CHANGE_PER_SECOND = 12f;
+        [SerializeField]
+        private float MAX_ORIENTATION_CHANGE_PER_SECOND = 8f;
 
         private bool _areControlsEnabled = false;
         private bool _areControlsVisible = false;
 
-        private const short MAX_MAZE_ORIENTATION = 10;
+        public const short MAX_MAZE_ORIENTATION = 10;
 
 
         void Awake()

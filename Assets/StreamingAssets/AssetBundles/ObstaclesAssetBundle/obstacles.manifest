@@ -1,0 +1,66 @@
+ManifestFileVersion: 0
+CRC: 2378544596
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0dbdfa283a8b0bea08af9a95dec19588
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 081c2eef531aa0dde013a8fb11a7ad58
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 0dbdfa283a8b0bea08af9a95dec19588
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Art/Models/Obstacles/FlagTarget.fbx
+- Assets/Art/Models/Obstacles/Wedge.fbx
+- Assets/Art/Materials/Obstacles/Spikes/Spikes.mat
+- Assets/Art/Models/Obstacles/HalfCylinder.fbx
+- Assets/Art/Models/Obstacles/FlagTarget.prefab
+- Assets/Art/Models/Obstacles/Tunnels/2WayCornerTunnel.fbx
+- Assets/Art/Materials/Obstacles/FlagTarget/Pole.mat
+- Assets/Art/Materials/Obstacles/FlagTarget/Flag.mat
+- Assets/Art/Materials/Obstacles/FlagTarget/PoleBase.mat
+- Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsLeft.fbx
+- Assets/Art/Materials/Obstacles/Tunnel/TunnelInterior.mat
+- Assets/Art/Models/Obstacles/FloorHole.fbx
+- Assets/Art/Models/Obstacles/Tunnels/4WayTunnel.fbx
+- Assets/Art/Models/Obstacles/Rails/StraightRail1Connections.fbx
+- Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsRight.fbx
+- Assets/Art/Materials/Obstacles/Spikes/SpikesBase.mat
+- Assets/Art/Materials/Obstacles/Kill.mat
+- Assets/Art/Materials/Obstacles/Tunnel/TunnelExterior.mat
+- Assets/Art/Materials/Obstacles/BaseObstacle.mat
+- Assets/Art/Materials/Obstacles/UnlitBaseObstacle.mat
+- Assets/Art/Materials/Obstacles/Rail/Rail.mat
+- Assets/Art/Models/Obstacles/Rails/CorneredRail0Connections.fbx
+- Assets/Art/Models/Obstacles/HalfSphere.fbx
+- Assets/Art/Models/Obstacles/Tunnels/3WayTunnel.fbx
+- Assets/Art/Models/Obstacles/Tunnels/2WayTunnel.fbx
+- Assets/Art/Models/Obstacles/Rails/StraightRail2Connections.fbx
+- Assets/Art/Models/Obstacles/Rails/StraightRail0Connections.prefab
+- Assets/Art/Models/Obstacles/Spikes.fbx
+- Assets/Art/Models/Obstacles/Rails/CorneredRail2Connections.fbx
+Dependencies: []

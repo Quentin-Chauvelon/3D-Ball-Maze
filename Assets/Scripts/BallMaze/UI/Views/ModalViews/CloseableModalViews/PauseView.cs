@@ -80,6 +80,7 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
+                LevelManager.Instance.QuitLevel();
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
 
@@ -96,7 +97,7 @@ namespace BallMaze.UI
 
             _tryAgainButton.clicked += () =>
             {
-                // TODO: restart the level
+                LevelManager.Instance.ResetLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
         }

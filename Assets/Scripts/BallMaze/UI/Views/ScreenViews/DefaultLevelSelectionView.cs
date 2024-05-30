@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
 using UnityExtensionMethods;
 
@@ -17,6 +20,10 @@ namespace BallMaze.UI
         private VisualElement _eventImage;
         private Label _eventName;
 
+        // Adressable handle to load the default level selection template
+        private AsyncOperationHandle<VisualTreeAsset> _defaultLevelSelectionTemplateHandle;
+        private VisualTreeAsset _levelSelectionTemplate;
+
         // The height of the level relative to its container
         private const float LEVEL_HEIGHT_PERCENTAGE = 0.35f;
 
@@ -24,6 +31,9 @@ namespace BallMaze.UI
         public DefaultLevelSelectionView(VisualElement root) : base(root)
         {
             _levelSelectionButtonsClickAction = new Dictionary<string, Action>();
+
+            _defaultLevelSelectionTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("DefaultLevelSelectionTemplate");
+            _defaultLevelSelectionTemplateHandle.Completed += DefaultLevelSelectionTemplateHandleCompleted;
         }
 
 
@@ -66,7 +76,11 @@ namespace BallMaze.UI
             // Start by emptying the level selection view
             EmptyLevelSelectionView();
 
+#if UNITY_EDITOR
             VisualTreeAsset levelSelectionTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/UXML/Templates/DefaultLevelSelectionTemplate.uxml");
+#else
+            VisualTreeAsset levelSelectionTemplate = _levelSelectionTemplate;
+#endif
 
             // Create a level selection template for each level
             foreach (LevelSelection levelSelection in levelsSelection.levels)
@@ -124,7 +138,7 @@ namespace BallMaze.UI
         {
             UIManager.Instance.Show(UIViewType.Playing);
 
-            GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadLevel(id);
+            LevelManager.Instance.LoadLevel(id);
         }
 
 
@@ -167,6 +181,28 @@ namespace BallMaze.UI
                     child.style.height = height;
                 }
             }
+        }
+
+
+        private void DefaultLevelSelectionTemplateHandleCompleted(AsyncOperationHandle<VisualTreeAsset> operation)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                _levelSelectionTemplate = operation.Result;
+            }
+            else
+            {
+                ExceptionManager.ShowExceptionMessage(operation.OperationException, $"Couldn't load default level selection template: {operation.OperationException}");
+            }
+
+            _defaultLevelSelectionTemplateHandle.Completed -= DefaultLevelSelectionTemplateHandleCompleted;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            Addressables.Release(_defaultLevelSelectionTemplateHandle);
         }
     }
 }
