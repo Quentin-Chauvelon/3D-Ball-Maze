@@ -9,7 +9,7 @@
                 <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__trophies-value-label" style="flex-grow: 1; font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
             </ui:VisualElement>
             <ui:VisualElement name="permanent__coins-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between;">
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__coins-value-label" style="flex-grow: 1; font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__coins-value-label" style="flex-grow: 1; color: rgba(255, 255, 255, 1); font-size: 50px; -unity-font-style: bold; -unity-text-align: middle-left; padding-left: 10%;" />
                 <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__more-coins-button" />
             </ui:VisualElement>
         </ui:VisualElement>

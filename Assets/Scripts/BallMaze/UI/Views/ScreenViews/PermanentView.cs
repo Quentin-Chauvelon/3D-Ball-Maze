@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,7 +37,7 @@ namespace BallMaze.UI
             _trophiesContainer = _root.Q<VisualElement>("permanent__trophies-container");
             _trophiesLabel = _root.Q<Label>("permanent__trophies-label");
             _coinsContainer = _root.Q<VisualElement>("permanent__coins-container");
-            _coinsLabel = _root.Q<Label>("permanent__coins-label");
+            _coinsLabel = _root.Q<Label>("permanent__coins-value-label");
             _moreCoinsButton = _root.Q<Button>("permanent__more-coins-button");
             _skipButton = _root.Q<Button>("permanent__skip-button");
             _pauseButton = _root.Q<Button>("permanent__pause-button");
@@ -58,6 +59,9 @@ namespace BallMaze.UI
             _pauseButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Pause); };
 
             _skipButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Skip); };
+
+            // Update the coins label when the player's coins are updated
+            PlayerEvents.CoinsUpdated += (coins) => { _coinsLabel.text = coins.ToString(); };
         }
 
 
@@ -83,8 +87,13 @@ namespace BallMaze.UI
                 case UIViewType.Playing:
                     _backButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.None;
-                    _skipButton.style.display = DisplayStyle.Flex;
                     _pauseButton.style.display = DisplayStyle.Flex;
+
+                    // Show the skip button only for default and daily levels
+                    _skipButton.style.display = LevelManager.Instance.levelType == LevelType.Default || LevelManager.Instance.levelType == LevelType.DailyLevel
+                        ? DisplayStyle.Flex
+                        : DisplayStyle.None;
+
                     break;
                 default:
                     _backButton.style.display = DisplayStyle.Flex;

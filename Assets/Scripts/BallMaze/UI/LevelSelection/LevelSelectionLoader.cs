@@ -47,7 +47,7 @@ namespace BallMaze.UI
         /// <exception cref="CouldNotLoadLevelException"></exception>
         private static string GetLevelsSelectionJsonAsString()
         {
-            string path = Path.Combine(LevelManager.LEVELS_PATH, LevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME);
+            string path = Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME);
 
             // Read the json data from the file
             string jsonData = ReadLevelFile(path);
