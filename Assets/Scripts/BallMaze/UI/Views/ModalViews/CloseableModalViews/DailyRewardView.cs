@@ -61,6 +61,18 @@ namespace BallMaze.UI
         }
 
 
+        public override void Show()
+        {
+            base.Show();
+
+            // TODO: check if the reward has already been collected before showing the timer
+            if (true)
+            {
+                StartNextRewardTimer();
+            }
+        }
+
+
         /// <summary>
         /// Bind the daily reward day button click.
         /// </summary>

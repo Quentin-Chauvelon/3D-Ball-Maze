@@ -37,7 +37,11 @@ namespace BallMaze.UI
 
         protected override void RegisterButtonCallbacks()
         {
-            _closeButton.clicked += () => { UIManager.Instance.Hide(UIViewType.Skip); };
+            _closeButton.clicked += () =>
+            {
+                LevelManager.Instance.ResumeLevel();
+                UIManager.Instance.Hide(UIViewType.Skip);
+            };
 
             _unlockNextLevelCoinsButton.clicked += () =>
             {
@@ -56,9 +60,17 @@ namespace BallMaze.UI
 
             _resumeButton.clicked += () =>
             {
-                // TODO: resume level
+                LevelManager.Instance.ResumeLevel();
                 UIManager.Instance.Hide(UIViewType.Skip);
             };
+        }
+
+
+        public override void Show()
+        {
+            base.Show();
+
+            LevelManager.Instance.PauseLevel();
         }
     }
 }

@@ -3,6 +3,7 @@ using BallMaze.Obstacles;
 using BallMaze.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 
 namespace BallMaze
 {
@@ -30,10 +31,12 @@ namespace BallMaze
 
         private CameraManager _camera;
 
-        private LevelTimer _levelTimer;
+        protected LevelTimer _levelTimer;
 
         protected abstract bool _isSecondChanceEnabled { get; }
         private bool _usedSecondChance = false;
+
+        protected string _currentLevelId = "";
 
         private GameObject _lastRespawnableObstacle;
 
@@ -105,7 +108,7 @@ namespace BallMaze
 
         /// <summary>
         /// Loads the the given level.
-        /// </summary>
+        /// </>
         /// <param name="level">The level to load</param>
         public void LoadLevel(string levelId)
         {
@@ -116,6 +119,7 @@ namespace BallMaze
             }
 
             LevelManager.levelToLoad = levelId;
+            _currentLevelId = levelId;
 
             bool result = _maze.BuildMaze(levelType, levelId);
             if (!result)
@@ -153,7 +157,7 @@ namespace BallMaze
         }
 
 
-        private void ResumeLevel()
+        public void ResumeLevel()
         {
             _controls.EnableAndShowControls();
 
@@ -227,12 +231,18 @@ namespace BallMaze
             _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
         }
 
+        /// <summary>
+        /// Get the level after the current one. Overriden by child classes. Only used for default and daily levels
+        /// </summary>
+        /// <returns>The next level to load</returns>
+        public virtual string GetNextLevel() { return ""; }
+
 
         /// <summary>
         /// Player reached the target and won the level.
         /// Binded to the target's triggerAction, and so called when the ball enters a target's trigger.
         /// </summary>
-        private void TargetReached()
+        protected virtual void TargetReached()
         {
             if (_levelState == LevelState.Playing)
             {

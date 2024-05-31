@@ -12,3 +12,11 @@
     margin-bottom: 20px;
     margin-left: 20px;
 }
+
+.level-selection-item-locked #default-level-selection-template__container-button {
+    display: none;
+}
+
+.level-selection-item-unlocked #default-level-selection-template__lock-container {
+    display: none;
+}

@@ -74,7 +74,13 @@ namespace BallMaze.UI
 
             _nextLevelButton.clicked += () =>
             {
-                // TODO: go to next level
+                string nextLevel = LevelManager.Instance.GetNextLevel();
+
+                if (!String.IsNullOrEmpty(nextLevel))
+                {
+                    LevelManager.Instance.LoadLevel(nextLevel);
+                }
+
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
@@ -104,7 +110,7 @@ namespace BallMaze.UI
         /// <param name="secondTimeInfo">A string which depends on the context. For instance, if the player hasn't got all the stars
         /// it will be "NEXT STAR: XX:XXs, if the player got all the stars, it will be "BEST TIME: XX:XXs" or "NEW BEST TIME: XX:XXs"...
         /// </param>
-        private void UpdateTime(TimeSpan time, short starsGained, string secondTimeInfo)
+        private void UpdateTime(float time, short starsGained, string secondTimeInfo)
         {
             // Hide the stars
             _stars[0].RemoveFromClassList("star-active");
@@ -117,7 +123,7 @@ namespace BallMaze.UI
                 _stars[i].AddToClassList("star-active");
             }
 
-            _timeLabel.text = $"TIME: {time.ToString(@"ss\:ff\s")}";
+            _timeLabel.text = $"TIME: {time.ToString("00.00")}";
             _secondTimeInfoLabel.text = secondTimeInfo;
         }
     }

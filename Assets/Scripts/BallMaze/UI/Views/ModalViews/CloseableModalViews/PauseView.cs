@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityExtensionMethods;
@@ -58,12 +59,18 @@ namespace BallMaze.UI
             _homeButton = _root.Q<Button>("pause__home-button");
             _resumeButton = _root.Q<Button>("pause__resume-button");
             _tryAgainButton = _root.Q<Button>("pause__try-again-button");
+
+            PlayerEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"Best time: {time.ToString("00:00")}s"; };
         }
 
 
         protected override void RegisterButtonCallbacks()
         {
-            _closeButton.clicked += () => { UIManager.Instance.Hide(UIViewType.Pause); };
+            _closeButton.clicked += () =>
+            {
+                LevelManager.Instance.ResumeLevel();
+                UIManager.Instance.Hide(UIViewType.Pause);
+            };
 
             _musicButton.clicked += () =>
             {
@@ -91,7 +98,7 @@ namespace BallMaze.UI
 
             _resumeButton.clicked += () =>
             {
-                // TODO: resume the level
+                LevelManager.Instance.ResumeLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
 
@@ -100,6 +107,14 @@ namespace BallMaze.UI
                 LevelManager.Instance.ResetLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
+        }
+
+
+        public override void Show()
+        {
+            base.Show();
+
+            LevelManager.Instance.PauseLevel();
         }
 
 

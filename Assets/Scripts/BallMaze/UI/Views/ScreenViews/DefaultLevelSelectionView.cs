@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -45,6 +46,9 @@ namespace BallMaze.UI
 
             // Update the size of the children when the size of the container changes
             _levelsSelectionContainerScrollView.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
+            PlayerEvents.DefaultLevelUnlocked += UnlockLevel;
+            PlayerEvents.DefaultLevelBestTimeUpdated += SetLevelTime;
         }
 
 
@@ -73,6 +77,9 @@ namespace BallMaze.UI
         /// <param name="levelsSelection"></param>
         public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
         {
+            // Save the ids of the default levels
+            DefaultLevelsLevelManager.LoadDefaultLevelsIds(levelsSelection);
+
             // Start by emptying the level selection view
             EmptyLevelSelectionView();
 
@@ -93,12 +100,26 @@ namespace BallMaze.UI
                 Action levelSelectionClickedHandler = () => LevelSelectionClicked(levelSelection.id);
                 _levelSelectionButtonsClickAction[levelSelection.id] = levelSelectionClickedHandler;
 
-                Button levelSelectionCloneBackground = levelSelectionTemplateClone.Q<Button>("default-level-selection-template__container-button");
                 levelSelectionTemplateClone.AddToClassList("level-selection-item");
+
+                if (PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(levelSelection.id))
+                {
+                    levelSelectionTemplateClone.AddToClassList("level-selection-item-unlocked");
+
+                    // Set the level's best time
+                    levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelSelection.id).ToString("00.00");
+                }
+                else
+                {
+                    levelSelectionTemplateClone.AddToClassList("level-selection-item-locked");
+                }
+
+                Button levelSelectionCloneBackground = levelSelectionTemplateClone.Q<Button>("default-level-selection-template__container-button");
                 levelSelectionCloneBackground.clicked += levelSelectionClickedHandler;
 
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-id").text = levelSelection.id;
                 levelSelectionCloneBackground.Q<Label>("default-level-selection-template__level-name").text = levelSelection.name;
+
             }
         }
 
@@ -136,11 +157,54 @@ namespace BallMaze.UI
         /// <param name="id"></param>
         public void LevelSelectionClicked(string id)
         {
+            // If the level is locked, return
+            if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(id))
+            {
+                return;
+            }
+
             UIManager.Instance.Show(UIViewType.Playing);
 
             LevelManager.SwitchMode(LevelType.Default);
 
             LevelManager.Instance.LoadLevel(id);
+        }
+
+
+        public VisualElement GetLevelFromId(string levelId)
+        {
+            foreach (VisualElement child in _levelsSelectionContainerScrollView.Children())
+            {
+                if (child.Q<Label>("default-level-selection-template__level-id").text == levelId)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
+
+        public void UnlockLevel(string levelId)
+        {
+            VisualElement level = GetLevelFromId(levelId);
+
+            if (level != null)
+            {
+                level.RemoveFromClassList("level-selection-item-locked");
+                level.AddToClassList("level-selection-item-unlocked");
+            }
+        }
+
+
+        public void SetLevelTime(string levelId, float time)
+        {
+            VisualElement level = GetLevelFromId(levelId);
+
+            if (level != null)
+            {
+                level.Q<Label>("default-level-selection-template__time-label").text = time.ToString("00.00");
+            }
         }
 
 

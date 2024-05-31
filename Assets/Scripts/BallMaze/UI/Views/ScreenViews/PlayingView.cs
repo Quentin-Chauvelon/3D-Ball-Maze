@@ -25,7 +25,7 @@ namespace BallMaze.UI
 
         public void SetTimerText(float time)
         {
-            _timerLabel.text = $"{time.ToString("00.00")}s";
+            _timerLabel.text = time.ToString("00.00");
         }
     }
 }
