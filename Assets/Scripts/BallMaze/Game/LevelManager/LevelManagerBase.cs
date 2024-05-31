@@ -210,10 +210,21 @@ namespace BallMaze
             _levelTimer.Reset();
         }
 
-                _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(Vector3.zero));
-            }
+
+        public void UseSecondChance()
+        {
+            _levelState = LevelState.WaitingToStart;
+
+            _controls.DisableAndShowControls();
+
+            _ball.SetBallVisible(true);
+            _ball.FreezeBall(true);
+
+            _usedSecondChance = true;
 
             _maze.ResetMazeOrientation();
+
+            _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
         }
 
 
