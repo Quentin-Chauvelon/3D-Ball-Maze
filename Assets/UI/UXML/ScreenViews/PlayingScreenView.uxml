@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="playing__timer-container" style="flex-grow: 0; margin-top: 2%; margin-left: 2%; position: absolute; top: 0; left: 0; flex-direction: row; align-items: center; justify-content: flex-start;">
+        <ui:VisualElement name="playing__clock-image" style="flex-grow: 0; background-image: url(&apos;project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&amp;guid=54628aafa20f64b40ae661038ee7abf0&amp;type=3#AllAxis_Ridged&apos;); -unity-background-scale-mode: scale-to-fit; width: 80px; height: 80px;" />
+        <ui:Label name="playing__timer-label" tabindex="-1" text="00:00s" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" style="font-size: 50px; -unity-font-style: bold; -unity-text-align: upper-left; margin-left: 15px;" />
+    </ui:VisualElement>
+</ui:UXML>

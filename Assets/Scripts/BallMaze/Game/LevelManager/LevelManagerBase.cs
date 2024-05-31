@@ -30,6 +30,8 @@ namespace BallMaze
 
         private CameraManager _camera;
 
+        private LevelTimer _levelTimer;
+
         protected abstract bool _isSecondChanceEnabled { get; }
         private bool _usedSecondChance = false;
 
@@ -61,6 +63,8 @@ namespace BallMaze
 
             _maze.InitMaze();
 
+            _levelTimer = new LevelTimer();
+
             SettingsEvents.UpdatedStartMethod += ResetLevel;
         }
 
@@ -90,6 +94,8 @@ namespace BallMaze
 
                     _maze.UpdateMazeOrientation(_controls.GetControlsOrientation());
                     _ball.AddForce(_controls.GetRawControlsDirection());
+
+                    _levelTimer.Update(Time.deltaTime);
 
                     break;
             }
@@ -155,6 +161,8 @@ namespace BallMaze
             _ball.FreezeBall(false);
 
             _levelState = LevelState.Playing;
+
+            _levelTimer.Resume();
         }
 
 
@@ -165,12 +173,16 @@ namespace BallMaze
             _ball.FreezeBall(true);
 
             _levelState = LevelState.Paused;
+
+            _levelTimer.Pause();
         }
 
 
         private void StartLevel()
         {
             ResumeLevel();
+
+            _levelTimer.Start();
         }
 
 
@@ -187,9 +199,17 @@ namespace BallMaze
 
             _usedSecondChance = false;
 
+            _maze.ResetMazeOrientation();
+
             // Move the ball to the start position
             if (_maze.start != null)
             {
+                _ball.MoveBallToPosition(_maze.start.transform.position);
+            }
+
+            _levelTimer.Reset();
+        }
+
                 _ball.MoveBallToPosition(_maze.start.transform.TransformPoint(Vector3.zero));
             }
 
@@ -225,8 +245,6 @@ namespace BallMaze
 
                 if (_isSecondChanceEnabled && !_usedSecondChance)
                 {
-                    _usedSecondChance = true;
-
                     UIManager.Instance.Show(UIViewType.SecondChance);
                 }
                 else
@@ -257,9 +275,13 @@ namespace BallMaze
 
         public void HandleBallCollision(Collision other)
         {
-            _lastRespawnableObstacle = other.gameObject;
+            GameObject obstacleRoot = GetObstacleGameObjectFromBallCollision(other.gameObject);
+            Obstacle obstacle = _maze.obstacles[obstacleRoot];
 
-            Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
+            if (obstacle.canRespawnOn)
+            {
+                _lastRespawnableObstacle = obstacleRoot;
+            }
 
             if (obstacle.canKill)
             {
@@ -290,6 +312,11 @@ namespace BallMaze
         /// <returns></returns>
         public GameObject GetObstacleGameObjectFromBallCollision(GameObject gameObject)
         {
+            if (gameObject.layer == 2)
+            {
+                return null;
+            }
+
             if (gameObject.transform.parent.parent.name == "Maze")
             {
                 return gameObject;
@@ -322,6 +349,8 @@ namespace BallMaze
             _maze.ResetMazeOrientation();
 
             ClearMaze();
+
+            _levelTimer.Reset();
         }
 
 

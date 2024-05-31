@@ -33,7 +33,7 @@
             <ui:Instance template="ModeSelectionScreenView" picking-mode="Ignore" name="mode-selection" class="screen__anchor--center screen_view" style="display: none;" />
             <ui:Instance template="DailyLevelsScreenView" picking-mode="Ignore" name="daily-levels" class="screen__anchor--center screen_view" style="justify-content: space-around; align-items: center; display: none;" />
             <ui:Instance template="RankedLevelView" name="ranked-level" class="screen__anchor--center screen_view" style="flex-direction: row; display: none;" />
-            <ui:Instance template="PlayingScreenView" picking-mode="Ignore" name="playing" class="screen__anchor--center screen_view" style="display: none;" />
+            <ui:Instance template="PlayingScreenView" picking-mode="Ignore" name="playing" class="screen__anchor--center" style="display: none;" />
         </ui:VisualElement>
         <ui:Instance template="ModalBackgroundView" name="modal-background" class="screen__anchor--center" style="display: none;" />
         <ui:VisualElement name="main__modal-views-container" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1;">
