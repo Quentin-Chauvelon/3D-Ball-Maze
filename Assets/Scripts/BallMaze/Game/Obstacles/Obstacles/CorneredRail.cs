@@ -96,6 +96,7 @@ namespace BallMaze.Obstacles
 #endif
             }
 
+
             corneredRail.name = "CorneredRail";
             corneredRail.transform.position = position;
             corneredRail.transform.rotation = Quaternion.Euler(0, railDirection * 90, 0);

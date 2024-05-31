@@ -95,8 +95,6 @@ namespace BallMaze
             voidYLevel = level.mazeSize.x > level.mazeSize.z
             ? level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f
             : level.mazeSize.z / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f;
-            Debug.Log(level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad));
-            Debug.Log($"Void level: {voidYLevel}");
 
             obstaclesList = new Obstacle[level.nbObstacles];
             obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
@@ -463,7 +461,6 @@ namespace BallMaze
         {
             if (_obstaclesGameObjects.ContainsKey(path))
             {
-                Debug.Log("Found obstacle at path: " + path);
                 return Instantiate((GameObject)_obstaclesGameObjects[path]);
             }
 

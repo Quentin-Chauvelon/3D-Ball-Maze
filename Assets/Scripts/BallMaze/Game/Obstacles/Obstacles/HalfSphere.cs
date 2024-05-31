@@ -11,7 +11,7 @@ namespace BallMaze.Obstacles
     {
         public override ObstacleType obstacleType => ObstacleType.HalfSphere;
 
-        public override bool canRespawnOn => false;
+        public override bool canRespawnOn => true;
 
         public override bool canRollOn => true;
 

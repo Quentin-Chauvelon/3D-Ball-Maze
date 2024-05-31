@@ -63,11 +63,13 @@ namespace BallMaze.UI
             _defaultLevelsListButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
             _homeButton.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
+                UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
             _nextLevelButton.clicked += () =>

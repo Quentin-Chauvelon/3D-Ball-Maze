@@ -35,7 +35,7 @@ namespace BallMaze.Obstacles
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
             GameObject killWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            killWall.name = "Wall";
+            killWall.name = "KillWall";
 
             // Adapt the wall's scale to the direction it's facing (equivalent to rotating the wall)
             if (direction == CardinalDirection.North || direction == CardinalDirection.South)
@@ -72,7 +72,7 @@ namespace BallMaze.Obstacles
 
             if (Application.isPlaying)
             {
-                killWall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/killwall.mat");
+                killWall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/kill.mat");
             }
 
             return killWall;

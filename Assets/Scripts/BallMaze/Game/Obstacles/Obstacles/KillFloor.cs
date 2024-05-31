@@ -38,7 +38,7 @@ namespace BallMaze.Obstacles
 
             if (Application.isPlaying)
             {
-                killFloor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/killfloor.mat");
+                killFloor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/kill.mat");
             }
 
             return killFloor;

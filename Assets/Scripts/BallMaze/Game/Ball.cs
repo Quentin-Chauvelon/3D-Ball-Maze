@@ -3,6 +3,7 @@ using Microsoft.Unity.VisualStudio.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -47,16 +48,14 @@ namespace BallMaze
             // Get the root of the obstacle
             GameObject otherObstacleGameObject = LevelManager.Instance.GetObstacleGameObjectFromBallCollision(other.gameObject);
 
+            if (otherObstacleGameObject == null)
+            {
+                return;
+            }
+
             if (LevelManager.Instance.Maze.obstacles[otherObstacleGameObject] != null && LevelManager.Instance.Maze.obstacles[otherObstacleGameObject].canRollOn)
             {
                 _lastHitObstacle = other.gameObject;
-
-                Renderer[] renderers = _lastHitObstacle.GetComponentsInChildren<Renderer>();
-                Bounds bounds = renderers[0].bounds;
-                for (var i = 1; i < renderers.Length; ++i)
-                {
-                    bounds.Encapsulate(renderers[i].bounds);
-                }
             }
 
             LevelManager.Instance.HandleBallCollision(other);
@@ -125,9 +124,23 @@ namespace BallMaze
             }
 
             Bounds bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; ++i)
+            for (var i = 0; i < renderers.Length; ++i)
             {
                 bounds.Encapsulate(renderers[i].bounds);
+            }
+
+            // Cap the size of the obstacle to 1 on the x and z axis. This prevent obstacles
+            // which which are bigger than a tile to move the ball when it shouldn't. For example,
+            // the top of a tunnel is slightly bigger than a tile, so when the ball falls off the floor
+            // which is exactly a tile, the ball is moved back on top of the tunnel, which we don't want
+            if (bounds.size.x > 1f)
+            {
+                bounds.size.Set(1f, bounds.size.y, bounds.size.z);
+            }
+
+            if (bounds.size.z > 1f)
+            {
+                bounds.size.Set(bounds.size.x, bounds.size.y, 1f);
             }
 
             // Check if the ball is within the x and z bounds of the obstacle and if it is under the obstacle but not too low (we don't want to move back from a normal fall)

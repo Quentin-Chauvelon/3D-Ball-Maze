@@ -21,7 +21,10 @@ namespace BallMaze.Obstacles
     {
         public override ObstacleType obstacleType => ObstacleType.Tunnel;
 
-        public override bool canRespawnOn => true;
+        // Tunnels aren't respawnable since they are higher than other obstacles, the player
+        // would respawn above the tunnel with the current system. Furthermore, if the player
+        // respanws in a tunnel, they wouldn't know where they are.
+        public override bool canRespawnOn => false;
 
         public override bool canRollOn => true;
 
@@ -61,9 +64,7 @@ namespace BallMaze.Obstacles
                         tunnel = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/tunnels/3waytunnel.fbx");
                         break;
                     case TunnelType.FourWay:
-                        GameObject test = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/tunnels/4waytunnel.fbx");
-                        Debug.Log("test" + test);
-                        tunnel = test;
+                        tunnel = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/tunnels/4waytunnel.fbx");
                         break;
                     default:
                         tunnel = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/tunnels/2waytunnel.fbx");
@@ -101,13 +102,18 @@ namespace BallMaze.Obstacles
             tunnel.transform.position = position;
             tunnel.transform.rotation = Quaternion.Euler(0, (int)direction * 90, 0);
 
-            Transform tunnelFloor = tunnel.transform.Find("Tunnel_Floor");
-            Transform tunnelExterior = tunnel.transform.Find("Tunnel_Exterior");
-            Transform tunnelInterior = tunnel.transform.Find("Tunnel_Interior");
+            if (Application.isPlaying)
+            {
+                tunnel.transform.Find("Tunnel_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                tunnel.transform.Find("Tunnel_Exterior").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelexterior.mat");
+                tunnel.transform.Find("Tunnel_Interior").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelinterior.mat");
 
-            tunnelFloor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
-            tunnelExterior.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelexterior.mat");
-            tunnelInterior.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelinterior.mat");
+                // Mark the tunnel itself as Ignore Raycast, this is used by the ball collision
+                // detection to ignore the tunnel itself, otherwise the ball could be moved
+                // back on top of the tunnel when falling off the maze
+                tunnel.transform.Find("Tunnel_Interior").gameObject.layer = 2;
+                tunnel.transform.Find("Tunnel_Exterior").gameObject.layer = 2;
+            }
 
             return tunnel;
         }
