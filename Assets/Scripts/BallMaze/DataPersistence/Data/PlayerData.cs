@@ -11,7 +11,8 @@ namespace BallMaze
     {
         public long lastUpdated;
         public int coins;
-        public Dictionary<string, int> defaultLevelsTimes;
+        public List<string> defaultLevelsUnlocked;
+        public Dictionary<string, decimal> defaultLevelsTimes;
         public int[] dailyLevelsTimes;
         public List<int> ownedSkins;
 
@@ -19,7 +20,8 @@ namespace BallMaze
         public PlayerData()
         {
             coins = 0;
-            defaultLevelsTimes = new Dictionary<string, int>();
+            defaultLevelsUnlocked = new List<string>() { "1" };
+            defaultLevelsTimes = new Dictionary<string, decimal>();
             dailyLevelsTimes = new int[5];
             ownedSkins = new List<int>();
         }

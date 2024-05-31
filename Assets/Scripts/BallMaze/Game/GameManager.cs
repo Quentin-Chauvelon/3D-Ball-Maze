@@ -46,8 +46,8 @@ namespace BallMaze
 
         // These two variables are used to test the editor and act as different platforms.
         // This is primarly used for features like Cloud Save where WebGL and mobile have different implementations
-        [SerializeField] public bool editorIsWebGL = false;
-        [SerializeField] public bool editorIsMobile = false;
+        [SerializeField] public bool editorIsWebGL;
+        [SerializeField] public bool editorIsMobile;
 
         public static bool isQuitting = false;
 

@@ -37,7 +37,9 @@ namespace BallMaze
 
         private int autoSaveTimeSeconds = 15;
 
-        private PlayerData playerData;
+        private PlayerData filePlayerData;
+        private PlayerData cloudPlayerData;
+
         private List<IDataPersistence> dataPersistenceObjects;
 
         private FileDataHandler fileDataHandler;
@@ -57,7 +59,9 @@ namespace BallMaze
             // Store a bool to know if CloudSave is enabled. This is used so that we don't have to add conditional compilation every time we want to know
 #if UNITY_WEBGL
             isCloudSaveEnabled = true;
+            isFileSaveEnabled = false;
 #elif UNITY_ANDROID || UNITY_IOS
+            isCloudSaveEnabled = true;
             isFileSaveEnabled = true;
 #endif
 
@@ -74,11 +78,13 @@ namespace BallMaze
             if (GameManager.Instance.editorIsWebGL)
             {
                 isCloudSaveEnabled = true;
+                isFileSaveEnabled = false;
             }
 
             // If the editor is being tested as mobile, enable File Save
             if (GameManager.Instance.editorIsMobile)
             {
+                isCloudSaveEnabled = true;
                 isFileSaveEnabled = true;
             }
 
@@ -101,6 +107,7 @@ namespace BallMaze
 
             LoadGame();
 
+            Debug.Log($"DataPersistenceManager initialized. File Save: {isFileSaveEnabled}, Cloud Save: {isCloudSaveEnabled}");
             if (isFileSaveEnabled)
             {
                 AutoSave();
@@ -117,12 +124,6 @@ namespace BallMaze
         }
 
 
-        public void NewGame()
-        {
-            playerData = new PlayerData();
-        }
-
-
         public async void LoadGame()
         {
             // return right away if data persistence is disabled
@@ -131,39 +132,55 @@ namespace BallMaze
                 return;
             }
 
-            if (isCloudSaveEnabled)
-            {
-                playerData = await cloudDataHandler.Load();
-            }
-
             if (isFileSaveEnabled)
             {
-                playerData = fileDataHandler.Load();
+                filePlayerData = fileDataHandler.Load();
             }
 
             // start a new game if the data is null and we're configured to initialize data for debugging purposes
-            if (playerData == null && initializeDataIfNull)
+            if (filePlayerData == null && initializeDataIfNull)
             {
-                NewGame();
+                filePlayerData = new PlayerData();
+            }
+
+            if (isCloudSaveEnabled)
+            {
+                cloudPlayerData = await cloudDataHandler.Load();
+            }
+
+            if (cloudPlayerData == null && initializeDataIfNull)
+            {
+                cloudPlayerData = new PlayerData();
             }
 
             // if no data can be loaded, don't continue
-            if (playerData == null)
+            if (filePlayerData == null && cloudPlayerData == null)
             {
                 Debug.Log("No data was found. A New Game needs to be started before data can be loaded.");
                 return;
             }
 
+            // Find the data that has been saved most recently. Add a few seconds to the cloud data to give it
+            // a higher priority if they have been saved roughly at the same time
+            PlayerData latestPlayerData = DateTime.FromBinary(filePlayerData.lastUpdated) > DateTime.FromBinary(cloudPlayerData.lastUpdated).AddSeconds(5)
+                ? filePlayerData
+                : cloudPlayerData;
+
             // push the loaded data to all other scripts that need it
             foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
             {
-                dataPersistenceObj.LoadData(playerData);
+                dataPersistenceObj.LoadData(latestPlayerData);
             }
         }
 
 
         public void SaveGame()
         {
+            if (cloudDataHandlerInitialized && isCloudSaveEnabled)
+            {
+                _ = cloudDataHandler.Save(CloudSaveKey.lastUpdated, DateTime.Now.ToBinary());
+            }
+
             // return right away if data persistence is disabled or if file save is disabled
             if (disableDataPersistence || !isFileSaveEnabled)
             {
@@ -171,7 +188,7 @@ namespace BallMaze
             }
 
             // if we don't have any data to save, log a warning here
-            if (playerData == null)
+            if (filePlayerData == null)
             {
                 Debug.LogWarning("No data was found. A New Game needs to be started before data can be saved.");
                 return;
@@ -180,14 +197,14 @@ namespace BallMaze
             // pass the data to other scripts so they can update it
             foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
             {
-                dataPersistenceObj.SaveData(playerData);
+                dataPersistenceObj.SaveData(filePlayerData);
             }
 
             // timestamp the data so we know when it was last saved
-            playerData.lastUpdated = DateTime.Now.ToBinary();
+            filePlayerData.lastUpdated = DateTime.Now.ToBinary();
 
             // save that data to a file using the data handler
-            fileDataHandler.Save(playerData);
+            fileDataHandler.Save(filePlayerData);
         }
 
 
@@ -198,12 +215,6 @@ namespace BallMaze
                 .OfType<IDataPersistence>();
 
             return new List<IDataPersistence>(dataPersistenceObjects);
-        }
-
-
-        public bool HasPlayerData()
-        {
-            return playerData != null;
         }
 
 

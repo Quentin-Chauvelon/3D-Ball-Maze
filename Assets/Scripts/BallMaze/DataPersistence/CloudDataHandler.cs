@@ -15,6 +15,9 @@ namespace BallMaze
     public enum CloudSaveKey
     {
         coins,
+        defaultLevelsUnlocked,
+        defaultLevelsTimes,
+        lastUpdated
     }
 
 
@@ -79,6 +82,9 @@ namespace BallMaze
         private CloudDataHandler()
         {
             _cloudSaveKeys.Add(CloudSaveKey.coins, new CloudSaveKeyInfo("coins", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.defaultLevelsUnlocked, new CloudSaveKeyInfo("defaultLevelsUnlocked", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.defaultLevelsTimes, new CloudSaveKeyInfo("defaultLevelsTimes", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.lastUpdated, new CloudSaveKeyInfo("lastUpdated", new SaveOptions(new DefaultWriteAccessClassOptions())));
         }
 
 
@@ -101,7 +107,34 @@ namespace BallMaze
                 }
                 else
                 {
-                    Debug.Log($"{coins} key not found!");
+                    Debug.Log($"key coins not found!");
+                }
+
+                if (data.TryGetValue("defaultLevelsUnlocked", out var defaultLevelsUnlocked))
+                {
+                    playerData.defaultLevelsUnlocked = defaultLevelsUnlocked.Value.GetAs<List<string>>();
+                }
+                else
+                {
+                    Debug.Log($"key defaultLevelsUnlocked not found!");
+                }
+
+                if (data.TryGetValue("defaultLevelsTimes", out var defaultLevelsTimes))
+                {
+                    playerData.defaultLevelsTimes = defaultLevelsTimes.Value.GetAs<Dictionary<string, decimal>>();
+                }
+                else
+                {
+                    Debug.Log($"key defaultLevelsTimes not found!");
+                }
+
+                if (data.TryGetValue("lastUpdated", out var lastUpdated))
+                {
+                    playerData.lastUpdated = lastUpdated.Value.GetAs<long>();
+                }
+                else
+                {
+                    Debug.Log($"key lastUpdated not found!");
                 }
 
                 return playerData;
