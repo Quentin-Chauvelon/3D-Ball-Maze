@@ -106,8 +106,16 @@ namespace BallMaze.UI
                 {
                     levelSelectionTemplateClone.AddToClassList("level-selection-item-unlocked");
 
+                    float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelSelection.id);
+
                     // Set the level's best time
-                    levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelSelection.id).ToString("00.00");
+                    levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = bestTime.ToString("00.00");
+
+                    // Set the level's stars
+                    for (int i = 3; i > 3 - LevelManager.Instance.GetNumberOfStarsForLevel(levelSelection.id, bestTime); i--)
+                    {
+                        levelSelectionTemplateClone.Q<VisualElement>($"default-level-selection-template__star-{i}-image").AddToClassList("star-active");
+                    }
                 }
                 else
                 {
@@ -204,6 +212,12 @@ namespace BallMaze.UI
             if (level != null)
             {
                 level.Q<Label>("default-level-selection-template__time-label").text = time.ToString("00.00");
+            }
+
+            // Set the level's stars
+            for (int i = 3; i > 3 - LevelManager.Instance.GetNumberOfStarsForLevel(levelId); i--)
+            {
+                level.Q<VisualElement>($"default-level-selection-template__star-{i}-image").AddToClassList("star-active");
             }
         }
 

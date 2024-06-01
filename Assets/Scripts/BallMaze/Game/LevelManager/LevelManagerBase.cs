@@ -235,7 +235,20 @@ namespace BallMaze
         /// Get the level after the current one. Overriden by child classes. Only used for default and daily levels
         /// </summary>
         /// <returns>The next level to load</returns>
-        public virtual string GetNextLevel() { return ""; }
+        public virtual string GetNextLevel()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Return the number of stars the player got for the level. Overriden by child classes.
+        /// </summary>
+        /// <param name="levelId">The level's id</param>
+        /// <returns>The number of stars the player got for the level</returns>
+        public virtual int GetNumberOfStarsForLevel(string levelId, float? bestTime = null)
+        {
+            return 0;
+        }
 
 
         /// <summary>

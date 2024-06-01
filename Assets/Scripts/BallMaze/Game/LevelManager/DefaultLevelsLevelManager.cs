@@ -18,6 +18,7 @@ namespace BallMaze
         public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
 
         private static string[] _defaultLevelsIds = null;
+        private static Dictionary<string, float[]> _defaultLevelsStarsTimes = new Dictionary<string, float[]>();
 
 
         public DefaultLevelsLevelManager()
@@ -39,11 +40,27 @@ namespace BallMaze
                 _defaultLevelsIds = null;
             }
 
+            if (_defaultLevelsStarsTimes != null)
+            {
+                _defaultLevelsStarsTimes.Clear();
+            }
+
             _defaultLevelsIds = new string[levelsSelection.numberOfLevels];
 
             for (int i = 0; i < levelsSelection.numberOfLevels; i++)
             {
                 _defaultLevelsIds[i] = levelsSelection.levels[i].id;
+
+                // Add the level's stars times to the dictionary if they are not already present, otherwise simply update the times
+                if (!_defaultLevelsStarsTimes.ContainsKey(levelsSelection.levels[i].id))
+                {
+                    _defaultLevelsStarsTimes.Add(levelsSelection.levels[i].id, levelsSelection.levels[i].times);
+                }
+                else
+                {
+                    _defaultLevelsStarsTimes[levelsSelection.levels[i].id] = levelsSelection.levels[i].times;
+
+                }
             }
         }
 
@@ -74,6 +91,29 @@ namespace BallMaze
             }
 
             return null;
+        }
+
+
+        public override int GetNumberOfStarsForLevel(string levelId, float? bestTime = null)
+        {
+            bestTime ??= PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelId);
+
+            if (bestTime.Value > 0f)
+            {
+                float[] starsTimes = _defaultLevelsStarsTimes[levelId];
+
+                for (int i = 1; i <= starsTimes.Length; i++)
+                {
+                    // In the file, the times are sorted in ascending order, meaning the last star is the first element.
+                    // Find the best star the player has, and return its index
+                    if (bestTime <= starsTimes[3 - i])
+                    {
+                        return 4 - i;
+                    }
+                }
+            }
+
+            return 0;
         }
 
 
