@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Cysharp.Threading.Tasks;
+using UnityExtensionMethods;
 
 
 namespace BallMaze.UI
@@ -13,6 +14,9 @@ namespace BallMaze.UI
 
 
         private const int RADIAL_PROGRESS_DURATION = 6;
+
+        // The percentage of the screen height the UI will take. Must match the value in the UXML file
+        private const float UI_HEIGHT_PERCENTAGE = 0.80f;
 
         // Visual Elements
         private RadialProgress _secondChanceRadialProgress;
@@ -70,7 +74,19 @@ namespace BallMaze.UI
         {
             base.Show();
 
+            // Tween the modal view from the top to the center of the screen
+            UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE);
+
             StartRadialProgress();
+        }
+
+
+        public override async void Hide()
+        {
+            // Tween the modal view back to the top of the screen
+            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
+
+            base.Hide();
         }
 
 

@@ -25,6 +25,8 @@ namespace BallMaze.UI
         private Button _pauseButton;
         private Button _settingsButton;
 
+        public const float UI_HEIGHT_PERCENTAGE = 0.15f;
+
 
         public PermanentView(VisualElement root) : base(root)
         {

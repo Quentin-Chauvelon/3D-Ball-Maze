@@ -44,9 +44,6 @@ namespace BallMaze.UI
         // The duration of the star scale animation in milliseconds
         private const int STAR_SCALE_ANIMATION_DURATION = 150;
 
-        // The duration of the tween of the root element (from top to center or vice versa)
-        private const int UI_TWEEN_DURATION = 500;
-
         // The number of milliseconds to wait before the last star animation and the first coin animation
         private const int DELAY_BETWEEN_STARS_AND_COINS_ANIMATION = 500;
 
@@ -122,27 +119,18 @@ namespace BallMaze.UI
 
         public override void Show()
         {
-            float height = GameManager.GetScreenSize().y;
-
-            // Get the size of the UI, the container of the UI is 85% of the screen height and the UI is 70% of the container
-            float size = height * (0.85f * UI_HEIGHT_PERCENTAGE);
-
-            // Move the UI out of the screen
-            _root.style.top = -size - 30;
-
             base.Show();
 
-            // Animate the UI dropping down
-            // Skip the first 15% of the screen height since it's the permanent UI, then move the UI to the center of the 85% left
-            _ = _root.TweenToPosition(height * 0.15f + height * (0.85f / 2) - height * (0.85f * UI_HEIGHT_PERCENTAGE) / 2, UI_TWEEN_DURATION / 1000f);
+            // Tween the modal view from the top to the center of the screen
+            UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE);
         }
 
 
 
         public override async void Hide()
         {
-            // Get the size of the UI, the container of the UI is 85% of the screen height and the UI is 70% of the container
-            await _root.TweenToPosition(-(GameManager.GetScreenSize().y * (0.85f * UI_HEIGHT_PERCENTAGE)) - 30, UI_TWEEN_DURATION / 1000f);
+            // Tween the modal view back to the top of the screen
+            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
 
             base.Hide();
 
@@ -283,7 +271,7 @@ namespace BallMaze.UI
             // - 0.5s for the delay between the last star animation and the start of the coin animation
             return
                 LevelManagerBase.TARGET_REACHED_UI_DELAY +
-                UI_TWEEN_DURATION +
+                (int)(UIUtitlities.UI_TWEEN_DURATION * 1000) +
                 DELAY_BEFORE_STARS_ANIMATION +
                 numberOfStarsGained * (DELAY_BETWEEN_STARS_ANIMATION + STAR_SCALE_ANIMATION_DURATION) +
                 DELAY_BETWEEN_STARS_AND_COINS_ANIMATION +
