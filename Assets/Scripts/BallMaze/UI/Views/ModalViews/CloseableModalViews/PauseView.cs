@@ -141,11 +141,6 @@ namespace BallMaze.UI
 
         public override async void Hide()
         {
-            // Tween the modal view back to the top of the screen
-            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
-
-            base.Hide();
-
             if (!_hasInteractedBeforeHide)
             {
                 if (LevelManager.Instance.HasLevelStarted)
@@ -157,6 +152,11 @@ namespace BallMaze.UI
                     LevelManager.Instance.LevelState = LevelState.WaitingToStart;
                 }
             }
+
+            // Tween the modal view back to the top of the screen
+            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
+
+            base.Hide();
         }
 
 
