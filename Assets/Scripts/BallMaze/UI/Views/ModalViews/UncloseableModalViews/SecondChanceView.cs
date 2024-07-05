@@ -117,6 +117,8 @@ namespace BallMaze.UI
                 {
                     LevelManager.Instance.UseSecondChance();
                     UIManager.Instance.Hide(UIViewType.SecondChance);
+
+                    break;
                 }
             }
 

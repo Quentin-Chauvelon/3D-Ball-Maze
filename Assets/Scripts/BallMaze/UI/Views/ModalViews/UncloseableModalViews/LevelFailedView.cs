@@ -131,6 +131,8 @@ namespace BallMaze.UI
                 {
                     LevelManager.Instance.ResetLevel();
                     UIManager.Instance.Hide(UIViewType.LevelFailed);
+
+                    break;
                 }
             }
 
