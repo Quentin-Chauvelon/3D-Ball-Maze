@@ -109,7 +109,8 @@ namespace BallMaze.UI
                     float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelSelection.id);
 
                     // Set the level's best time
-                    levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = bestTime.ToString("00.00");
+                    levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = $"{bestTime.ToString("00.00")}s";
+
 
                     // Set the level's stars
                     for (int i = 3; i > 3 - LevelManager.Instance.GetNumberOfStarsForLevel(levelSelection.id, bestTime); i--)
@@ -179,6 +180,11 @@ namespace BallMaze.UI
         }
 
 
+        /// <summary>
+        /// Get the visual element of the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <returns></returns>
         public VisualElement GetLevelFromId(string levelId)
         {
             foreach (VisualElement child in _levelsSelectionContainerScrollView.Children())
@@ -193,6 +199,10 @@ namespace BallMaze.UI
         }
 
 
+        /// <summary>
+        /// Removes the lock icon for the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
         public void UnlockLevel(string levelId)
         {
             VisualElement level = GetLevelFromId(levelId);
@@ -205,13 +215,18 @@ namespace BallMaze.UI
         }
 
 
+        /// <summary>
+        /// Update the time and stars of the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <param name="time"></param>
         public void SetLevelTime(string levelId, float time)
         {
             VisualElement level = GetLevelFromId(levelId);
 
             if (level != null)
             {
-                level.Q<Label>("default-level-selection-template__time-label").text = time.ToString("00.00");
+                level.Q<Label>("default-level-selection-template__time-label").text = $"{time.ToString("00.00")}s";
             }
 
             // Set the level's stars

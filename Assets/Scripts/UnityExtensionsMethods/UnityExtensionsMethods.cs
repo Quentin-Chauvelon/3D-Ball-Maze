@@ -1,6 +1,11 @@
 using System;
+using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using BallMaze;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace UnityExtensionMethods
 {
@@ -91,7 +96,7 @@ namespace UnityExtensionMethods
             return Math.Abs(a - b) < epsilon;
         }
 
-        
+
         /// <summary>
         /// Checks if two doubles are equal within a certain epsilon.
         /// </summary>
@@ -183,6 +188,15 @@ namespace UnityExtensionMethods
                 default:
                     return ("", new Color(0.51f, 0.51f, 0.51f));
             }
+        }
+
+
+        public static async UniTask TweenToPosition(this VisualElement element, float endPosition, float duration = 0.5f, Ease ease = Ease.OutExpo)
+        {
+            Debug.Log($"tweening to {endPosition} in {duration} seconds");
+
+            // Skip the first 15% of the screen height since it's the permanent UI, then move the UI to the center of the 85% left
+            await DOTween.To(() => element.style.top.value.value, x => element.style.top = x, endPosition, duration).SetEase(ease).AsyncWaitForCompletion();
         }
     }
 }

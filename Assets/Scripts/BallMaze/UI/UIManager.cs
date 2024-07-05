@@ -27,6 +27,7 @@ namespace BallMaze.UI
         LevelCompleted,
         Skip,
         Pause,
+        Animation,
         Exception,
         ExceptionDetails,
         ExceptionSendToSupport,
@@ -75,6 +76,7 @@ namespace BallMaze.UI
             get { return _isModalOpened; }
         }
 
+
         private void Awake()
         {
             _instance = this;
@@ -98,6 +100,7 @@ namespace BallMaze.UI
             // For the other UIs, call the UIManager.Show() method to add them to the navigation history
             _uiViews[UIViewType.Permanent].Show();
             _uiViews[UIViewType.Background].Show();
+            _uiViews[UIViewType.Animation].Show();
             Show(_uiViews[UIViewType.MainMenu]);
         }
 
@@ -120,6 +123,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.Permanent, new PermanentView(root.Q<VisualElement>("permanent")));
             _uiViews.Add(UIViewType.Background, new BackgroundView(root.Q<VisualElement>("background")));
             _uiViews.Add(UIViewType.ModalBackground, new ModalBackgroundView(root.Q<VisualElement>("modal-background")));
+            _uiViews.Add(UIViewType.Animation, new AnimationView(root.Q<VisualElement>("animation")));
 
             // Screen views
             _uiViews.Add(UIViewType.MainMenu, new MainMenuView(root.Q<VisualElement>("main-menu")));

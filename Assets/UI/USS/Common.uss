@@ -10,7 +10,6 @@
     height: 85%;
 }
 
-
 .modal-view-close-button {
     position: absolute;
     top: 0;
@@ -18,12 +17,10 @@
     flex-grow: 1;
 }
 
-
 .text-field__transparent > #unity-text-input {
     background-color: transparent;
     border-color: transparent;
 }
-
 
 .text-field__placeholder-active {
     color: rgb(130, 130, 130);
@@ -31,4 +28,13 @@
 
 .text-field__placeholder-inactive {
     color: rgb(0, 0, 0);
+}
+
+.coin {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    -unity-background-image-tint-color: rgb(255, 220, 0);
+    border-radius: 50px;
 }

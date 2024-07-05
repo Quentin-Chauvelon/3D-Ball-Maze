@@ -8,8 +8,9 @@
             <ui:VisualElement name="permanent__trophies-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between; display: none; align-items: stretch;">
                 <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__trophies-value-label" style="flex-grow: 1; font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
             </ui:VisualElement>
-            <ui:VisualElement name="permanent__coins-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between;">
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__coins-value-label" style="flex-grow: 1; color: rgba(255, 255, 255, 1); font-size: 50px; -unity-font-style: bold; -unity-text-align: middle-left; padding-left: 10%;" />
+            <ui:VisualElement name="permanent__coins-container" style="flex-grow: 0; height: 50%; width: 47%; background-color: rgba(0, 0, 0, 0.68); flex-direction: row; justify-content: space-between; align-items: center;">
+                <ui:VisualElement name="permanent__coins-image" style="flex-grow: 0; width: 15%; height:70%; margin-left: 5%; background-image: url(&apos;project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&amp;guid=54628aafa20f64b40ae661038ee7abf0&amp;type=3#AllAxis_Ridged&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__coins-value-label" style="flex-grow: 1; color: rgba(255, 255, 255, 1); font-size: 50px; -unity-font-style: bold; -unity-text-align: middle-left; padding-left: 5%;" />
                 <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="permanent__more-coins-button" />
             </ui:VisualElement>
         </ui:VisualElement>

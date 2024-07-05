@@ -36,7 +36,7 @@ namespace BallMaze
             }
         }
 
-        public static bool DEBUG = false;
+        public static bool DEBUG = true;
 
         private GameState _gameState;
 
@@ -224,6 +224,20 @@ namespace BallMaze
             // Application.Quit() doesn't work in the editor, so we need to stop the editor manually
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
+
+
+        /// <summary>
+        /// Return the screen size in pixels
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 GetScreenSize()
+        {
+#if UNITY_EDITOR
+            return new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+#else
+            return new Vector2(Screen.width, Screen.height);
 #endif
         }
     }

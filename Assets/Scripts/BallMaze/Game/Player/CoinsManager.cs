@@ -35,12 +35,12 @@ namespace BallMaze
             if (uiUpdateDelay == 0)
             {
                 // Update the UI immediately
-                UpdateCoinsUI();
+                UpdateCoinsUI(amount);
             }
             else
             {
                 // Update the UI after a delay
-                UpdateCoinsUIAfterDelay(uiUpdateDelay);
+                UpdateCoinsUIAfterDelay(amount, uiUpdateDelay);
             }
         }
 
@@ -53,6 +53,11 @@ namespace BallMaze
         /// <param name="uiUpdateDelay">The amount of milliseconds to wait before updating the UI</param>
         public async void UpdateCoins(int amount, int multiplier, int uiUpdateDelay = 0)
         {
+            if (amount == 0)
+            {
+                return;
+            }
+
             // The multiplier should never be 0, so set it to 1 if it is (to avoid errasing player data)
             if (multiplier == 0)
             {
@@ -75,12 +80,12 @@ namespace BallMaze
             if (uiUpdateDelay == 0)
             {
                 // Update the UI immediately
-                UpdateCoinsUI();
+                UpdateCoinsUI(amount);
             }
             else
             {
                 // Update the UI after a delay
-                UpdateCoinsUIAfterDelay(uiUpdateDelay);
+                UpdateCoinsUIAfterDelay(amount, uiUpdateDelay);
             }
         }
 
@@ -99,20 +104,22 @@ namespace BallMaze
         /// <summary>
         /// Update the coins UI
         /// </summary>
-        public void UpdateCoinsUI()
+        /// <param name="amount"></param>
+        public void UpdateCoinsUI(int amount)
         {
-            PlayerEvents.CoinsUpdated?.Invoke(_coins);
+            PlayerEvents.CoinsUpdated?.Invoke(_coins, amount);
         }
 
 
         /// <summary>
         /// Update the coins UI after waiting for the given amount of milliseconds
         /// </summary>
+        /// <param name="amount"></param>
         /// <param name="uiUpdateDelay"></param>
-        private async void UpdateCoinsUIAfterDelay(int uiUpdateDelay)
+        private async void UpdateCoinsUIAfterDelay(int amount, int uiUpdateDelay)
         {
             await UniTask.Delay(uiUpdateDelay);
-            UpdateCoinsUI();
+            UpdateCoinsUI(amount);
         }
 
 

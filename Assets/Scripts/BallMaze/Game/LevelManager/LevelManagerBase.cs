@@ -1,9 +1,9 @@
+using System;
 using BallMaze.Events;
 using BallMaze.Obstacles;
 using BallMaze.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 
 namespace BallMaze
 {
@@ -39,6 +39,9 @@ namespace BallMaze
         protected string _currentLevelId = "";
 
         private GameObject _lastRespawnableObstacle;
+
+        // The number of milliseconds to wait before displaying the level completed view once the player reaches the target
+        public const int TARGET_REACHED_UI_DELAY = 1500;
 
 
         public void Start()
@@ -252,6 +255,18 @@ namespace BallMaze
 
 
         /// <summary>
+        /// Return the number of coins the player should earn for the given level and the number of stars gained. Overriden by child classes.
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <param name="starsGained"></param>
+        /// <returns></returns>
+        public virtual int GetCoinsEarnedForLevel(int starsAlreadygained, int starsGained, string levelId = "")
+        {
+            return 0;
+        }
+
+
+        /// <summary>
         /// Player reached the target and won the level.
         /// Binded to the target's triggerAction, and so called when the ball enters a target's trigger.
         /// </summary>
@@ -262,8 +277,6 @@ namespace BallMaze
                 PauseLevel();
 
                 _levelState = LevelState.Won;
-
-                UIManager.Instance.Show(UIViewType.LevelCompleted);
             }
         }
 
@@ -328,7 +341,7 @@ namespace BallMaze
         {
             Obstacle obstacle = _maze.obstacles[GetObstacleGameObjectFromBallCollision(other.gameObject)];
 
-            if (obstacle.obstacleType == ObstacleType.FlagTarget)
+            if (obstacle.obstacleType == ObstacleType.FlagTarget && _levelState == LevelState.Playing)
             {
                 MazeEvents.targetReached?.Invoke();
             }

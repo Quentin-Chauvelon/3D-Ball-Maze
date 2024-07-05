@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using BallMaze.Events;
 using BallMaze.UI;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace BallMaze
@@ -67,7 +69,7 @@ namespace BallMaze
 
         public override string GetNextLevel()
         {
-            // Don't call the base method since it have any implementation
+            // Don't call the base method since it doesn't have any implementation
 
             if (_defaultLevelsIds == null || _defaultLevelsIds.Length == 0)
             {
@@ -117,29 +119,121 @@ namespace BallMaze
         }
 
 
-        protected override void TargetReached()
+        public override int GetCoinsEarnedForLevel(int starsAlreadygained, int starsGained, string levelId = "")
+        {
+            int coinsEarned = 0;
+
+            for (int i = starsAlreadygained; i < starsGained; i++)
+            {
+                coinsEarned += 10 * (i + 1);
+            }
+
+            return coinsEarned;
+        }
+
+
+        /// <summary>
+        /// Get the time the player needs to get the next star
+        /// </summary>
+        /// <param name="levelId">The id of the level</param>
+        /// <param name="starIndex">The index of the star</param>
+        /// <returns>The time the player needs to get the next star</returns>
+        private float GetNextStarTime(string levelId, int starIndex)
+        {
+            float[] starsTimes = _defaultLevelsStarsTimes[levelId];
+
+            if (starIndex <= 3)
+            {
+                return starsTimes[3 - starIndex];
+            }
+
+            return 0f;
+        }
+
+
+        protected override async void TargetReached()
         {
             base.TargetReached();
 
+            float time = _levelTimer.GetTime();
             float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(_currentLevelId);
 
+            bool newBestTime = bestTime == 0f || time < bestTime;
+
+            if (GameManager.DEBUG)
+            {
+                Debug.Log($"Completed level {_currentLevelId} in {time}. Previous PB: {bestTime}. New best? {newBestTime}");
+            }
+
+            // The number of stars the player already had before completing the level
+            int numberOfStarsAlreadyGained = GetNumberOfStarsForLevel(_currentLevelId, bestTime);
+
             // Update the player's best time for the current level
-            if (bestTime == 0f || _levelTimer.GetTime() < bestTime)
+            if (newBestTime)
             {
                 // Save the time of the current level
-                PlayerManager.Instance.LevelDataManager.SetDefaultLevelTime(_currentLevelId, _levelTimer.GetTime());
+                PlayerManager.Instance.LevelDataManager.SetDefaultLevelTime(_currentLevelId, time);
             }
 
             string nextLevelId = GetNextLevel();
 
             if (nextLevelId != null)
             {
-                // Unlock the next level
+                // Unlock the next level if it hasn't already been unlocked
                 if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevelId))
                 {
                     PlayerManager.Instance.LevelDataManager.UnlockDefaultLevel(nextLevelId);
                 }
             }
+
+            LevelCompletedView levelCompletedView = UIManager.Instance.UIViews[UIViewType.LevelCompleted] as LevelCompletedView;
+
+            // The number of stars the player now has after completing the level
+            int numberOfStars = GetNumberOfStarsForLevel(_currentLevelId, newBestTime ? time : bestTime);
+
+            string levelCompletedSecondText;
+
+            if (GameManager.DEBUG)
+            {
+                Debug.Log($"Player had {numberOfStarsAlreadyGained} stars. Now has {numberOfStars}");
+            }
+
+            // Update the second text depending on the amount of stars and the time the player got
+            if (numberOfStars == 3)
+            {
+                // Update the player's best time for the current level
+                if (newBestTime)
+                {
+                    levelCompletedSecondText = $"NEW BEST TIME: {time.ToString("00.00")}s";
+                }
+                else
+                {
+                    levelCompletedSecondText = $"BEST TIME: {bestTime.ToString("00.00")}s";
+                }
+            }
+            else
+            {
+                levelCompletedSecondText = $"NEXT STAR: {GetNextStarTime(_currentLevelId, 3 - numberOfStars).ToString("00.00")}s";
+            }
+
+            // The number of stars the player has gained for completing the level
+            int numberOfStarsGained = numberOfStars - numberOfStarsAlreadyGained;
+
+            int coinsEarned = GetCoinsEarnedForLevel(numberOfStarsAlreadyGained, numberOfStars, _currentLevelId);
+
+            // Update the amount of coins the player has
+            if (coinsEarned > 0)
+            {
+                PlayerManager.Instance.CoinsManager.UpdateCoins(coinsEarned, LevelCompletedView.GetLevelCompletedAnimationDuration(numberOfStarsGained));
+            }
+
+            levelCompletedView.DisplayNewBestTimeFrame(newBestTime);
+
+            await UniTask.Delay(TimeSpan.FromMilliseconds(TARGET_REACHED_UI_DELAY));
+
+            UIManager.Instance.Show(UIViewType.LevelCompleted);
+
+            levelCompletedView.UpdateTime(_levelTimer.GetTime(), numberOfStarsAlreadyGained, numberOfStars, levelCompletedSecondText);
         }
     }
 }
