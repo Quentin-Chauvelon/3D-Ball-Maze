@@ -231,6 +231,8 @@ namespace BallMaze
 
             await UniTask.Delay(TimeSpan.FromMilliseconds(TARGET_REACHED_UI_DELAY));
 
+            (UIManager.Instance.UIViews[UIViewType.LevelCompleted] as LevelCompletedView).SetNextLevelButtonVisibility(nextLevelId != null);
+
             UIManager.Instance.Show(UIViewType.LevelCompleted);
 
             levelCompletedView.UpdateTime(_levelTimer.GetTime(), numberOfStarsAlreadyGained, numberOfStars, levelCompletedSecondText);

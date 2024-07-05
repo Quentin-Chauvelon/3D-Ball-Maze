@@ -287,5 +287,11 @@ namespace BallMaze.UI
                 DELAY_BETWEEN_STARS_AND_COINS_ANIMATION +
                 AnimationView.DELAY_BETWEEN_COINS_ANIMATION * AnimationView.DEFAULT_NUMBER_OF_COINS_TO_ANIMATE;
         }
+
+
+        public void SetNextLevelButtonVisibility(bool visible)
+        {
+            _nextLevelButton.visible = visible;
+        }
     }
 }
