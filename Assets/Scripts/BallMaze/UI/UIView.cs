@@ -16,7 +16,7 @@ namespace BallMaze.UI
 
         public abstract bool isModal { get; }
 
-        protected bool _hideOnAwake = true;
+        protected bool _hideOnAwake = false;
 
 
         /// <summary>

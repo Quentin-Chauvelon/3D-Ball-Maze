@@ -33,6 +33,11 @@ namespace BallMaze.UI
         private Button _resumeButton;
         private Button _tryAgainButton;
 
+        // Set to false when the UI is shown and is set to true whenever the player interacts with the UI (eg: try again, reset...).
+        // This is needed because once the UI is hidden, we need to run the default behavior (ie: resume the level)
+        // if and only if the player hasn't interacted with the UI. Otherwise, the player will be stuck and unable to play
+        private bool _hasInteractedBeforeHide = false;
+
 
         // The percentage of the screen height the UI will take. Must match the value in the UXML file
         private const float UI_HEIGHT_PERCENTAGE = 0.8f;
@@ -72,7 +77,6 @@ namespace BallMaze.UI
         {
             _closeButton.clicked += () =>
             {
-                LevelManager.Instance.ResumeLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
 
@@ -91,23 +95,31 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
+                _hasInteractedBeforeHide = true;
+
                 LevelManager.Instance.QuitLevel();
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
             };
 
             _homeButton.clicked += () =>
             {
+                _hasInteractedBeforeHide = true;
+
                 UIManager.Instance.Show(UIViewType.MainMenu);
             };
 
             _resumeButton.clicked += () =>
             {
+                _hasInteractedBeforeHide = true;
+
                 LevelManager.Instance.ResumeLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
 
             _tryAgainButton.clicked += () =>
             {
+                _hasInteractedBeforeHide = true;
+
                 LevelManager.Instance.ResetLevel();
                 UIManager.Instance.Hide(UIViewType.Pause);
             };
@@ -122,6 +134,8 @@ namespace BallMaze.UI
             UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE);
 
             LevelManager.Instance.PauseLevel();
+
+            _hasInteractedBeforeHide = false;
         }
 
 
@@ -131,6 +145,18 @@ namespace BallMaze.UI
             await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
 
             base.Hide();
+
+            if (!_hasInteractedBeforeHide)
+            {
+                if (LevelManager.Instance.HasLevelStarted)
+                {
+                    LevelManager.Instance.ResumeLevel();
+                }
+                else
+                {
+                    LevelManager.Instance.LevelState = LevelState.WaitingToStart;
+                }
+            }
         }
 
 

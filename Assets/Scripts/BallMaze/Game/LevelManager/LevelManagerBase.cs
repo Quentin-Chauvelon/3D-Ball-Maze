@@ -17,6 +17,7 @@ namespace BallMaze
         public LevelState LevelState
         {
             get { return _levelState; }
+            set { _levelState = value; }
         }
 
         private Controls _controls;
@@ -37,6 +38,8 @@ namespace BallMaze
         private bool _usedSecondChance = false;
 
         protected string _currentLevelId = "";
+
+        public bool HasLevelStarted { get; private set; } = false;
 
         private GameObject _lastRespawnableObstacle;
 
@@ -190,6 +193,8 @@ namespace BallMaze
             ResumeLevel();
 
             _levelTimer.Start();
+
+            HasLevelStarted = true;
         }
 
 
@@ -213,6 +218,8 @@ namespace BallMaze
             {
                 _ball.MoveBallToPosition(_maze.start.transform.position);
             }
+
+            HasLevelStarted = false;
 
             _levelTimer.Reset();
         }
