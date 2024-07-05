@@ -47,6 +47,10 @@ namespace BallMaze.UI
             _secondChanceButton.clicked += () =>
             {
                 LevelManager.Instance.UseSecondChance();
+
+                // Show the permanent view elements back
+                (UIManager.Instance.UIViews[UIViewType.Permanent] as PermanentView).UpdateVisibleElements(UIViewType.Playing);
+
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
@@ -65,6 +69,10 @@ namespace BallMaze.UI
             _tryAgainButton.clicked += () =>
             {
                 LevelManager.Instance.ResetLevel();
+
+                // Show the permanent view elements back
+                (UIManager.Instance.UIViews[UIViewType.Permanent] as PermanentView).UpdateVisibleElements(UIViewType.Playing);
+
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
         }
@@ -74,8 +82,10 @@ namespace BallMaze.UI
         {
             base.Show();
 
+            (UIManager.Instance.UIViews[UIViewType.Permanent] as PermanentView).UpdateVisibleElements(UIViewType.SecondChance);
+
             // Tween the modal view from the top to the center of the screen
-            UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE);
+            UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE + 0.05f);
 
             StartRadialProgress();
         }
@@ -84,7 +94,7 @@ namespace BallMaze.UI
         public override async void Hide()
         {
             // Tween the modal view back to the top of the screen
-            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
+            await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE + 0.05f);
 
             base.Hide();
         }

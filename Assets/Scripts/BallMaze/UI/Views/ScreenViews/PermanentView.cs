@@ -120,11 +120,14 @@ namespace BallMaze.UI
                     _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
+                    _settingsButton.style.display = DisplayStyle.Flex;
                     break;
+
                 case UIViewType.Playing:
                     _backButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.Flex;
+                    _settingsButton.style.display = DisplayStyle.Flex;
 
                     // Show the skip button only for default and daily levels
                     _skipButton.style.display = LevelManager.Instance.levelType == LevelType.Default || LevelManager.Instance.levelType == LevelType.DailyLevel
@@ -132,11 +135,40 @@ namespace BallMaze.UI
                         : DisplayStyle.None;
 
                     break;
+
+                case UIViewType.LevelCompleted:
+                    _backButton.style.display = DisplayStyle.None;
+                    _homeButton.style.display = DisplayStyle.None;
+                    _skipButton.style.display = DisplayStyle.None;
+                    _pauseButton.style.display = DisplayStyle.None;
+                    _settingsButton.style.display = DisplayStyle.None;
+
+                    break;
+
+                case UIViewType.SecondChance:
+                    _backButton.style.display = DisplayStyle.None;
+                    _homeButton.style.display = DisplayStyle.None;
+                    _skipButton.style.display = DisplayStyle.None;
+                    _pauseButton.style.display = DisplayStyle.None;
+                    _settingsButton.style.display = DisplayStyle.None;
+
+                    break;
+
+                case UIViewType.LevelFailed:
+                    _backButton.style.display = DisplayStyle.None;
+                    _homeButton.style.display = DisplayStyle.None;
+                    _skipButton.style.display = DisplayStyle.None;
+                    _pauseButton.style.display = DisplayStyle.None;
+                    _settingsButton.style.display = DisplayStyle.None;
+
+                    break;
+
                 default:
                     _backButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.Flex;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
+                    _settingsButton.style.display = DisplayStyle.Flex;
                     break;
             }
         }
