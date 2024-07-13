@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BallMaze.Events;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityExtensionMethods;
@@ -69,8 +70,15 @@ namespace BallMaze.UI
             _resumeButton = _root.Q<Button>("pause__resume-button");
             _tryAgainButton = _root.Q<Button>("pause__try-again-button");
 
-            PlayerEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"Best time: {time.ToString("00.00")}s"; };
+            LevelEvents.LevelNameUpdated += (levelName) => { _levelNameLabel.text = levelName; };
+
+            LevelEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
+
+            LevelEvents.BestTimeUpdated += (bestTime) => { _bestTimeLabel.text = $"BEST TIME: {bestTime.ToString("00.00")}s"; };
+
+            LevelEvents.NextStarTimeUpdated += (nextStarTime) => { SetNextStarTime(nextStarTime); };
         }
+
 
 
         protected override void RegisterButtonCallbacks()
@@ -198,27 +206,16 @@ namespace BallMaze.UI
         }
 
 
-        /// <summary>
-        /// Update the name of the level and the difficulty (if it's a daily level)
-        /// </summary>
-        /// <param name="levelName"></param>
-        /// <param name="levelDifficulty"></param>
-        private void SetLevelInfo(string levelName, DailyLevelDifficulty levelDifficulty = DailyLevelDifficulty.Unknown)
+        private void SetLevelDifficulty(DailyLevelDifficulty levelDifficulty = DailyLevelDifficulty.Unknown)
         {
-            _levelNameLabel.text = levelName;
-
             (string name, Color color) = levelDifficulty.GetDifficultyInfo();
+
             _levelDifficultyLabel.text = name;
             _levelDifficultyLabel.style.color = color;
         }
 
 
-        /// <summary>
-        /// Update the best time and the time to the next star (if there is one left to obtain)
-        /// </summary>
-        /// <param name="bestTime"></param>
-        /// <param name="nextStarTime"></param>
-        private void SetTimes(TimeSpan bestTime, TimeSpan? nextStarTime = null)
+        private void SetNextStarTime(float? nextStarTime)
         {
             if (nextStarTime == null)
             {
@@ -227,11 +224,8 @@ namespace BallMaze.UI
             else
             {
                 _nextStarLabel.style.display = DisplayStyle.Flex;
-                _nextStarLabel.text = $"Next star: {nextStarTime?.ToString(@"ss\:ff\s")}";
+                _nextStarLabel.text = $"NEXT STAR: {nextStarTime?.ToString("00.00")}s";
             }
-
-
-            _bestTimeLabel.text = $"Best time: {bestTime.ToString(@"ss\:ff\s")}";
         }
 
 
@@ -258,10 +252,10 @@ namespace BallMaze.UI
         /// </summary>
         /// <param name="rank"></param>
         /// <param name="time"></param>
-        private void UpdatePlayerRankAndTime(int rank, TimeSpan time)
+        private void UpdatePlayerRankAndTime(int rank, float time)
         {
             _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__rank").text = rank.ToString();
-            _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__time").text = time.ToString(@"ss\:ff\s");
+            _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__time").text = $"{time.ToString("00.00")}s";
         }
 
 

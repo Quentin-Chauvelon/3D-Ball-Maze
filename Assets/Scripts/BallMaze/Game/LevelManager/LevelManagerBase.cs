@@ -116,7 +116,7 @@ namespace BallMaze
         /// Loads the the given level.
         /// </>
         /// <param name="level">The level to load</param>
-        public void LoadLevel(string levelId)
+        public virtual void LoadLevel(string levelId)
         {
             if (LevelManager.levelToLoad != "")
             {

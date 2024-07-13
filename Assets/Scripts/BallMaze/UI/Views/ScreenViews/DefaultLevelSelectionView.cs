@@ -48,7 +48,7 @@ namespace BallMaze.UI
             _levelsSelectionContainerScrollView.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
             PlayerEvents.DefaultLevelUnlocked += UnlockLevel;
-            PlayerEvents.DefaultLevelBestTimeUpdated += SetLevelTime;
+            LevelEvents.DefaultLevelBestTimeUpdated += SetLevelTime;
         }
 
 
@@ -77,9 +77,6 @@ namespace BallMaze.UI
         /// <param name="levelsSelection"></param>
         public void PopulateLevelSelectionView(LevelsSelection levelsSelection)
         {
-            // Save the ids of the default levels
-            DefaultLevelsLevelManager.LoadDefaultLevelsIds(levelsSelection);
-
             // Start by emptying the level selection view
             EmptyLevelSelectionView();
 

@@ -91,7 +91,7 @@ namespace BallMaze.UI
         private void UpdatePlayerRankAndTime(int rank, TimeSpan time)
         {
             _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__rank").text = rank.ToString();
-            _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__time").text = time.ToString(@"ss\:ff\s");
+            _leaderboardUserEntry.Q<Label>("leaderboard-entry-template__time").text = $"{time.ToString("00.00")}s";
         }
 
 
@@ -111,7 +111,7 @@ namespace BallMaze.UI
         /// <param name="time"></param>
         private void UpdateBestTime(TimeSpan time)
         {
-            _rankedLevelBestTime.text = time.ToString(@"ss\:ff\s");
+            _rankedLevelBestTime.text = $"{time.ToString("00.00")}s";
         }
 
 

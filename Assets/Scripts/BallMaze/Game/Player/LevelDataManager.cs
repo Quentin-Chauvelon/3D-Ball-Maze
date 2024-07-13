@@ -78,7 +78,7 @@ namespace BallMaze
 
                 defaultLevelsTimes[level] = timeDecimal;
 
-                PlayerEvents.DefaultLevelBestTimeUpdated?.Invoke(level, time);
+                LevelEvents.DefaultLevelBestTimeUpdated?.Invoke(level, time);
             }
             else
             {

@@ -5,9 +5,26 @@ using BallMaze.Events;
 using BallMaze.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityExtensionMethods;
 
 namespace BallMaze
 {
+    public class LevelInformation
+    {
+        public string id;
+        public string name;
+        public float[] times;
+
+
+        public LevelInformation(string id, string name, float[] times)
+        {
+            this.id = id;
+            this.name = name;
+            this.times = times;
+        }
+    }
+
+
     public class DefaultLevelsLevelManager : LevelManagerBase
     {
         public override LevelType levelType => LevelType.Default;
@@ -20,7 +37,7 @@ namespace BallMaze
         public const string DEFAULT_LEVELS_SELECTION_FILE_NAME = "defaultLevelsSelection.json";
 
         private static string[] _defaultLevelsIds = null;
-        private static Dictionary<string, float[]> _defaultLevelsStarsTimes = new Dictionary<string, float[]>();
+        private static Dictionary<string, LevelInformation> _defaultLevelsInformation = new Dictionary<string, LevelInformation>();
 
 
         public DefaultLevelsLevelManager()
@@ -35,35 +52,72 @@ namespace BallMaze
         }
 
 
-        public static void LoadDefaultLevelsIds(LevelsSelection levelsSelection)
+        /// <summary>
+        /// Load information about each level when deserializing the default levels file.
+        /// This contains the id, name, times... of each level.
+        /// </summary>
+        /// <param name="levelsSelection"></param>
+        public static void LoadDefaultLevelsInformation(LevelsSelection levelsSelection)
         {
+            // If the levels information has already been loaded, remove the previous information
             if (_defaultLevelsIds != null)
             {
                 _defaultLevelsIds = null;
             }
 
-            if (_defaultLevelsStarsTimes != null)
+            if (_defaultLevelsInformation.Count > 0)
             {
-                _defaultLevelsStarsTimes.Clear();
+                _defaultLevelsInformation.Clear();
             }
 
+            // Create an array based on the nubmer of levels to load
             _defaultLevelsIds = new string[levelsSelection.numberOfLevels];
 
             for (int i = 0; i < levelsSelection.numberOfLevels; i++)
             {
-                _defaultLevelsIds[i] = levelsSelection.levels[i].id;
+                LevelSelection level = levelsSelection.levels[i];
 
-                // Add the level's stars times to the dictionary if they are not already present, otherwise simply update the times
-                if (!_defaultLevelsStarsTimes.ContainsKey(levelsSelection.levels[i].id))
+                _defaultLevelsIds[i] = level.id;
+
+                LevelInformation levelInformation = new LevelInformation(
+                    level.id,
+                    level.name,
+                    level.times
+                );
+
+                if (_defaultLevelsInformation.ContainsKey(level.id))
                 {
-                    _defaultLevelsStarsTimes.Add(levelsSelection.levels[i].id, levelsSelection.levels[i].times);
+                    _defaultLevelsInformation[level.id] = levelInformation;
                 }
                 else
                 {
-                    _defaultLevelsStarsTimes[levelsSelection.levels[i].id] = levelsSelection.levels[i].times;
-
+                    _defaultLevelsInformation.Add(level.id, levelInformation);
                 }
             }
+        }
+
+
+        public override void LoadLevel(string levelId)
+        {
+            base.LoadLevel(levelId);
+
+            float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(_currentLevelId);
+
+            if (GameManager.DEBUG)
+            {
+                Debug.Log($"Loaded level {_currentLevelId}. Best time: {bestTime}");
+            }
+
+            // Update the UI to match the level information
+            LevelEvents.LevelNameUpdated?.Invoke(_defaultLevelsInformation[_currentLevelId].name);
+            LevelEvents.BestTimeUpdated?.Invoke(bestTime);
+
+            int numberOfStars = GetNumberOfStarsForLevel(_currentLevelId, bestTime);
+
+            LevelEvents.NextStarTimeUpdated?.Invoke(numberOfStars < 3
+                ? GetNextStarTime(_currentLevelId, 3 - numberOfStars)
+                : null
+            );
         }
 
 
@@ -102,7 +156,7 @@ namespace BallMaze
 
             if (bestTime.Value > 0f)
             {
-                float[] starsTimes = _defaultLevelsStarsTimes[levelId];
+                float[] starsTimes = _defaultLevelsInformation[levelId].times;
 
                 for (int i = 1; i <= starsTimes.Length; i++)
                 {
@@ -140,7 +194,7 @@ namespace BallMaze
         /// <returns>The time the player needs to get the next star</returns>
         private float GetNextStarTime(string levelId, int starIndex)
         {
-            float[] starsTimes = _defaultLevelsStarsTimes[levelId];
+            float[] starsTimes = _defaultLevelsInformation[levelId].times;
 
             if (starIndex <= 3)
             {
@@ -210,10 +264,16 @@ namespace BallMaze
                 {
                     levelCompletedSecondText = $"BEST TIME: {bestTime.ToString("00.00")}s";
                 }
+
+                LevelEvents.NextStarTimeUpdated?.Invoke(null);
             }
             else
             {
-                levelCompletedSecondText = $"NEXT STAR: {GetNextStarTime(_currentLevelId, 3 - numberOfStars).ToString("00.00")}s";
+                float nextStarTime = GetNextStarTime(_currentLevelId, 3 - numberOfStars);
+
+                levelCompletedSecondText = $"NEXT STAR: {nextStarTime.ToString("00.00")}s";
+
+                LevelEvents.NextStarTimeUpdated?.Invoke(nextStarTime);
             }
 
             // The number of stars the player has gained for completing the level
