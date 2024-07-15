@@ -20,7 +20,7 @@ namespace BallMaze
         public PlayerData()
         {
             coins = 0;
-            defaultLevelsUnlocked = new List<string>() { "1" };
+            defaultLevelsUnlocked = new List<string>();
             defaultLevelsTimes = new Dictionary<string, decimal>();
             dailyLevelsTimes = new int[5];
             ownedSkins = new List<int>();
