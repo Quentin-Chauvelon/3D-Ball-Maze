@@ -107,9 +107,9 @@ namespace BallMaze
                         _isDownloading = false;
 
                         PopulateLevelSelectionView();
-
-                        return;
                     }
+
+                    return;
                 }
             }
             else
@@ -126,14 +126,9 @@ namespace BallMaze
                 }
             }
 
-            // If we have no internet but the file has been downloaded before, use the downloaded file (which may be outdated)
-            if (File.Exists(Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
-            {
-                PopulateLevelSelectionView();
-            }
-            // Else if the file doesn't exist and we have no internet, we have no way of loading the levels,
+            // If the file doesn't exist and we have no internet, we have no way of loading the levels,
             // So display no internet message and wait for the player to go back online
-            else
+            if (!File.Exists(Path.Combine(LevelManager.Instance.LEVELS_PATH, DefaultLevelsLevelManager.DEFAULT_LEVELS_SELECTION_FILE_NAME)))
             {
                 // Display no internet message and call LoadDefaultLevelSelection() when the player goes back online
                 await InternetManager.Instance.CheckIsOnlineAndDisplayUI(LoadDefaultLevelSelection);
