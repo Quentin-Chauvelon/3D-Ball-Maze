@@ -9,3 +9,11 @@
     width: var(--buttons-container-height);
     height: var(--buttons-container-width);
 }
+
+#skip__unlock-next-level-coins-button.button-enabled {
+    background-color: #ffcf21;
+}
+
+#skip__unlock-next-level-coins-button.button-disabled {
+    background-color: #969696;
+}

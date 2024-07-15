@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,6 +29,8 @@ namespace BallMaze.UI
         // The percentage of the screen height the UI will take. Must match the value in the UXML file
         private const float UI_HEIGHT_PERCENTAGE = 0.8f;
 
+        private const int COINS_TO_UNLOCK_NEXT_LEVEL = 100;
+
 
         public SkipView(VisualElement root) : base(root)
         {
@@ -41,6 +45,9 @@ namespace BallMaze.UI
             _unlockNextLevelAdButton = _root.Q<Button>("skip__unlock-next-level-ad-button");
             _unlockAllLevelsIAPButton = _root.Q<Button>("skip__unlock-all-levels-iap-button");
             _resumeButton = _root.Q<Button>("skip__resume-button");
+
+            // Update the cost label to unlock the next level
+            _unlockNextLevelCoinsButton.Q<Label>("skip__unlock-next-level-coins-button-cost-label").text = COINS_TO_UNLOCK_NEXT_LEVEL.ToString();
         }
 
 
@@ -56,7 +63,27 @@ namespace BallMaze.UI
 
             _unlockNextLevelCoinsButton.clicked += () =>
             {
-                // TODO: pay coins to unlock the next level check if has enough coins and hide the UI + unlock next level if it's the case
+                if (!PlayerManager.Instance.CoinsManager.HasEnoughCoins(COINS_TO_UNLOCK_NEXT_LEVEL))
+                {
+                    return;
+                }
+
+                string nextLevelId = LevelManager.Instance.GetNextLevel();
+
+                if (nextLevelId != null)
+                {
+                    // Unlock the next level if it hasn't already been unlocked
+                    if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevelId))
+                    {
+                        PlayerManager.Instance.LevelDataManager.UnlockDefaultLevel(nextLevelId);
+
+                        PlayerManager.Instance.CoinsManager.UpdateCoins(-COINS_TO_UNLOCK_NEXT_LEVEL);
+
+                        LevelManager.Instance.LoadLevel(nextLevelId);
+
+                        UIManager.Instance.Hide(UIViewType.Skip);
+                    }
+                }
             };
 
             _unlockNextLevelAdButton.clicked += () =>
@@ -75,6 +102,22 @@ namespace BallMaze.UI
 
                 LevelManager.Instance.ResumeLevel();
                 UIManager.Instance.Hide(UIViewType.Skip);
+            };
+
+            PlayerEvents.CoinsUpdated += (int amount, int _) =>
+            {
+                // Update the style of the button based on if the player has enough coins
+                // to unlock the next level or not
+                if (amount >= COINS_TO_UNLOCK_NEXT_LEVEL)
+                {
+                    _unlockNextLevelCoinsButton.AddToClassList("button-enabled");
+                    _unlockNextLevelCoinsButton.RemoveFromClassList("button-disabled");
+                }
+                else
+                {
+                    _unlockNextLevelCoinsButton.RemoveFromClassList("button-enabled");
+                    _unlockNextLevelCoinsButton.AddToClassList("button-disabled");
+                }
             };
         }
 

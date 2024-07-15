@@ -24,6 +24,17 @@ namespace BallMaze
 
 
         /// <summary>
+        /// Check and return if the player has enough coins
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public bool HasEnoughCoins(int amount)
+        {
+            return _coins >= amount;
+        }
+
+
+        /// <summary>
         /// Set the amount of coins the player has
         /// </summary>
         /// <param name="amount"></param>
@@ -48,12 +59,12 @@ namespace BallMaze
         /// <summary>
         /// Update the amount of coins the player has
         /// </summary>
-        /// <param name="amount"></param>
+        /// <param name="increment"></param>
         /// <param name="multiplier"></param>
         /// <param name="uiUpdateDelay">The amount of milliseconds to wait before updating the UI</param>
-        public async void UpdateCoins(int amount, int multiplier, int uiUpdateDelay = 0)
+        public async void UpdateCoins(int increment, int multiplier, int uiUpdateDelay = 0)
         {
-            if (amount == 0)
+            if (increment == 0)
             {
                 return;
             }
@@ -64,12 +75,18 @@ namespace BallMaze
                 multiplier = 1;
             }
 
-            if (amount > 0)
+            if (increment > 0)
             {
-                amount = amount * multiplier;
+                increment = increment * multiplier;
             }
 
-            _coins += amount;
+            // Make sure the player's balance will still be positive after updating the coins
+            if (increment < 0 && _coins + increment < 0)
+            {
+                return;
+            }
+
+            _coins += increment;
 
             // If Cloud Save is enabled, save to the cloud
             if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
@@ -80,12 +97,12 @@ namespace BallMaze
             if (uiUpdateDelay == 0)
             {
                 // Update the UI immediately
-                UpdateCoinsUI(amount);
+                UpdateCoinsUI(increment);
             }
             else
             {
                 // Update the UI after a delay
-                UpdateCoinsUIAfterDelay(amount, uiUpdateDelay);
+                UpdateCoinsUIAfterDelay(increment, uiUpdateDelay);
             }
         }
 
@@ -93,33 +110,33 @@ namespace BallMaze
         /// <summary>
         /// Update the amount of coins the player has
         /// </summary>
-        /// <param name="amount"></param>
+        /// <param name="increment"></param>
         /// <param name="uiUpdateDelay">The amount of milliseconds to wait before updating the UI</param>
-        public void UpdateCoins(int amount, int uiUpdateDelay = 0)
+        public void UpdateCoins(int increment, int uiUpdateDelay = 0)
         {
-            UpdateCoins(amount, _coinsMultiplier, uiUpdateDelay);
+            UpdateCoins(increment, _coinsMultiplier, uiUpdateDelay);
         }
 
 
         /// <summary>
         /// Update the coins UI
         /// </summary>
-        /// <param name="amount"></param>
-        public void UpdateCoinsUI(int amount)
+        /// <param name="increment"></param>
+        public void UpdateCoinsUI(int increment)
         {
-            PlayerEvents.CoinsUpdated?.Invoke(_coins, amount);
+            PlayerEvents.CoinsUpdated?.Invoke(_coins, increment);
         }
 
 
         /// <summary>
         /// Update the coins UI after waiting for the given amount of milliseconds
         /// </summary>
-        /// <param name="amount"></param>
+        /// <param name="increment"></param>
         /// <param name="uiUpdateDelay"></param>
-        private async void UpdateCoinsUIAfterDelay(int amount, int uiUpdateDelay)
+        private async void UpdateCoinsUIAfterDelay(int increment, int uiUpdateDelay)
         {
             await UniTask.Delay(uiUpdateDelay);
-            UpdateCoinsUI(amount);
+            UpdateCoinsUI(increment);
         }
 
 
