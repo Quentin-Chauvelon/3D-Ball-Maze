@@ -35,7 +35,7 @@ namespace BallMaze
         private string fileName = "3dbm_data.json";
         private bool useEncryption = false;
 
-        private int autoSaveTimeSeconds = 15;
+        private int autoSaveTimeSeconds = 60;
 
         private PlayerData filePlayerData;
         private PlayerData cloudPlayerData;
@@ -84,15 +84,18 @@ namespace BallMaze
             // If the editor is being tested as mobile, enable File Save
             if (GameManager.Instance.editorIsMobile)
             {
-                isCloudSaveEnabled = true;
+                isCloudSaveEnabled = false;
                 isFileSaveEnabled = true;
             }
 
             fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
 
-            // For the CloudDataHandler, we can't call the constructor directly
-            cloudDataHandler = await CloudDataHandler.CloudDataHandlerAsync();
-            cloudDataHandlerInitialized = cloudDataHandler.initialized;
+            if (isCloudSaveEnabled)
+            {
+                // For the CloudDataHandler, we can't call the constructor directly
+                cloudDataHandler = await CloudDataHandler.CloudDataHandlerAsync();
+                cloudDataHandlerInitialized = cloudDataHandler.initialized;
+            }
 
             StartGame();
         }
