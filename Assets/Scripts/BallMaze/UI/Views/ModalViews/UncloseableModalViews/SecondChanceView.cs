@@ -26,6 +26,7 @@ namespace BallMaze.UI
         private Button _homeButton;
         private Button _tryAgainButton;
 
+        private int PULSE_ANIMATION_INTERVAL = 700;
         private const bool IS_RADIAL_PROGRESS_ENABLED = false;
 
 
@@ -90,12 +91,20 @@ namespace BallMaze.UI
             // Tween the modal view from the top to the center of the screen
             UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE + 0.05f);
 
+#pragma warning disable CS0162 // Unreachable code detected
             if (IS_RADIAL_PROGRESS_ENABLED)
             {
-#pragma warning disable CS0162 // Unreachable code detected
                 StartRadialProgress();
-#pragma warning restore CS0162 // Unreachable code detected
             }
+            else
+            {
+                // Slow the pulse down if the radial progress is disabled, otherwise it will be too fast and annoying
+                PULSE_ANIMATION_INTERVAL = 1800;
+
+                // Set the progress to 0 so that the radial progress is not visible
+                _secondChanceRadialProgress.progress = 0;
+            }
+#pragma warning restore CS0162 // Unreachable code detected
 
             StartPulseAnimation();
         }

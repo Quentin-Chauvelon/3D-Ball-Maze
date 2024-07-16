@@ -11,12 +11,6 @@ namespace BallMaze.UI
     {
         public override bool isCloseable => false;
 
-
-        private const int RADIAL_PROGRESS_DURATION = 6;
-
-        // The percentage of the screen height the UI will take. Must match the value in the UXML file
-        private const float UI_HEIGHT_PERCENTAGE = 0.8f;
-
         // Visual Elements
         private VisualElement _aspectRatioContainer;
         private Label _restartWhereYouFailedLabel;
@@ -27,6 +21,13 @@ namespace BallMaze.UI
         private Button _homeButton;
         private RadialProgress _tryAgainRadialProgress;
         private Button _tryAgainButton;
+
+        // The percentage of the screen height the UI will take. Must match the value in the UXML file
+        private const float UI_HEIGHT_PERCENTAGE = 0.8f;
+
+        private const int RADIAL_PROGRESS_DURATION = 4;
+
+        private const bool IS_RADIAL_PROGRESS_ENABLED = true;
 
 
         public LevelFailedView(VisualElement root) : base(root)
@@ -100,7 +101,17 @@ namespace BallMaze.UI
             // Tween the modal view from the top to the center of the screen
             UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE + 0.05f);
 
-            StartRadialProgress();
+#pragma warning disable CS0162 // Unreachable code detected
+            if (IS_RADIAL_PROGRESS_ENABLED)
+            {
+                StartRadialProgress();
+            }
+            else
+            {
+                // Set the progress to 0 so that the radial progress is not visible
+                _tryAgainRadialProgress.progress = 0;
+            }
+#pragma warning restore CS0162 // Unreachable code detected
         }
 
 
@@ -119,13 +130,14 @@ namespace BallMaze.UI
         /// </summary>
         private async void StartRadialProgress()
         {
-            float step = 100f / (RADIAL_PROGRESS_DURATION * 60);
+            // Multiply by 50 instead of 60 because FixedUpdate is called 50 times per second
+            float step = 100f / (RADIAL_PROGRESS_DURATION * 50);
 
             // Decrease the progress every frame while the view is visible
             while (isEnabled)
             {
                 _tryAgainRadialProgress.progress -= step;
-                await UniTask.Yield();
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
 
                 if (_tryAgainRadialProgress.progress <= 0)
                 {
