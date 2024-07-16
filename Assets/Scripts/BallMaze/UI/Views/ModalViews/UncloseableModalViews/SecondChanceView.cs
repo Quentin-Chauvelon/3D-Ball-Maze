@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Cysharp.Threading.Tasks;
 using UnityExtensionMethods;
+using DG.Tweening;
 
 
 namespace BallMaze.UI
@@ -13,7 +14,7 @@ namespace BallMaze.UI
         public override bool isCloseable => false;
 
 
-        private const int RADIAL_PROGRESS_DURATION = 6;
+        private const int RADIAL_PROGRESS_DURATION = 4;
 
         // The percentage of the screen height the UI will take. Must match the value in the UXML file
         private const float UI_HEIGHT_PERCENTAGE = 0.80f;
@@ -24,6 +25,8 @@ namespace BallMaze.UI
         private Button _defaultLevelsListButton;
         private Button _homeButton;
         private Button _tryAgainButton;
+
+        private const bool IS_RADIAL_PROGRESS_ENABLED = false;
 
 
         public SecondChanceView(VisualElement root) : base(root)
@@ -87,7 +90,14 @@ namespace BallMaze.UI
             // Tween the modal view from the top to the center of the screen
             UIUtitlities.TweenModalViewFromTop(_root, UI_HEIGHT_PERCENTAGE + 0.05f);
 
-            StartRadialProgress();
+            if (IS_RADIAL_PROGRESS_ENABLED)
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                StartRadialProgress();
+#pragma warning restore CS0162 // Unreachable code detected
+            }
+
+            StartPulseAnimation();
         }
 
 
@@ -101,17 +111,33 @@ namespace BallMaze.UI
 
 
         /// <summary>
+        /// Start the pulse animation for the second chance button
+        /// </summary>
+        /// <returns></returns>
+        private async void StartPulseAnimation()
+        {
+            while (isEnabled)
+            {
+                await UniTask.Delay(700);
+                await DOTween.To(() => 1f, x => _secondChanceRadialProgress.style.scale = new StyleScale(new Vector2(x, x)), 1.1f, 0.1f).SetEase(Ease.OutQuint).AsyncWaitForCompletion();
+                await DOTween.To(() => 1.1f, x => _secondChanceRadialProgress.style.scale = new StyleScale(new Vector2(x, x)), 1f, 0.4f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+            }
+        }
+
+
+        /// <summary>
         /// Decrease the radial progress every frame (acts as a timer) and restart the level once it reaches 0
         /// </summary>
         private async void StartRadialProgress()
         {
-            float step = 100f / (RADIAL_PROGRESS_DURATION * 60);
+            // Multiply by 50 instead of 60 because FixedUpdate is called 50 times per second
+            float step = 100f / (RADIAL_PROGRESS_DURATION * 50);
 
             // Decrease the progress every frame while the view is visible
             while (isEnabled)
             {
                 _secondChanceRadialProgress.progress -= step;
-                await UniTask.Yield();
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
 
                 if (_secondChanceRadialProgress.progress <= 0)
                 {
