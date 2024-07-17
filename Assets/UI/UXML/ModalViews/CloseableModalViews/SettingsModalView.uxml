@@ -13,8 +13,8 @@
             </ui:GroupBox>
         </ui:VisualElement>
         <ui:Toggle label="Joystick position" name="settings__joystick-position-toggle" style="font-size: 30px; -unity-font-style: bold;" />
-        <ui:RadioButtonGroup label="Radio Button Group" value="0" choices="Touch, Cooldown" name="settings__start-on-radio-button-group" style="font-size: 30px; -unity-font-style: bold;" />
-        <ui:SliderInt picking-mode="Ignore" label="Cooldown duration" value="3" high-value="10" name="settings__cooldown-duration-slider" low-value="1" style="font-size: 30px; -unity-font-style: bold;" />
+        <ui:RadioButtonGroup label="Radio Button Group" value="0" choices="Touch, Countdown" name="settings__start-on-radio-button-group" style="font-size: 30px; -unity-font-style: bold;" />
+        <ui:SliderInt picking-mode="Ignore" label="Countdown duration" value="3" high-value="10" name="settings__countdown-duration-slider" low-value="1" style="font-size: 30px; -unity-font-style: bold;" />
         <ui:DropdownField label="Language" index="0" name="settings__language-dropdown" style="font-size: 30px; -unity-font-style: bold;" />
     </ui:VisualElement>
 </ui:UXML>

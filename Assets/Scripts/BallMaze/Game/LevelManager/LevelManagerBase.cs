@@ -83,12 +83,26 @@ namespace BallMaze
             switch (_levelState)
             {
                 case LevelState.WaitingToStart:
-                    // If the player has start on touch enabled, is not over a UI element and clicks or touches the screen, start the game
-                    if (SettingsManager.Instance.startOn == StartOnSettings.Touch &&
-                        !EventSystem.current.currentSelectedGameObject &&
-                        (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
+                    // If the player has start on touch enabled
+                    if (SettingsManager.Instance.startOn == StartOnSettings.Touch)
                     {
-                        StartLevel();
+                        // If the player is not over a UI element and clicks or touches the screen, start the game
+                        if (!EventSystem.current.currentSelectedGameObject &&
+                        (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
+                        {
+                            (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).SetTouchToStartLabelVisibility(false);
+
+                            StartLevel();
+                        }
+                    }
+                    // If the player has countdown enabled
+                    else if (SettingsManager.Instance.startOn == StartOnSettings.Countdown)
+                    {
+                        // If the countdown has reached 0, start the game
+                        if ((UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).UpdateCountdown())
+                        {
+                            StartLevel();
+                        }
                     }
 
                     break;
@@ -217,6 +231,16 @@ namespace BallMaze
             if (_maze.start != null)
             {
                 _ball.MoveBallToPosition(_maze.start.transform.position);
+            }
+
+            if (SettingsManager.Instance.startOn == StartOnSettings.Touch)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).SetTouchToStartLabelVisibility(true);
+            }
+            else if (SettingsManager.Instance.startOn == StartOnSettings.Countdown)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).ResetCountdown();
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).SetCountdownLabelVisibility(true);
             }
 
             HasLevelStarted = false;

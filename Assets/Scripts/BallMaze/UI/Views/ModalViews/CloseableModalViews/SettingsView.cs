@@ -23,7 +23,7 @@ namespace BallMaze.UI
         private RadioButton _controlsAccelerometerRadioButton;
         private Toggle _joystickPositionToggle;
         private RadioButtonGroup _startOnRadioButtonGroup;
-        private SliderInt _cooldownDurationSlider;
+        private SliderInt _countdownDurationSlider;
         private Label _accelerometerUnavailableLabel;
         private DropdownField _languageDropdown;
 
@@ -40,7 +40,7 @@ namespace BallMaze.UI
             _controlsAccelerometerRadioButton = _root.Q<RadioButton>("settings__accelerometer-radio-button");
             _joystickPositionToggle= _root.Q<Toggle>("settings__joystick-position-toggle");
             _startOnRadioButtonGroup = _root.Q<RadioButtonGroup>("settings__start-on-radio-button-group");
-            _cooldownDurationSlider = _root.Q<SliderInt>("settings__cooldown-duration-slider");
+            _countdownDurationSlider = _root.Q<SliderInt>("settings__countdown-duration-slider");
             _accelerometerUnavailableLabel = _root.Q<Label>("settings__controls-accelerometer-unavailable-label");
             _languageDropdown = _root.Q<DropdownField>("settings__language-dropdown");
 
@@ -85,13 +85,22 @@ namespace BallMaze.UI
             _startOnRadioButtonGroup.RegisterValueChangedCallback((evt) =>
             {
                 SettingsManager.Instance.startOn = (StartOnSettings)evt.newValue;
+
+                // Reset both methods UI
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).SetTouchToStartLabelVisibility(false);
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).ResetCountdown();
+
+
                 SettingsEvents.UpdatedStartMethod?.Invoke();
             });
 
-            // Set the cooldown duration
-            _cooldownDurationSlider.RegisterValueChangedCallback((evt) =>
+            // Set the countdown duration
+            _countdownDurationSlider.RegisterValueChangedCallback((evt) =>
             {
-                SettingsManager.Instance.cooldownDuration = evt.newValue;
+                SettingsManager.Instance.countdownDuration = evt.newValue;
+
+                (UIManager.Instance.UIViews[UIViewType.Playing] as PlayingView).ResetCountdown();
+
                 SettingsEvents.UpdatedStartMethod?.Invoke();
             });
 
@@ -122,8 +131,8 @@ namespace BallMaze.UI
             // Update the start method
             _startOnRadioButtonGroup.value = (int)SettingsManager.Instance.startOn;
 
-            // Update the cooldown duration
-            _cooldownDurationSlider.value = SettingsManager.Instance.cooldownDuration;
+            // Update the countdown duration
+            _countdownDurationSlider.value = SettingsManager.Instance.countdownDuration;
 
             // Update the language
             int index = SettingsManager.Instance.language.IndexOf("(");

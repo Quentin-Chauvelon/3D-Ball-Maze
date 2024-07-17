@@ -16,7 +16,7 @@ namespace BallMaze
 
     public enum StartOnSettings
     {
-        Cooldown,
+        Countdown,
         Touch
     }
 
@@ -112,16 +112,16 @@ namespace BallMaze
             }
         }
 
-        private int _cooldownDuration = 3;
-        public int cooldownDuration
+        private int _countdownDuration = 3;
+        public int countdownDuration
         {
-            get { return _cooldownDuration; }
+            get { return _countdownDuration; }
             set
             {
                 // The duration must be between 1 and 10 seconds
-                _cooldownDuration = Mathf.Clamp(value, 1, 10);
+                _countdownDuration = Mathf.Clamp(value, 1, 10);
 
-                PlayerPrefs.SetInt("cooldownDuration", _cooldownDuration);
+                PlayerPrefs.SetInt("cooldownDuration", _countdownDuration);
             }
         }
 
@@ -201,8 +201,8 @@ namespace BallMaze
                 ? (StartOnSettings)PlayerPrefs.GetInt("startOn")
                 : StartOnSettings.Touch;
 
-            // Load the cooldown duration. Defaults to 3 seconds
-            cooldownDuration = PlayerPrefs.HasKey("cooldownDuration")
+            // Load the countdown duration. Defaults to 3 seconds
+            countdownDuration = PlayerPrefs.HasKey("cooldownDuration")
                 ? PlayerPrefs.GetInt("cooldownDuration")
                 : 3;
 
