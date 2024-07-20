@@ -80,6 +80,12 @@ namespace BallMaze
         {
             _gameState = GameState.MainMenu;
 
+            if (RemoteConfigManager.REMOTE_CONFIG_ENABLED)
+            {
+                RemoteConfigManager.Initialize();
+                RemoteConfigManager.FetchAndApplyRemoteSettings();
+            }
+
             UIManager.Instance.Initialize();
         }
 
