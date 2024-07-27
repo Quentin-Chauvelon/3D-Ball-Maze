@@ -10,8 +10,7 @@ namespace BallMaze
 {
     public class LoadingScreen : MonoBehaviour
     {
-        private UIDocument _loadingScreenUIDocument;
-        private LoadingScreenView _loadingScreenUIView;
+        public static LoadingScreenView LoadingScreenUIView;
 
         private int _numberOfTasksCompleted = 0;
 
@@ -19,13 +18,16 @@ namespace BallMaze
         private readonly int NUMBER_OF_TASKS = 1;
 
 
+        private void Awake()
+        {
+            LoadingScreenUIView = new LoadingScreenView(GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("loading-screen__background"));
+        }
+
+
         private async void Start()
         {
             // Initialize and show the loading screen UI
-            _loadingScreenUIDocument = GetComponent<UIDocument>();
-            _loadingScreenUIView = new LoadingScreenView(_loadingScreenUIDocument.rootVisualElement.Q<VisualElement>("loading-screen__background"));
-            _loadingScreenUIView.SetProgressBarValue(0);
-            _loadingScreenUIView.Show();
+            LoadingScreenUIView.InitializeLoadingScreen(LoadingIndicatorType.ProgressBar);
 
             // Wait for Unity Gaming Services to initialize
             if (GameManager.Instance.editorIsWebGL || GameManager.Instance.editorIsMobile)
@@ -71,7 +73,7 @@ namespace BallMaze
                 else
                 {
                     Debug.Log("Services have been initialized, game launching");
-                    _loadingScreenUIView.Hide();
+                    LoadingScreenUIView.Hide();
                     GameManager.Instance.StartGame();
                 }
             }
@@ -85,7 +87,7 @@ namespace BallMaze
         private void UpdateProgress()
         {
             _numberOfTasksCompleted += 1;
-            _loadingScreenUIView.SetProgressBarValue((100 * _numberOfTasksCompleted) / NUMBER_OF_TASKS);
+            LoadingScreenUIView.SetProgressBarValue((100 * _numberOfTasksCompleted) / NUMBER_OF_TASKS);
         }
 
 

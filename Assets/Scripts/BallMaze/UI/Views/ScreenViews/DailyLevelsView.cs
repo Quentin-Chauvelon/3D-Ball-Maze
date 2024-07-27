@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -54,11 +55,28 @@ namespace BallMaze.UI
         }
 
 
-        public override void Show()
+        public override async void Show()
         {
             base.Show();
 
             StartUpdatesInTimer();
+
+            // If the daily levels aren't loaded, show the loading screen
+            if (!AreDailyLevelsLoaded)
+            {
+                LoadingScreen.LoadingScreenUIView.InitializeLoadingScreen(LoadingIndicatorType.CircularAnimation);
+
+                TimeoutException timeoutException = await UniTask.WaitUntil(() => AreDailyLevelsLoaded).Timeout(20);
+
+                LoadingScreen.LoadingScreenUIView.Hide();
+
+                if (timeoutException != null)
+                {
+                    UIManager.Instance.Show(UIViewType.MainMenu);
+
+                    ExceptionManager.ShowExceptionMessage(timeoutException, "ExceptionMessagesTable", "DailyLevelsDownloadingGenericError", ExceptionActionType.BackToMainMenu);
+                }
+            }
         }
 
 

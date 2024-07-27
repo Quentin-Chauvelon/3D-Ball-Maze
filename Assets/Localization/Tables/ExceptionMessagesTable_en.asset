@@ -84,6 +84,12 @@ MonoBehaviour:
       and try again...
     m_Metadata:
       m_Items: []
+  - m_Id: 68122700207009792
+    m_Localized: The daily levels could not be loaded. Please, try checking your
+      internet connection and try again... If the issue persists, try relaunching
+      the game.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

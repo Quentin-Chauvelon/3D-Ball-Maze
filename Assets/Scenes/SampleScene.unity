@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: ed847d21558cbd342bed8b93d67c5322, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 5dba300cd8ce271c98af9a16ef9f5c7f, type: 3}
-  m_SortingOrder: -2
+  m_SortingOrder: 10
 --- !u!1 &514934737
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,8 +2705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb08129923acd0249891d4eb36c804ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  editorIsWebGL: 0
-  editorIsMobile: 1
+  editorIsWebGL: 1
+  editorIsMobile: 0
 --- !u!4 &1110262685
 Transform:
   m_ObjectHideFlags: 0

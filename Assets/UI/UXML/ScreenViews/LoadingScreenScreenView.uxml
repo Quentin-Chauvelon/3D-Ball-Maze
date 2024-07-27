@@ -1,7 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/USS/ScreenViews/LoadingScreen.uss?fileID=7433441132597879392&amp;guid=24f88eb7c398d05d5be7da40c24a3810&amp;type=3#LoadingScreen" />
-    <ui:VisualElement name="loading-screen__background" style="flex-grow: 1; flex-shrink: 0; background-color: rgb(127, 202, 255); align-items: center; justify-content: center; display: none;">
+    <ui:VisualElement name="loading-screen__background" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100%; background-color: rgb(127, 202, 255); align-items: center; justify-content: center; display: none;">
         <ui:Label tabindex="-1" text="Loading..." parse-escape-sequences="false" display-tooltip-when-elided="true" name="loading-screen__loading-label" enable-rich-text="false" style="-unity-text-align: middle-center; font-size: 30px; -unity-font-style: bold;" />
         <ui:ProgressBar value="0" title="0%" name="loading-screen__loading-progress-bar" style="width: 30%; -unity-font-style: bold; font-size: 30px; flex-grow: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%;" />
+        <ui:VisualElement name="loading-screen__circular-animation" style="flex-grow: 0; flex-shrink: 0; width: 50px; height: 50px; position: absolute; top: 70%; background-image: url(&apos;project://database/Assets/Joystick%20Pack/Sprites/Handles/Handle_Outline_Arrows.png?fileID=2800000&amp;guid=5eda94a9dcf71e445ad17e3c065d1460&amp;type=3#Handle_Outline_Arrows&apos;); rotate: 0;" />
     </ui:VisualElement>
 </ui:UXML>
