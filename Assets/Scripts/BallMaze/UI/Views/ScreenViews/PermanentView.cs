@@ -72,7 +72,7 @@ namespace BallMaze.UI
                 {
                     string nextLevel = LevelManager.Instance.GetNextLevel();
 
-                    if (!String.IsNullOrEmpty(nextLevel) && PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevel))
+                    if (!String.IsNullOrEmpty(nextLevel) && PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(nextLevel))
                     {
                         LevelManager.Instance.LoadLevel(nextLevel);
 

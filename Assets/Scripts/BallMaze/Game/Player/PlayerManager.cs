@@ -27,10 +27,16 @@ namespace BallMaze
             get { return _coinsManager; }
         }
 
-        private LevelDataManager _levelDataManager;
-        public LevelDataManager LevelDataManager
+        private DefaultLevelsDataManager _defaultLevelsDataManager;
+        public DefaultLevelsDataManager DefaultLevelsDataManager
         {
-            get { return _levelDataManager; }
+            get { return _defaultLevelsDataManager; }
+        }
+
+        private DailyLevelsDataManager _dailyLevelsDataManager;
+        public DailyLevelsDataManager DailyLevelsDataManager
+        {
+            get { return _dailyLevelsDataManager; }
         }
 
 
@@ -40,7 +46,8 @@ namespace BallMaze
             DontDestroyOnLoad(gameObject);
 
             _coinsManager = new CoinsManager();
-            _levelDataManager = new LevelDataManager();
+
+            _defaultLevelsDataManager = new DefaultLevelsDataManager();
         }
 
 
@@ -49,13 +56,13 @@ namespace BallMaze
         {
             _coinsManager.SetCoins(data.coins);
 
-            _levelDataManager.defaultLevelsUnlocked = data.defaultLevelsUnlocked;
-            _levelDataManager.defaultLevelsTimes = data.defaultLevelsTimes;
+            _defaultLevelsDataManager.defaultLevelsUnlocked = data.defaultLevelsUnlocked;
+            _defaultLevelsDataManager.defaultLevelsTimes = data.defaultLevelsTimes;
 
             // If there are no levels unlocked, add the first one
-            if (_levelDataManager.defaultLevelsUnlocked.Count == 0)
+            if (_defaultLevelsDataManager.defaultLevelsUnlocked.Count == 0)
             {
-                _levelDataManager.defaultLevelsUnlocked.Add("1");
+                _defaultLevelsDataManager.defaultLevelsUnlocked.Add("1");
             }
         }
 
@@ -64,8 +71,8 @@ namespace BallMaze
         {
             data.coins = _coinsManager.Coins;
 
-            data.defaultLevelsUnlocked = _levelDataManager.defaultLevelsUnlocked;
-            data.defaultLevelsTimes = _levelDataManager.defaultLevelsTimes;
+            data.defaultLevelsUnlocked = _defaultLevelsDataManager.defaultLevelsUnlocked;
+            data.defaultLevelsTimes = _defaultLevelsDataManager.defaultLevelsTimes;
         }
     }
 }
