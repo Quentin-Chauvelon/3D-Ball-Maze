@@ -15,7 +15,8 @@ namespace BallMaze.UI
     {
         private short _dailyLevelsCompletedToday;
         private short _dailyLevelsStreak;
-        private bool _areDailyLevelsLoaded;
+
+        public bool AreDailyLevelsLoaded = false;
 
         // Visual Elements
         private VisualElement _dailyLevelsButtonsContainerScrollView;
@@ -65,7 +66,7 @@ namespace BallMaze.UI
         /// Populates the daily levels view with the levels of the day
         /// </summary>
         /// <param name="textures"></param>
-        private void PopulateLevels(Texture[] textures)
+        public void PopulateLevels(Level[] dailyLevels)
         {
             // Start by emptying the daily levels view
             EmptyDailyLevelsView();
@@ -78,28 +79,33 @@ namespace BallMaze.UI
 
             foreach (DailyLevelDifficulty difficulty in Enum.GetValues(typeof(DailyLevelDifficulty)))
             {
+                if (difficulty == DailyLevelDifficulty.Unknown)
+                {
+                    continue;
+                }
+
                 VisualElement dailyLevelTemplateClone = levelSelectionTemplate.CloneTree();
                 dailyLevelTemplateClone.name = $"daily-levels__level-{(int)difficulty + 1}";
                 dailyLevelTemplateClone.AddToClassList("daily-levels__level-button");
                 _dailyLevelsButtonsContainerScrollView.Add(dailyLevelTemplateClone);
 
-                // Lock all the levels except the first one
-                if (difficulty != DailyLevelDifficulty.VeryEasy)
-                {
-                    dailyLevelTemplateClone.AddToClassList("level-locked");
-                }
-
                 Action dailyLevelClickedHandler = () => { DailyLevelClicked(difficulty); };
                 _dailyLevelsButtonClickAction[difficulty] = dailyLevelClickedHandler;
 
                 Button dailyLevelCloneButton = dailyLevelTemplateClone.Q<Button>("default-level-selection-template__container-button");
-                dailyLevelCloneButton.style.backgroundImage = (StyleBackground)textures[(int)difficulty];
                 dailyLevelCloneButton.clicked += dailyLevelClickedHandler;
+
+                // Lock all the levels except the first one
+                if (difficulty != DailyLevelDifficulty.VeryEasy)
+                {
+                    dailyLevelTemplateClone.AddToClassList("level-locked");
+                    dailyLevelCloneButton.text = "Locked";
+                }
             }
 
             if (_dailyLevelsButtonsContainerScrollView.childCount == 5)
             {
-                _areDailyLevelsLoaded = true;
+                AreDailyLevelsLoaded = true;
             }
         }
 
@@ -109,7 +115,7 @@ namespace BallMaze.UI
         /// </summary>
         private void EmptyDailyLevelsView()
         {
-            if (_areDailyLevelsLoaded)
+            if (AreDailyLevelsLoaded)
             {
                 // Unsubscribe from the click event of each daily level button
                 foreach (DailyLevelDifficulty difficulty in Enum.GetValues(typeof(DailyLevelDifficulty)))
@@ -122,7 +128,7 @@ namespace BallMaze.UI
             _dailyLevelsButtonClickAction.Clear();
             _dailyLevelsButtonsContainerScrollView.Clear();
 
-            _areDailyLevelsLoaded = false;
+            AreDailyLevelsLoaded = false;
         }
 
 
@@ -174,7 +180,7 @@ namespace BallMaze.UI
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
             try
             {
-                if (isEnabled && !_areDailyLevelsLoaded)
+                if (isEnabled && !AreDailyLevelsLoaded)
                 {
                     throw new CouldNotLoadLevelException("No daily levels loaded");
                 }
@@ -203,7 +209,7 @@ namespace BallMaze.UI
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
             try
             {
-                if (isEnabled && !_areDailyLevelsLoaded)
+                if (isEnabled && !AreDailyLevelsLoaded)
                 {
                     throw new CouldNotLoadLevelException("No daily levels loaded");
                 }
@@ -250,7 +256,7 @@ namespace BallMaze.UI
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
             try
             {
-                if (isEnabled && !_areDailyLevelsLoaded)
+                if (isEnabled && !AreDailyLevelsLoaded)
                 {
                     throw new CouldNotLoadLevelException("No daily levels loaded");
                 }

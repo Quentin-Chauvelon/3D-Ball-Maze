@@ -54,11 +54,11 @@ namespace BallMaze
         {
             if (DateTime.UtcNow.DayOfYear % 2 == 0)
             {
-                RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsEvenDays");
+                DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsEvenDays").ToObject<Level[]>());
             }
             else
             {
-                RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsOddDays");
+                DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsOddDays").ToObject<Level[]>());
             }
         }
     }
