@@ -20,6 +20,7 @@ namespace BallMaze
         Playing
     }
 
+
     public class GameManager : MonoBehaviour
     {
         // Singleton pattern
@@ -48,6 +49,8 @@ namespace BallMaze
         // This is primarly used for features like Cloud Save where WebGL and mobile have different implementations
         [SerializeField] public bool editorIsWebGL;
         [SerializeField] public bool editorIsMobile;
+
+        [SerializeField] public RemoteConfigFetchState remoteConfigFetchState;
 
         public static bool isQuitting = false;
 
@@ -80,10 +83,14 @@ namespace BallMaze
         {
             _gameState = GameState.MainMenu;
 
-            if (RemoteConfigManager.REMOTE_CONFIG_ENABLED)
+            if (remoteConfigFetchState == RemoteConfigFetchState.Enabled)
             {
                 RemoteConfigManager.Initialize();
                 RemoteConfigManager.FetchAndApplyRemoteSettings();
+            }
+            else if (remoteConfigFetchState == RemoteConfigFetchState.Stub)
+            {
+                RemoteConfigManager.FetchAndApplyRemoteSettingsStub();
             }
 
             UIManager.Instance.Initialize();
