@@ -1,5 +1,8 @@
 using BallMaze.UI;
+using Cysharp.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
@@ -43,14 +46,19 @@ namespace BallMaze
 
         private DateTime _lastUnfocus;
 
+        private int _lastFrameMinute;
+
         public DefaultLevelSelection defaultLevelSelection;
 
         // These two variables are used to test the editor and act as different platforms.
         // This is primarly used for features like Cloud Save where WebGL and mobile have different implementations
-        [SerializeField] public bool editorIsWebGL;
-        [SerializeField] public bool editorIsMobile;
+        [SerializeField] public bool EditorIsWebGL;
+        [SerializeField] public bool EditorIsMobile;
 
-        [SerializeField] public RemoteConfigFetchState remoteConfigFetchState;
+        [SerializeField] public RemoteConfigFetchState RemoteConfigFetchState;
+
+        [SerializeField] public bool MockNowTimeEnabled;
+        [SerializeField] public string MockNowTime;
 
         public static bool isQuitting = false;
 
@@ -73,6 +81,8 @@ namespace BallMaze
             Debug.Log("Initializing game");
             GameObject.Find("DataPersistenceManager").GetComponent<DataPersistenceManager>().Initialize();
             defaultLevelSelection.Initialize();
+
+            MockNowTime = DateTime.UtcNow.AddDays(1).Date.ToString();
         }
 
 
@@ -83,15 +93,8 @@ namespace BallMaze
         {
             _gameState = GameState.MainMenu;
 
-            if (remoteConfigFetchState == RemoteConfigFetchState.Enabled)
-            {
-                RemoteConfigManager.Initialize();
-                RemoteConfigManager.FetchAndApplyRemoteSettings();
-            }
-            else if (remoteConfigFetchState == RemoteConfigFetchState.Stub)
-            {
-                RemoteConfigManager.FetchAndApplyRemoteSettingsStub();
-            }
+            RemoteConfigManager.Initialize();
+            RemoteConfigManager.LoadRemoteConfig();
 
             UIManager.Instance.Initialize();
         }
@@ -138,6 +141,61 @@ namespace BallMaze
                     UIManager.Instance.Back();
                 }
             }
+
+            DateTime currentTime = GetUtcNowTime();
+
+            // If a minute has passed
+            if (currentTime.Minute != _lastFrameMinute)
+            {
+                Debug.Log("Current time: " + currentTime.ToString());
+                _lastFrameMinute = currentTime.Minute;
+
+                // If it's 23:50
+                if (currentTime.Hour == 23 && _lastFrameMinute == 51)
+                {
+                    Debug.Log("Daily levels will be updated in 10 minutes");
+                }
+                // If it's 23:55
+                else if (currentTime.Hour == 23 && _lastFrameMinute == 56)
+                {
+                    Debug.Log("Daily levels will be updated in 5 minutes");
+                }
+                // If it's 23:58
+                else if (currentTime.Hour == 23 && _lastFrameMinute == 59)
+                {
+                    Debug.Log("Daily levels will be updated in 2 minutes");
+                }
+                // If it's 23:59
+                else if (currentTime.Hour == 0 && _lastFrameMinute == 0)
+                {
+                    Debug.Log("Daily levels will be updated in 1 minute");
+                }
+                // If it's 00:01
+                else if (currentTime.Hour == 0 && _lastFrameMinute == 1)
+                {
+                    // Reload the remote config to get the new daily levels
+                    RemoteConfigManager.LoadRemoteConfig();
+
+                    // (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetLevels();
+                }
+            }
+        }
+
+
+        public DateTime GetUtcNowTime()
+        {
+            if (!MockNowTimeEnabled)
+            {
+                return DateTime.UtcNow;
+            }
+            else
+            {
+                DateTime now = DateTime.UtcNow;
+
+                DateTime.TryParse(MockNowTime, out now);
+
+                return now;
+            }
         }
 
 
@@ -183,7 +241,7 @@ namespace BallMaze
             // If the game is paused, save the time it was paused at, this will allow to know how much time the game was paused for
             if (pause)
             {
-                _lastUnfocus = DateTime.UtcNow;
+                _lastUnfocus = GameManager.Instance.GetUtcNowTime();
 
                 // Save the game on Application.Pause() and not on Application.Quit().
                 // This is done because Application.Quit() is not always called on mobile devices (especially older ones)

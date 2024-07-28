@@ -69,7 +69,7 @@ namespace BallMaze
             }
 
             // If the player has played today's daily levels, load the times and unlock the corresponding levels
-            if (data.lastDailyLevelPlayedDay == DateTime.UtcNow.DayOfYear)
+            if (data.lastDailyLevelPlayedDay == GameManager.Instance.GetUtcNowTime().DayOfYear)
             {
                 foreach (KeyValuePair<string, decimal> entry in data.dailyLevelsTimes)
                 {

@@ -48,6 +48,13 @@ public class DailyLevelsLevelManager : LevelManagerBase
     {
         _dailyLevels = dailyLevels;
 
+        // Reset the player's times and unlocked levels if it's a new day (00:01)
+        if (GameManager.Instance.GetUtcNowTime().Hour == 0 && GameManager.Instance.GetUtcNowTime().Minute == 1)
+        {
+            PlayerManager.Instance.DailyLevelsDataManager.dailyLevelsTimes.Clear();
+            PlayerManager.Instance.DailyLevelsDataManager.dailyLevelsUnlocked.Clear();
+        }
+
         if (GameManager.DEBUG)
         {
             Debug.Log("Daily levels populated");

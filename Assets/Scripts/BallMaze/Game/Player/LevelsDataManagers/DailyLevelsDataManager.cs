@@ -54,7 +54,7 @@ namespace BallMaze
             // If Cloud Save is enabled, save to the cloud
             if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
             {
-                await DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.lastDailyLevelPlayedDay, DateTime.UtcNow.DayOfYear);
+                await DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.lastDailyLevelPlayedDay, GameManager.Instance.GetUtcNowTime().DayOfYear);
             }
         }
 

@@ -75,14 +75,14 @@ namespace BallMaze
         public async void Initialize()
         {
             // If the editor is being tested as WebGL, enable Cloud Save
-            if (GameManager.Instance.editorIsWebGL)
+            if (GameManager.Instance.EditorIsWebGL)
             {
                 isCloudSaveEnabled = true;
                 isFileSaveEnabled = false;
             }
 
             // If the editor is being tested as mobile, enable File Save
-            if (GameManager.Instance.editorIsMobile)
+            if (GameManager.Instance.EditorIsMobile)
             {
                 isCloudSaveEnabled = false;
                 isFileSaveEnabled = true;

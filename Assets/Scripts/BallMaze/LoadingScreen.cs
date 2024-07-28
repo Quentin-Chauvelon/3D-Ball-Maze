@@ -30,7 +30,7 @@ namespace BallMaze
             LoadingScreenUIView.InitializeLoadingScreen(LoadingIndicatorType.ProgressBar);
 
             // Wait for Unity Gaming Services to initialize
-            if (GameManager.Instance.editorIsWebGL || GameManager.Instance.editorIsMobile)
+            if (GameManager.Instance.EditorIsWebGL || GameManager.Instance.EditorIsMobile)
             {
                 try
                 {

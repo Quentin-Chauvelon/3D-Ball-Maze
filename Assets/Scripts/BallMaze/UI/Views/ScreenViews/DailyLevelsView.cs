@@ -67,7 +67,7 @@ namespace BallMaze.UI
         {
             base.Show();
 
-            _dailyLevelsTitle.text = $"DAILY LEVELS - {DateTime.UtcNow.ToString("dd/MM/yyyy")}";
+            _dailyLevelsTitle.text = $"DAILY LEVELS - {GameManager.Instance.GetUtcNowTime().ToString("dd/MM/yyyy")}";
 
             StartUpdatesInTimer();
 
@@ -97,7 +97,7 @@ namespace BallMaze.UI
         public void PopulateLevels(Level[] dailyLevels)
         {
             // Start by emptying the daily levels view
-            EmptyDailyLevelsView();
+            ResetLevels();
 
 #if UNITY_EDITOR
             VisualTreeAsset levelSelectionTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/UXML/Templates/DefaultLevelSelectionTemplate.uxml");
@@ -129,8 +129,9 @@ namespace BallMaze.UI
 
                 dailyLevelTemplateClone.AddToClassList("level-selection-item");
 
-                if (PlayerManager.Instance.DailyLevelsDataManager.IsLevelUnlocked(id))
+                if (PlayerManager.Instance.DailyLevelsDataManager.IsLevelUnlocked(id) || difficulty == DailyLevelDifficulty.VeryEasy)
                 {
+                    dailyLevelTemplateClone.RemoveFromClassList("level-selection-item-locked");
                     dailyLevelTemplateClone.AddToClassList("level-selection-item-unlocked");
 
                     float bestTime = PlayerManager.Instance.DailyLevelsDataManager.GetLevelBestTime(id);
@@ -150,6 +151,7 @@ namespace BallMaze.UI
                 }
                 else
                 {
+                    dailyLevelTemplateClone.RemoveFromClassList("level-selection-item-unlocked");
                     dailyLevelTemplateClone.AddToClassList("level-selection-item-locked");
                 }
             }
@@ -171,7 +173,12 @@ namespace BallMaze.UI
                 // Unsubscribe from the click event of each daily level button
                 foreach (DailyLevelDifficulty difficulty in Enum.GetValues(typeof(DailyLevelDifficulty)))
                 {
-                    _dailyLevelsButtonsContainer.ElementAt((int)difficulty).Q<Button>("default-level-selection-template__container-button").clicked -= _dailyLevelsButtonClickAction[difficulty];
+                    if (difficulty == DailyLevelDifficulty.Unknown)
+                    {
+                        continue;
+                    }
+
+                    _dailyLevelsButtonsContainer.ElementAt((int)difficulty - 1).Q<Button>("default-level-selection-template__container-button").clicked -= _dailyLevelsButtonClickAction[difficulty];
                 }
             }
 
@@ -309,41 +316,46 @@ namespace BallMaze.UI
         /// <summary>
         /// Resets the levels to their initial state
         /// </summary>
-        private void ResetLevels()
+        public void ResetLevels()
         {
             // Only reset the levels if they are loaded.
             // Furthermore, since this method is called at midnight utc, the UI might not be displayed if the user is not in the daily levels view
             // And so, we don't want to display the error if the UI is not displayed
             // (eg: the player might be offline playing another mode and so daily levels might not be loaded but it is then normal and no error should be displayed)
-            try
+            // try
+            // {
+            //     if (isEnabled && !AreDailyLevelsLoaded)
+            //     {
+            //         throw new CouldNotLoadLevelException("No daily levels loaded");
+            //     }
+            // }
+            // catch (Exception e)
+            // {
+            //     DisplayDefaultDailyLevelsLoadingException(e);
+            //     return;
+            // }
+            if (!AreDailyLevelsLoaded)
             {
-                if (isEnabled && !AreDailyLevelsLoaded)
-                {
-                    throw new CouldNotLoadLevelException("No daily levels loaded");
-                }
-            }
-            catch (Exception e)
-            {
-                DisplayDefaultDailyLevelsLoadingException(e);
                 return;
             }
 
             // Lock the levels, hide the stars and time
-            for (int i = 1; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
                 VisualElement dailyLevelButton = _dailyLevelsButtonsContainer.Q<VisualElement>($"daily-levels__level-{i}");
 
                 // Lock the levels except the first one
-                if (i != 1)
+                if (i != 0)
                 {
-                    dailyLevelButton.AddToClassList("level-locked");
+                    dailyLevelButton.RemoveFromClassList("level-selection-item-unlocked");
+                    dailyLevelButton.AddToClassList("level-selection-item-locked");
                 }
 
                 // Hide the stars and time
                 dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-1-image").RemoveFromClassList("star-active");
                 dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-2-image").RemoveFromClassList("star-active");
                 dailyLevelButton.Q<VisualElement>("default-level-selection-template__star-3-image").RemoveFromClassList("star-active");
-                dailyLevelButton.Q<Label>("default-level-selection-template__time-label").style.display = DisplayStyle.None;
+                dailyLevelButton.Q<Label>("default-level-selection-template__time-label").text = "";
             }
 
             EmptyDailyLevelsView();
@@ -394,12 +406,12 @@ namespace BallMaze.UI
         /// </summary>
         private async void StartUpdatesInTimer()
         {
-            DateTime midnightUtc = DateTime.UtcNow.MidnightUtc();
+            DateTime midnightUtc = GameManager.Instance.GetUtcNowTime().MidnightUtc();
 
             while (isEnabled)
             {
                 // Calculate the time left until midnight utc
-                TimeSpan timeLeft = midnightUtc - DateTime.UtcNow;
+                TimeSpan timeLeft = midnightUtc - GameManager.Instance.GetUtcNowTime();
 
                 _dailyLevelsUpdatesInLabel.text = $"Updates in: {timeLeft.ToString(@"hh\:mm\:ss")}";
                 await UniTask.Delay(TimeSpan.FromSeconds(1));

@@ -56,6 +56,19 @@ namespace BallMaze
         }
 
 
+        public static void LoadRemoteConfig()
+        {
+            if (GameManager.Instance.RemoteConfigFetchState == RemoteConfigFetchState.Enabled)
+            {
+                FetchAndApplyRemoteSettings();
+            }
+            else if (GameManager.Instance.RemoteConfigFetchState == RemoteConfigFetchState.Stub)
+            {
+                FetchAndApplyRemoteSettingsStub();
+            }
+        }
+
+
         public static async void FetchAndApplyRemoteSettings()
         {
             // Wait for the internet manager to be initialized
@@ -88,7 +101,7 @@ namespace BallMaze
         /// <param name="configResponse"></param>
         public static void ApplyRemoteSettings(ConfigResponse configResponse)
         {
-            if (DateTime.UtcNow.DayOfYear % 2 == 0)
+            if (GameManager.Instance.GetUtcNowTime().DayOfYear % 2 == 0)
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsEvenDays").ToObject<Level[]>());
             }
@@ -116,7 +129,7 @@ namespace BallMaze
         /// <param name="data"></param>
         public static void ApplyRemoteSettingsStub(RemoteConfigData data)
         {
-            if (DateTime.UtcNow.DayOfYear % 2 == 0)
+            if (GameManager.Instance.GetUtcNowTime().DayOfYear % 2 == 0)
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(data.dailyLevelsEvenDays);
             }
