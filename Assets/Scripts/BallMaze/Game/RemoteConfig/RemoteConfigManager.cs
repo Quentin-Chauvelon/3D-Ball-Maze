@@ -47,6 +47,8 @@ namespace BallMaze
         public struct userAttributes { }
         public struct appAttributes { }
 
+        public static bool Initialized = false;
+
 
         public static void Initialize()
         {
@@ -94,6 +96,8 @@ namespace BallMaze
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsOddDays").ToObject<Level[]>());
             }
+
+            Initialized = true;
         }
 
 
@@ -120,6 +124,8 @@ namespace BallMaze
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(data.dailyLevelsOddDays);
             }
+
+            Initialized = true;
         }
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
 using UnityEngine;
 
 
@@ -48,6 +50,7 @@ namespace BallMaze
             _coinsManager = new CoinsManager();
 
             _defaultLevelsDataManager = new DefaultLevelsDataManager();
+            _dailyLevelsDataManager = new DailyLevelsDataManager();
         }
 
 
@@ -64,6 +67,25 @@ namespace BallMaze
             {
                 _defaultLevelsDataManager.defaultLevelsUnlocked.Add("1");
             }
+
+            // If the player has played today's daily levels, load the times and unlock the corresponding levels
+            if (data.lastDailyLevelPlayedDay == DateTime.UtcNow.DayOfYear)
+            {
+                foreach (KeyValuePair<string, decimal> entry in data.dailyLevelsTimes)
+                {
+                    _dailyLevelsDataManager.dailyLevelsUnlocked.Add(entry.Key);
+                    PlayerEvents.DailyLevelUnlocked?.Invoke(entry.Key);
+
+                    // If the time is 0, that means the player hasn't completed that level, so we stop to not load the time nor unlock the next level
+                    if (entry.Value == 0m)
+                    {
+                        break;
+                    }
+
+                    // Load the time for that level
+                    _dailyLevelsDataManager.dailyLevelsTimes.Add(entry.Key, entry.Value);
+                }
+            }
         }
 
 
@@ -73,6 +95,8 @@ namespace BallMaze
 
             data.defaultLevelsUnlocked = _defaultLevelsDataManager.defaultLevelsUnlocked;
             data.defaultLevelsTimes = _defaultLevelsDataManager.defaultLevelsTimes;
+
+            data.dailyLevelsTimes = _dailyLevelsDataManager.dailyLevelsTimes;
         }
     }
 }

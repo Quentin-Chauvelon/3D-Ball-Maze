@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
+using BallMaze.Events;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -20,7 +22,8 @@ namespace BallMaze.UI
         public bool AreDailyLevelsLoaded = false;
 
         // Visual Elements
-        private VisualElement _dailyLevelsButtonsContainerScrollView;
+        private Label _dailyLevelsTitle;
+        private VisualElement _dailyLevelsButtonsContainer;
         private Dictionary<DailyLevelDifficulty, Action> _dailyLevelsButtonClickAction;
         private VisualElement[] _dailyLevelsStreakDays = new VisualElement[7];
         private Label _dailyLevelsUpdatesInLabel;
@@ -44,7 +47,9 @@ namespace BallMaze.UI
 
         protected override void SetVisualElements()
         {
-            _dailyLevelsButtonsContainerScrollView = _root.Q<VisualElement>("daily-levels__levels-container");
+            _dailyLevelsTitle = _root.Q<Label>("daily-levels__title");
+
+            _dailyLevelsButtonsContainer = _root.Q<VisualElement>("daily-levels__levels-container");
 
             for (int i = 0; i < 7; i++)
             {
@@ -52,12 +57,17 @@ namespace BallMaze.UI
             }
 
             _dailyLevelsUpdatesInLabel = _root.Q<Label>("daily-levels__updates-in-label");
+
+            PlayerEvents.DailyLevelUnlocked += UnlockLevel;
+            LevelEvents.DailyLevelBestTimeUpdated += SetLevelTime;
         }
 
 
         public override async void Show()
         {
             base.Show();
+
+            _dailyLevelsTitle.text = $"DAILY LEVELS - {DateTime.UtcNow.ToString("dd/MM/yyyy")}";
 
             StartUpdatesInTimer();
 
@@ -103,9 +113,9 @@ namespace BallMaze.UI
                 }
 
                 VisualElement dailyLevelTemplateClone = levelSelectionTemplate.CloneTree();
-                dailyLevelTemplateClone.name = $"daily-levels__level-{(int)difficulty + 1}";
+                dailyLevelTemplateClone.name = $"daily-levels__level-{(int)difficulty - 1}";
                 dailyLevelTemplateClone.AddToClassList("daily-levels__level-button");
-                _dailyLevelsButtonsContainerScrollView.Add(dailyLevelTemplateClone);
+                _dailyLevelsButtonsContainer.Add(dailyLevelTemplateClone);
 
                 Action dailyLevelClickedHandler = () => { DailyLevelClicked(difficulty); };
                 _dailyLevelsButtonClickAction[difficulty] = dailyLevelClickedHandler;
@@ -113,15 +123,38 @@ namespace BallMaze.UI
                 Button dailyLevelCloneButton = dailyLevelTemplateClone.Q<Button>("default-level-selection-template__container-button");
                 dailyLevelCloneButton.clicked += dailyLevelClickedHandler;
 
-                // Lock all the levels except the first one
-                if (difficulty != DailyLevelDifficulty.VeryEasy)
+                string id = dailyLevels[(int)difficulty - 1].id;
+
+                dailyLevelCloneButton.Q<Label>("default-level-selection-template__level-id").text = id;
+
+                dailyLevelTemplateClone.AddToClassList("level-selection-item");
+
+                if (PlayerManager.Instance.DailyLevelsDataManager.IsLevelUnlocked(id))
                 {
-                    dailyLevelTemplateClone.AddToClassList("level-locked");
-                    dailyLevelCloneButton.text = "Locked";
+                    dailyLevelTemplateClone.AddToClassList("level-selection-item-unlocked");
+
+                    float bestTime = PlayerManager.Instance.DailyLevelsDataManager.GetLevelBestTime(id);
+
+                    if (!bestTime.AlmostEquals(0))
+                    {
+                        dailyLevelCloneButton.Q<Label>("default-level-selection-template__time-label").text = $"{bestTime.ToString("00.00")}s";
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (bestTime < dailyLevels[(int)difficulty - 1].times[i])
+                            {
+                                dailyLevelCloneButton.Q<VisualElement>($"default-level-selection-template__star-{3 - i}-image").AddToClassList("star-active");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    dailyLevelTemplateClone.AddToClassList("level-selection-item-locked");
                 }
             }
 
-            if (_dailyLevelsButtonsContainerScrollView.childCount == 5)
+            if (_dailyLevelsButtonsContainer.childCount == 5)
             {
                 AreDailyLevelsLoaded = true;
             }
@@ -138,13 +171,13 @@ namespace BallMaze.UI
                 // Unsubscribe from the click event of each daily level button
                 foreach (DailyLevelDifficulty difficulty in Enum.GetValues(typeof(DailyLevelDifficulty)))
                 {
-                    _dailyLevelsButtonsContainerScrollView.ElementAt((int)difficulty).Q<Button>("default-level-selection-template__container-button").clicked -= _dailyLevelsButtonClickAction[difficulty];
+                    _dailyLevelsButtonsContainer.ElementAt((int)difficulty).Q<Button>("default-level-selection-template__container-button").clicked -= _dailyLevelsButtonClickAction[difficulty];
                 }
             }
 
             // Empty the action dictionary and the scroll view content
             _dailyLevelsButtonClickAction.Clear();
-            _dailyLevelsButtonsContainerScrollView.Clear();
+            _dailyLevelsButtonsContainer.Clear();
 
             AreDailyLevelsLoaded = false;
         }
@@ -156,6 +189,63 @@ namespace BallMaze.UI
 
             Debug.Log($"Daily level {difficulty} clicked");
             throw new NotImplementedException("Implement DailyLevelClicked method to start the daily level with the selected difficulty");
+        }
+
+
+        /// <summary>
+        /// Get the visual element of the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <returns></returns>
+        public VisualElement GetLevelFromId(string levelId)
+        {
+            foreach (VisualElement child in _dailyLevelsButtonsContainer.Children())
+            {
+                if (child.Q<Label>("default-level-selection-template__level-id").text == levelId)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Removes the lock icon for the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
+        public void UnlockLevel(string levelId)
+        {
+            VisualElement level = GetLevelFromId(levelId);
+
+            if (level != null)
+            {
+                level.RemoveFromClassList("level-selection-item-locked");
+                level.AddToClassList("level-selection-item-unlocked");
+            }
+        }
+
+
+        /// <summary>
+        /// Update the time and stars of the level with the given id
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <param name="time"></param>
+        public void SetLevelTime(string levelId, float time)
+        {
+            VisualElement level = GetLevelFromId(levelId);
+
+            if (level != null)
+            {
+                level.Q<Label>("default-level-selection-template__time-label").text = $"{time.ToString("00.00")}s";
+            }
+
+            // Set the level's stars
+            for (int i = 3; i > 3 - LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).GetNumberOfStarsForLevel(levelId); i--)
+            {
+                level.Q<VisualElement>($"default-level-selection-template__star-{i}-image").AddToClassList("star-active");
+            }
         }
 
 
@@ -211,7 +301,7 @@ namespace BallMaze.UI
 
             for (int i = 1; i <= (int)difficultyToUnlockTo + 1; i++)
             {
-                _dailyLevelsButtonsContainerScrollView.Q<VisualElement>($"daily-levels__level-{i}").RemoveFromClassList("level-locked");
+                _dailyLevelsButtonsContainer.Q<VisualElement>($"daily-levels__level-{i}").RemoveFromClassList("level-locked");
             }
         }
 
@@ -241,7 +331,7 @@ namespace BallMaze.UI
             // Lock the levels, hide the stars and time
             for (int i = 1; i < 6; i++)
             {
-                VisualElement dailyLevelButton = _dailyLevelsButtonsContainerScrollView.Q<VisualElement>($"daily-levels__level-{i}");
+                VisualElement dailyLevelButton = _dailyLevelsButtonsContainer.Q<VisualElement>($"daily-levels__level-{i}");
 
                 // Lock the levels except the first one
                 if (i != 1)
@@ -285,7 +375,7 @@ namespace BallMaze.UI
                 return;
             }
 
-            VisualElement dailyLevelButton = _dailyLevelsButtonsContainerScrollView.Q<VisualElement>($"daily-levels__level-{(int)difficulty + 1}");
+            VisualElement dailyLevelButton = _dailyLevelsButtonsContainer.Q<VisualElement>($"daily-levels__level-{(int)difficulty + 1}");
 
             // Show the time
             dailyLevelButton.Q<Label>("default-level-selection-template__time-label").text = $"{time.ToString("00.00")}s";

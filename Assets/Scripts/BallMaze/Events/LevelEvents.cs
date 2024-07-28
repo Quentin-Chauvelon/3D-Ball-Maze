@@ -19,6 +19,11 @@ namespace BallMaze.Events
         // or simply when the player switches to a different level to update the UI.
         public static Action<string, float> DefaultLevelBestTimeUpdated;
 
+        // Called when the player's best time for a daily level is updated.
+        // This can happen when the player completes a level with a new best time
+        // or simply when the player switches to a different level to update the UI.
+        public static Action<string, float> DailyLevelBestTimeUpdated;
+
         // Called when the next star time is updated.
         // Usually happens when the player completes a level with a new best time
         public static Action<float?> NextStarTimeUpdated;

@@ -74,6 +74,8 @@ namespace BallMaze.UI
 
             LevelEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
 
+            LevelEvents.DailyLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
+
             LevelEvents.BestTimeUpdated += (bestTime) => { _bestTimeLabel.text = $"BEST TIME: {bestTime.ToString("00.00")}s"; };
 
             LevelEvents.NextStarTimeUpdated += (nextStarTime) => { SetNextStarTime(nextStarTime); };

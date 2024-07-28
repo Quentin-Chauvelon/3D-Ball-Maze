@@ -2705,8 +2705,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb08129923acd0249891d4eb36c804ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  editorIsWebGL: 1
-  editorIsMobile: 0
+  editorIsWebGL: 0
+  editorIsMobile: 1
+  remoteConfigFetchState: 2
 --- !u!4 &1110262685
 Transform:
   m_ObjectHideFlags: 0
