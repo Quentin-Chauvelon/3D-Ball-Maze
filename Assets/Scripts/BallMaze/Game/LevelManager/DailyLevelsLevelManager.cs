@@ -83,6 +83,7 @@ public class DailyLevelsLevelManager : LevelManagerBase
         // Update the UI to match the level information
         LevelEvents.LevelNameUpdated?.Invoke(GetLevelFromDifficulty(difficulty).name);
         LevelEvents.BestTimeUpdated?.Invoke(bestTime);
+        LevelEvents.DailyLevelDifficultyUpdated?.Invoke(difficulty);
 
         int numberOfStars = GetNumberOfStarsForLevel(_currentLevelId, bestTime);
 

@@ -10,6 +10,10 @@ namespace BallMaze.Events
         // Usually happens when the player switches level
         public static Action<string> LevelNameUpdated;
 
+        // Called when the difficulty of the daily level is updated.
+        // Usually happens when the player switches level
+        public static Action<DailyLevelDifficulty> DailyLevelDifficultyUpdated;
+
         // Called whenever the best time has been updated.
         // Can happen when the player sets a new best time or simply when switching level
         public static Action<float> BestTimeUpdated;

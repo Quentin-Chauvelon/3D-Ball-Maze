@@ -72,6 +72,8 @@ namespace BallMaze.UI
 
             LevelEvents.LevelNameUpdated += (levelName) => { _levelNameLabel.text = levelName; };
 
+            LevelEvents.DailyLevelDifficultyUpdated += (difficulty) => { SetLevelDifficulty(difficulty); };
+
             LevelEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
 
             LevelEvents.DailyLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
@@ -215,9 +217,9 @@ namespace BallMaze.UI
         }
 
 
-        private void SetLevelDifficulty(DailyLevelDifficulty levelDifficulty = DailyLevelDifficulty.Unknown)
+        public void SetLevelDifficulty(DailyLevelDifficulty difficulty = DailyLevelDifficulty.Unknown)
         {
-            (string name, Color color) = levelDifficulty.GetDifficultyInfo();
+            (string name, Color color) = difficulty.GetDifficultyInfo();
 
             _levelDifficultyLabel.text = name;
             _levelDifficultyLabel.style.color = color;
