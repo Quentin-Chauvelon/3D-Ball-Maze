@@ -201,7 +201,7 @@ namespace BallMaze.UI
 
             UIManager.Instance.Show(UIViewType.Playing);
 
-            LevelManager.SwitchMode(LevelType.DailyLevel);
+            LevelEvents.LevelModeUpdated?.Invoke(LevelType.DailyLevel);
 
             LevelManager.Instance.LoadLevel(levelId);
         }

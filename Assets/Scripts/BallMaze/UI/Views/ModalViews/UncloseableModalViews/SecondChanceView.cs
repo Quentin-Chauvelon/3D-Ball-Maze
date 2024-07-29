@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using Cysharp.Threading.Tasks;
 using UnityExtensionMethods;
 using DG.Tweening;
+using BallMaze.Events;
 
 
 namespace BallMaze.UI
@@ -43,6 +44,8 @@ namespace BallMaze.UI
             _defaultLevelsListButton = _root.Q<Button>("second-chance__default-levels-list-button");
             _homeButton = _root.Q<Button>("second-chance__home-button");
             _tryAgainButton = _root.Q<Button>("second-chance__try-again-button");
+
+            LevelEvents.LevelModeUpdated += (levelType) => { SwitchLevelTypeSource(levelType); };
         }
 
 
@@ -60,7 +63,20 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
-                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                switch (LevelManager.Instance.levelType)
+                {
+                    case LevelType.Default:
+                        UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                        break;
+                    case LevelType.DailyLevel:
+                        UIManager.Instance.Show(UIViewType.DailyLevels);
+                        break;
+                    default:
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                        break;
+
+                }
+
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
@@ -174,8 +190,8 @@ namespace BallMaze.UI
                     _homeButton.style.display = DisplayStyle.None;
                     break;
                 case LevelType.DailyLevel:
-                    _defaultLevelsListButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.Flex;
+                    _defaultLevelsListButton.style.display = DisplayStyle.Flex;
+                    _homeButton.style.display = DisplayStyle.None;
                     break;
                 default:
                     break;

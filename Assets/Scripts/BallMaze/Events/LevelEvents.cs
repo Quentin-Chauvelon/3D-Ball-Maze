@@ -6,6 +6,9 @@ namespace BallMaze.Events
 {
     public static class LevelEvents
     {
+        // Called when the player switches mode
+        public static Action<LevelType> LevelModeUpdated;
+
         // Called when the name of the level is updated.
         // Usually happens when the player switches level
         public static Action<string> LevelNameUpdated;

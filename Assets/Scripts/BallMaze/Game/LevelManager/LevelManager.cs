@@ -1,4 +1,5 @@
 using System;
+using BallMaze.Events;
 using UnityEngine;
 
 
@@ -98,6 +99,8 @@ namespace BallMaze
             {
                 levelToLoad = _config.levelToLoad;
             }
+
+            LevelEvents.LevelModeUpdated += (levelType) => { SwitchMode(levelType); };
         }
 
 

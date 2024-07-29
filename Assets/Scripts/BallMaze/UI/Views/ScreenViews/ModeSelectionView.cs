@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BallMaze.Events;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -38,6 +39,8 @@ namespace BallMaze.UI {
         {
             _defaultLevelsButton.clickable.clicked += () =>
             {
+                LevelEvents.LevelModeUpdated?.Invoke(LevelType.Default);
+
                 // We are playing classic, so disable the event UI
                 (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(false);
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
@@ -45,16 +48,22 @@ namespace BallMaze.UI {
 
             _dailylevelsButton.clickable.clicked += () =>
             {
+                LevelEvents.LevelModeUpdated?.Invoke(LevelType.DailyLevel);
+
                 UIManager.Instance.Show(UIViewType.DailyLevels);
             };
 
             _rankedButton.clickable.clicked += () =>
             {
+                LevelEvents.LevelModeUpdated?.Invoke(LevelType.RankedLevel);
+
                 UIManager.Instance.Show(UIViewType.RankedLevel);
             };
 
             _eventButton.clickable.clicked += () =>
             {
+                LevelEvents.LevelModeUpdated?.Invoke(LevelType.Default);
+
                 // We are playing event, so enable the event UI
                 (UIManager.Instance.UIViews[UIViewType.DefaultLevelSelection] as DefaultLevelSelectionView).SetEventModeSelected(true);
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);

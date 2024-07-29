@@ -87,7 +87,20 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
-                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                switch (LevelManager.Instance.levelType)
+                {
+                    case LevelType.Default:
+                        UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                        break;
+                    case LevelType.DailyLevel:
+                        UIManager.Instance.Show(UIViewType.DailyLevels);
+                        break;
+                    default:
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                        break;
+
+                }
+
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 

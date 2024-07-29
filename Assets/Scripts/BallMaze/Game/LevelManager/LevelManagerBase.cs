@@ -473,8 +473,7 @@ namespace BallMaze
             _usedSecondChance = false;
 
             // Update the UI to match the selected mode
-            ((PauseView)UIManager.Instance.UIViews[UIViewType.Pause]).SwitchLevelTypeSource(levelType);
-            ((LevelFailedView)UIManager.Instance.UIViews[UIViewType.LevelFailed]).SwitchLevelTypeSource(levelType);
+            LevelEvents.LevelModeUpdated?.Invoke(levelType);
         }
     }
 }
