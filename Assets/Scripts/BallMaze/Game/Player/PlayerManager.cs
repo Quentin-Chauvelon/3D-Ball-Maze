@@ -68,24 +68,34 @@ namespace BallMaze
                 _defaultLevelsDataManager.defaultLevelsUnlocked.Add("1");
             }
 
+            _dailyLevelsDataManager.dailyLevelsUnlocked.Add("DailyLevelVeryEasy");
+
             // If the player has played today's daily levels, load the times and unlock the corresponding levels
             if (data.lastDailyLevelPlayedDay == GameManager.Instance.GetUtcNowTime().DayOfYear)
             {
                 foreach (KeyValuePair<string, decimal> entry in data.dailyLevelsTimes)
                 {
-                    _dailyLevelsDataManager.dailyLevelsUnlocked.Add(entry.Key);
-                    PlayerEvents.DailyLevelUnlocked?.Invoke(entry.Key);
-
                     // If the time is 0, that means the player hasn't completed that level, so we stop to not load the time nor unlock the next level
                     if (entry.Value == 0m)
                     {
                         break;
                     }
 
+                    // If level id is not the last level, unlock the next one
+                    if (entry.Key != "DailyLevelVeryExtreme")
+                    {
+                        string nextLevelId = DailyLevelsLevelManager.GetDailyLevelIdFromDifficulty(DailyLevelsLevelManager.GetDailyLevelDifficultyFromId(entry.Key) + 1);
+
+                        _dailyLevelsDataManager.dailyLevelsUnlocked.Add(nextLevelId);
+                        PlayerEvents.DailyLevelUnlocked?.Invoke(nextLevelId);
+                    }
+
                     // Load the time for that level
                     _dailyLevelsDataManager.dailyLevelsTimes.Add(entry.Key, entry.Value);
                 }
             }
+
+            DailyLevelsLevelManager.LastDailyLevelsPlayedDay = data.lastDailyLevelPlayedDay;
         }
 
 
@@ -97,6 +107,8 @@ namespace BallMaze
             data.defaultLevelsTimes = _defaultLevelsDataManager.defaultLevelsTimes;
 
             data.dailyLevelsTimes = _dailyLevelsDataManager.dailyLevelsTimes;
+
+            data.lastDailyLevelPlayedDay = DailyLevelsLevelManager.LastDailyLevelsPlayedDay;
         }
     }
 }

@@ -89,7 +89,10 @@ namespace BallMaze
 
             SwitchMode(LevelType.Default);
 
-            _instance.Start();
+            _defaultLevelsLevelManager.Start();
+            _dailyLevelsLevelManager.Start();
+
+            _instance = _defaultLevelsLevelManager;
 
             if (_config.setLevelToLoad)
             {

@@ -117,13 +117,14 @@ namespace BallMaze.UI
                 dailyLevelTemplateClone.AddToClassList("daily-levels__level-button");
                 _dailyLevelsButtonsContainer.Add(dailyLevelTemplateClone);
 
-                Action dailyLevelClickedHandler = () => { DailyLevelClicked(difficulty); };
+                string id = dailyLevels[(int)difficulty - 1].id;
+
+                Action dailyLevelClickedHandler = () => { DailyLevelClicked(id); };
                 _dailyLevelsButtonClickAction[difficulty] = dailyLevelClickedHandler;
 
                 Button dailyLevelCloneButton = dailyLevelTemplateClone.Q<Button>("default-level-selection-template__container-button");
                 dailyLevelCloneButton.clicked += dailyLevelClickedHandler;
 
-                string id = dailyLevels[(int)difficulty - 1].id;
 
                 dailyLevelCloneButton.Q<Label>("default-level-selection-template__level-id").text = id;
 
@@ -190,12 +191,19 @@ namespace BallMaze.UI
         }
 
 
-        private void DailyLevelClicked(DailyLevelDifficulty difficulty)
+        private void DailyLevelClicked(string levelId)
         {
+            // If the level is locked, return
+            if (!PlayerManager.Instance.DailyLevelsDataManager.IsLevelUnlocked(levelId))
+            {
+                return;
+            }
+
+            UIManager.Instance.Show(UIViewType.Playing);
+
             LevelManager.SwitchMode(LevelType.DailyLevel);
 
-            Debug.Log($"Daily level {difficulty} clicked");
-            throw new NotImplementedException("Implement DailyLevelClicked method to start the daily level with the selected difficulty");
+            LevelManager.Instance.LoadLevel(levelId);
         }
 
 
@@ -249,6 +257,7 @@ namespace BallMaze.UI
             }
 
             // Set the level's stars
+            Debug.Log($"number of stars: {LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).GetNumberOfStarsForLevel(levelId)}");
             for (int i = 3; i > 3 - LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).GetNumberOfStarsForLevel(levelId); i--)
             {
                 level.Q<VisualElement>($"default-level-selection-template__star-{i}-image").AddToClassList("star-active");

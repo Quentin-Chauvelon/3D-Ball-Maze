@@ -170,6 +170,13 @@ namespace BallMaze.UI
         }
 
 
+        public void ForceHide()
+        {
+            _hasInteractedBeforeHide = true;
+            Hide();
+        }
+
+
         /// <summary>
         /// Toggle the state of the music button
         /// </summary>

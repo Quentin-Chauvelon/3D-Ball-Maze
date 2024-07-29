@@ -82,7 +82,7 @@ namespace BallMaze
             GameObject.Find("DataPersistenceManager").GetComponent<DataPersistenceManager>().Initialize();
             defaultLevelSelection.Initialize();
 
-            MockNowTime = DateTime.UtcNow.AddDays(1).Date.ToString();
+            MockNowTime = DateTime.UtcNow.AddDays(1).Date.AddMinutes(1).ToString(); // Tomorrow at 00:01
         }
 
 
@@ -173,10 +173,16 @@ namespace BallMaze
                 // If it's 00:01
                 else if (currentTime.Hour == 0 && _lastFrameMinute == 1)
                 {
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        LevelManager.Instance.QuitLevel();
+
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                    }
+
                     // Reload the remote config to get the new daily levels
                     RemoteConfigManager.LoadRemoteConfig();
-
-                    // (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetLevels();
                 }
             }
         }

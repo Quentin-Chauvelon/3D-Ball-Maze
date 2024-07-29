@@ -154,5 +154,12 @@ namespace BallMaze.UI
 
             base.Hide();
         }
+
+
+        public void ForceHide()
+        {
+            _hasInteractedBeforeHide = true;
+            Hide();
+        }
     }
 }

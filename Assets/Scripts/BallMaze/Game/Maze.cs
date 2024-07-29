@@ -33,6 +33,8 @@ namespace BallMaze
         // Map all obstacles names with the associated loaded game object
         private Dictionary<string, UnityEngine.Object> _obstaclesGameObjects = new Dictionary<string, UnityEngine.Object>();
 
+        private bool _initialized = false;
+
 
         void Awake()
         {
@@ -47,6 +49,11 @@ namespace BallMaze
         /// </summary>
         public void InitMaze()
         {
+            if (_initialized)
+            {
+                return;
+            }
+
             // Delete the maze if it already exists before loading (from the editor for example)
             foreach (Transform transform in _maze.transform)
             {
@@ -69,6 +76,7 @@ namespace BallMaze
             _obstaclesAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "ObstaclesAssetBundle", "obstacles"));
             _obstaclesAssetBundleCreateRequest.completed += OnObstacleAssetBundleLoaded;
 
+            _initialized = true;
         }
 
 

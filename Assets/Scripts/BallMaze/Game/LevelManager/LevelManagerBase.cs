@@ -331,7 +331,6 @@ namespace BallMaze
 
                     UIManager.Instance.Show(UIViewType.LevelFailed);
                 }
-
             }
         }
 
@@ -420,6 +419,32 @@ namespace BallMaze
         public void QuitLevel()
         {
             PauseLevel();
+
+            if (UIManager.Instance.UIViews[UIViewType.Pause].isEnabled)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Pause] as PauseView).ForceHide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.Skip].isEnabled)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Skip] as SkipView).ForceHide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.LevelCompleted].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.LevelCompleted].Hide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.SecondChance].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.SecondChance].Hide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.LevelFailed].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.LevelFailed].Hide();
+            }
+
 
             _ball.SetBallVisible(false);
             _ball.FreezeBall(true);

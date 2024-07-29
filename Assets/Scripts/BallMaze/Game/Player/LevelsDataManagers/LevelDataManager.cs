@@ -25,6 +25,11 @@ namespace BallMaze
         {
             if (!IsLevelUnlocked(level, unlockedLevels))
             {
+                if (GameManager.DEBUG)
+                {
+                    Debug.Log($"Unlocked level {level}");
+                }
+
                 unlockedLevels.Add(level);
 
                 // If Cloud Save is enabled, save to the cloud
