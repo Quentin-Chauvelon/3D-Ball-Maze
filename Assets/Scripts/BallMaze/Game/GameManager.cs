@@ -153,31 +153,33 @@ namespace BallMaze
                 // If it's 23:50
                 if (currentTime.Hour == 23 && _lastFrameMinute == 51)
                 {
-                    Debug.Log("Daily levels will be updated in 10 minutes");
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 10 minutes!");
                 }
                 // If it's 23:55
                 else if (currentTime.Hour == 23 && _lastFrameMinute == 56)
                 {
-                    Debug.Log("Daily levels will be updated in 5 minutes");
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 5 minutes!");
                 }
                 // If it's 23:58
                 else if (currentTime.Hour == 23 && _lastFrameMinute == 59)
                 {
-                    Debug.Log("Daily levels will be updated in 2 minutes");
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 2 minutes!");
                 }
                 // If it's 23:59
                 else if (currentTime.Hour == 0 && _lastFrameMinute == 0)
                 {
-                    Debug.Log("Daily levels will be updated in 1 minute");
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 1 minutes!");
                 }
                 // If it's 00:01
                 else if (currentTime.Hour == 0 && _lastFrameMinute == 1)
                 {
+
                     // If the player is playing the daily levels, move them back to the main menu
                     if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
                     {
                         LevelManager.Instance.QuitLevel();
 
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
                         UIManager.Instance.Show(UIViewType.MainMenu);
                     }
 
@@ -311,11 +313,7 @@ namespace BallMaze
         /// <returns></returns>
         public static Vector2 GetScreenSize()
         {
-#if UNITY_EDITOR
-            return new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-#else
             return new Vector2(Screen.width, Screen.height);
-#endif
         }
     }
 }

@@ -195,7 +195,6 @@ namespace UnityExtensionMethods
 
         public static async UniTask TweenToPosition(this VisualElement element, float endPosition, float duration = 0.5f, Ease ease = Ease.OutExpo)
         {
-            // Skip the first 15% of the screen height since it's the permanent UI, then move the UI to the center of the 85% left
             await DOTween.To(() => element.style.top.value.value, x => element.style.top = x, endPosition, duration).SetEase(ease).AsyncWaitForCompletion();
         }
 

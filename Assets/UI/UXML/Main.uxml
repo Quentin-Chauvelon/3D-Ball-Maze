@@ -21,6 +21,7 @@
     <ui:Template name="ExceptionDetailsModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/ExceptionDetailsModalView.uxml?fileID=9197481963319205126&amp;guid=f5ac7b557f7d333e3a4055070988ac87&amp;type=3#ExceptionDetailsModalView" />
     <ui:Template name="ExceptionSendToSupportModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/ExceptionSendToSupportModalView.uxml?fileID=9197481963319205126&amp;guid=b9337bbbb361e7fe783d1b9f5cbc212d&amp;type=3#ExceptionSendToSupportModalView" />
     <ui:Template name="NoInternetModalView" src="project://database/Assets/UI/UXML/ModalViews/UncloseableModalViews/NoInternetModalView.uxml?fileID=9197481963319205126&amp;guid=0d9767b7f549f1a4e87c70c82d0324d7&amp;type=3#NoInternetModalView" />
+    <ui:Template name="NotificationModalView" src="project://database/Assets/UI/UXML/ModalViews/CloseableModalViews/NotificationModalView.uxml?fileID=9197481963319205126&amp;guid=1edd3cbc6aea471a5bbd4dbbf2574949&amp;type=3#NotificationModalView" />
     <Style src="project://database/Assets/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=ee1639e19b66b6f479d9a6c712e3bf60&amp;type=3#Common" />
     <ui:VisualElement name="main" picking-mode="Ignore" class="screen__anchor--center">
         <ui:Instance template="Background" name="background" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100px; display: none;" />
@@ -61,6 +62,7 @@
             <ui:Instance template="ExceptionSendToSupportModalView" name="exception-send-to-support" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
             <ui:Instance template="NoInternetModalView" name="no-internet" class="screen__anchor--center" style="display: none; background-color: rgba(0, 0, 0, 0.44);" />
             <ui:VisualElement name="animation" picking-mode="Ignore" class="screen__anchor--center" style="flex-grow: 1; display: flex;" />
+            <ui:Instance template="NotificationModalView" name="notification" picking-mode="Ignore" class="screen__anchor--center" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

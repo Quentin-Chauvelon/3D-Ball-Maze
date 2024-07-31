@@ -31,6 +31,7 @@ namespace BallMaze.UI
         Exception,
         ExceptionDetails,
         ExceptionSendToSupport,
+        Notification,
         NoInternet
     }
 
@@ -140,6 +141,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.GameQuitConfirmation, new GameQuitConfirmationView(root.Q<VisualElement>("game-quit-confirmation")));
             _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip-container")));
             _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause-container")));
+            _uiViews.Add(UIViewType.Notification, new NotificationView(root.Q<VisualElement>("notification")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));
