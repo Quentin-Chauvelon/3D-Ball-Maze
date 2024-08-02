@@ -17,7 +17,7 @@ namespace BallMaze.UI
 
     public class NotificationView : ModalView
     {
-        public override bool isCloseable => true;
+        public override bool isCloseable => false;
 
         // Top visual element
         private VisualElement _notificationContainer;
@@ -118,6 +118,9 @@ namespace BallMaze.UI
             _notificationText.style.opacity = 1;
 
             float totalWidth = screenWidth * NOTIFICATION_IMAGE_WIDTH_PERCENTAGE + _notificationSizingLabel.resolvedStyle.width + screenWidth * NOTIFICATION_IMAGE_TEXT_MARGIN;
+
+            // Remove the text, otherwise clicks are blocked and can't get through the notification sizing label
+            _notificationSizingLabel.text = "";
 
             // Tween the opacity of the text from transparent to opaque
             DOTween.To(() => 0, x => _notificationText.style.opacity = x, 1, NOTIFICATION_TWEEN_DURATION - 0.2f);

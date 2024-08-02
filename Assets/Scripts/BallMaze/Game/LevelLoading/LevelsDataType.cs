@@ -60,6 +60,10 @@ namespace BallMaze
         public FlagTarget target;
         public Obstacle[] obstacles;
 
+        public bool setCameraView;
+        public Vector3 cameraPosition;
+        public Quaternion cameraRotation;
+
         public float[] times;
     }
 

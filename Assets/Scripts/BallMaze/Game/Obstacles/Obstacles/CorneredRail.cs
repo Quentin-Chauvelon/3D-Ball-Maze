@@ -20,6 +20,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public CardinalDirection direction { get; set; }
 
@@ -98,7 +99,7 @@ namespace BallMaze.Obstacles
 
 
             corneredRail.name = "CorneredRail";
-            corneredRail.transform.position = position;
+            corneredRail.transform.position = position + offset;
             corneredRail.transform.rotation = Quaternion.Euler(0, railDirection * 90, 0);
 
             if (Application.isPlaying)

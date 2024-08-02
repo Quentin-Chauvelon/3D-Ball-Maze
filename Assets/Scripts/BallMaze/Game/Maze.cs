@@ -34,6 +34,7 @@ namespace BallMaze
         private Dictionary<string, UnityEngine.Object> _obstaclesGameObjects = new Dictionary<string, UnityEngine.Object>();
 
         private bool _initialized = false;
+        public static bool ObstaclesBundleLoaded = false;
 
 
         void Awake()
@@ -81,22 +82,19 @@ namespace BallMaze
 
 
         /// <summary>
-        /// Builds the maze matching the given level.
+        /// Builds the given maze.
         /// </summary>
         /// <param name="levelType"></param>
         /// <param name="levelId"></param>
+        /// <param name="offset">The offset at which to build the maze relative to the origin (0,0,0)</param>
         /// <returns>A boolean indicating if the maze could be loaded</returns>
-        public bool BuildMaze(LevelType levelType, string levelId)
+        public bool BuildMaze(LevelType levelType, Level level, Vector3? offset = null)
         {
+            offset = offset ?? Vector3.zero;
+
             obstacles.Clear();
             obstaclesList = null;
             obstaclesTypesMap = null;
-
-            Level level = _levelLoader.DeserializeLevel(levelType, levelId);
-            if (level == null)
-            {
-                return false;
-            }
 
             // Update the void level based on the maze size. The formula uses trigonometry (a = c * sin(α)) and then multiplies by 5
             // to have a margin and negative to have the void level below the maze
@@ -111,6 +109,8 @@ namespace BallMaze
 
             foreach (Floor floor in level.floors)
             {
+                floor.offset = offset.Value;
+
                 obstaclesList[floor.id] = floor;
                 AddObstacleToTypesMap(obstaclesTypesMap, floor);
             }
@@ -120,6 +120,8 @@ namespace BallMaze
             {
                 if (obstacle is IAbsolutelyPositionnable)
                 {
+                    (obstacle as IAbsolutelyPositionnable).offset = offset.Value;
+
                     obstaclesList[obstacle.id] = obstacle;
                     AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
                 }
@@ -152,9 +154,41 @@ namespace BallMaze
         }
 
 
-        public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
+        /// <summary>
+        /// Builds the maze matching the given level.
+        /// </summary>
+        /// <param name="levelType"></param>
+        /// <param name="levelId"></param>
+        /// <param name="offset">The offset at which to build the maze relative to the origin (0,0,0)</param>
+        /// <returns>A boolean indicating if the maze could be loaded</returns>
+        public bool BuildMaze(LevelType levelType, string levelId, Vector3? offset = null)
         {
-            GameObject maze = GameObject.Find("Maze");
+            Level level = _levelLoader.DeserializeLevel(levelType, levelId);
+            if (level == null)
+            {
+                return false;
+            }
+
+            return BuildMaze(levelType, level, offset);
+        }
+
+
+        /// <summary>
+        /// Render all the obstacles of the maze.
+        /// </summary>
+        /// <param name="obstaclesList">A list of the obstacles to render</param>
+        /// <param name="obstacles">A dictionary to link the newly instantiated GameObject with its obstacle</param>
+        /// <param name="obstaclesTypesMap">A 2D int matrix representing the map viewed from above. This allows to get neighboring obstacles easily</param>
+        /// <param name="mazeRootName">The name of the game object to which the maze will be parented to</param>
+        public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap, string mazeRootName = "Maze")
+        {
+            GameObject maze = GameObject.Find(mazeRootName);
+
+            if (maze == null)
+            {
+                Debug.LogError("Maze object not found");
+                return;
+            }
 
             Transform flagTargetsContainer = maze.transform.Find("FlagTargets");
             Transform floorsContainer = maze.transform.Find("Floors");
@@ -224,10 +258,12 @@ namespace BallMaze
         /// <summary>
         /// Deletes all descendants of the maze object.
         /// </summary>
-        public void ClearMaze()
+        public void ClearMaze(GameObject mazeGameObject = null)
         {
+            mazeGameObject = mazeGameObject ?? gameObject;
+
             // Loop through all the obstacles and delete them
-            foreach (Transform transform in gameObject.transform)
+            foreach (Transform transform in mazeGameObject.transform)
             {
                 foreach (Transform child in transform)
                 {
@@ -303,8 +339,6 @@ namespace BallMaze
 
             GetPositionInTypesMap(obstaclesTypesMap, obstacle, out int x, out int z);
 
-            // Debug.Log($"position: {absolutelyPositionnable.position}");
-            // Debug.Log($"len0: {obstaclesTypesMap.GetLength(0)} len1: {obstaclesTypesMap.GetLength(1)} x: {x} z: {z}");
             obstaclesTypesMap[x, z] = (int)obstacle.obstacleType;
         }
 
@@ -457,6 +491,8 @@ namespace BallMaze
             {
                 _obstaclesGameObjects[obstacleName] = _obstaclesAssetBundle.LoadAsset<UnityEngine.Object>(obstacleName);
             }
+
+            ObstaclesBundleLoaded = true;
         }
 
 

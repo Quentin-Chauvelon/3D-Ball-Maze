@@ -17,6 +17,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public CardinalDirection direction { get; set; }
 
@@ -124,7 +125,7 @@ namespace BallMaze.Obstacles
             }
 
             rail.name = "Rail";
-            rail.transform.position = position + new Vector3(0, 0, 0);
+            rail.transform.position = position + offset;
             rail.transform.rotation *= rotationIncrement;
 
             if (Application.isPlaying)

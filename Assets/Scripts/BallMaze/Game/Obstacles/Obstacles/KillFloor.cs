@@ -20,6 +20,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => true;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public KillFloor(int id, Vector3 position) : base(id)
         {
@@ -34,7 +35,7 @@ namespace BallMaze.Obstacles
             GameObject killFloor = GameObject.CreatePrimitive(PrimitiveType.Cube);
             killFloor.name = "KillFloor";
             killFloor.transform.localScale = new Vector3(1, 0.1f, 1);
-            killFloor.transform.position = position;
+            killFloor.transform.position = position + offset;
 
             if (Application.isPlaying)
             {

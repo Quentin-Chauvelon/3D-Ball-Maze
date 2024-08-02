@@ -262,7 +262,10 @@ namespace BallMaze
 
             _maze.ResetMazeOrientation();
 
-            _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
+            if (_lastRespawnableObstacle != null)
+            {
+                _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
+            }
         }
 
         /// <summary>

@@ -257,6 +257,10 @@ namespace BallMaze.Editor
             // The last id is equal to the number of obstacles
             level.nbObstacles = Id;
 
+            level.setCameraView = true;
+            level.cameraPosition = SceneView.lastActiveSceneView.camera.transform.position;
+            level.cameraRotation = SceneView.lastActiveSceneView.camera.transform.rotation;
+
             // Times
             level.times = new float[3];
             level.times[0] = float.Parse(_star1Time.value);

@@ -4,9 +4,12 @@ using System.Globalization;
 using System.Threading;
 using BallMaze.Events;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.RendererUtils;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
 using UnityExtensionMethods;
@@ -31,6 +34,9 @@ namespace BallMaze.UI
         // Adressable handle to load the default level selection template
         private AsyncOperationHandle<VisualTreeAsset> _defaultLevelSelectionTemplateHandle;
         private VisualTreeAsset _levelSelectionTemplate;
+
+        // The difficulty of the level to save the thumbnail texture for. If 0, no texture is saved
+        private int _saveThumbnailToTexture = 0;
 
 
         public DailyLevelsView(VisualElement root) : base(root)
@@ -160,6 +166,79 @@ namespace BallMaze.UI
             if (_dailyLevelsButtonsContainer.childCount == 5)
             {
                 AreDailyLevelsLoaded = true;
+            }
+
+            LoadThumbnails(dailyLevels);
+        }
+
+
+        private async void LoadThumbnails(Level[] dailyLevels)
+        {
+            // Wait for the level manager and the maze to be initialized (obstacles, materials...)
+            await UniTask.WhenAll(
+                UniTask.WaitUntil(() => LevelManager.Initialized),
+                UniTask.WaitUntil(() => Maze.ObstaclesBundleLoaded)
+            );
+
+            RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+            Camera.onPostRender += OnPostRenderCallback;
+
+            Camera camera = GameObject.Find("DailyLevelsThumbnailCamera").GetComponent<Camera>();
+            camera.targetTexture = new RenderTexture(camera.pixelWidth, camera.pixelHeight, 24);
+
+            for (int i = 0; i < dailyLevels.Length; i++)
+            {
+                Level level = dailyLevels[i];
+
+                Vector3 offset = new Vector3(0, 0, 100);
+
+                LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).Maze.BuildMaze(LevelType.DailyLevel, level, offset);
+
+                Maze.RenderAllObstacles(LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).Maze.obstaclesList, LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).Maze.obstacles, LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).Maze.obstaclesTypesMap, "DailyLevelsThumbnailMaze");
+
+                camera.transform.position = level.cameraPosition + offset;
+                camera.transform.rotation = level.cameraRotation;
+
+                _saveThumbnailToTexture = i + 1;
+
+                await UniTask.WaitUntil(() => _saveThumbnailToTexture == 0);
+
+                LevelManager.GetLevelManagerModeInstance(LevelType.DailyLevel).Maze.ClearMaze(GameObject.Find("DailyLevelsThumbnailMaze"));
+            }
+
+            RenderTexture renderTexture = camera.activeTexture;
+
+            camera.targetTexture = null;
+            RenderTexture.active = null;
+            renderTexture.Release();
+            GameObject.Destroy(renderTexture);
+
+            RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
+            Camera.onPostRender -= OnPostRenderCallback;
+        }
+
+
+        private void OnEndCameraRendering(ScriptableRenderContext _, Camera camera)
+        {
+            OnPostRenderCallback(camera);
+        }
+
+
+        private void OnPostRenderCallback(Camera camera)
+        {
+            if (_saveThumbnailToTexture != 0 && camera.targetDisplay == 7)
+            {
+                RenderTexture renderTexture = camera.activeTexture;
+                camera.Render();
+
+                Texture2D texture = new Texture2D(camera.pixelWidth, camera.pixelHeight, TextureFormat.ARGB32, false);
+                RenderTexture.active = renderTexture;
+                texture.ReadPixels(new Rect(0, 0, camera.pixelWidth, camera.pixelHeight), 0, 0);
+                texture.Apply();
+
+                _dailyLevelsButtonsContainer.ElementAt(_saveThumbnailToTexture - 1).Q<Button>("default-level-selection-template__container-button").style.backgroundImage = texture;
+
+                _saveThumbnailToTexture = 0;
             }
         }
 
@@ -424,6 +503,15 @@ namespace BallMaze.UI
 
                 _dailyLevelsUpdatesInLabel.text = $"Updates in: {timeLeft.ToString(@"hh\:mm\:ss")}";
                 await UniTask.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
+
+
+        private async void StartSpinningCircleLoadingAnimation(VisualElement element)
+        {
+            while (element.style.display == DisplayStyle.Flex)
+            {
+                await DOTween.To(() => 0, x => element.transform.rotation = Quaternion.Euler(0, 0, x), 360, 2f).SetEase(Ease.Linear).AsyncWaitForCompletion();
             }
         }
 

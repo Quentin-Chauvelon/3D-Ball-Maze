@@ -72,6 +72,8 @@ namespace BallMaze
             }
         }
 
+        public static bool Initialized = false;
+
         private static DefaultLevelsLevelManager _defaultLevelsLevelManager;
         private static DailyLevelsLevelManager _dailyLevelsLevelManager;
 
@@ -101,6 +103,8 @@ namespace BallMaze
             }
 
             LevelEvents.LevelModeUpdated += (levelType) => { SwitchMode(levelType); };
+
+            Initialized = true;
         }
 
 

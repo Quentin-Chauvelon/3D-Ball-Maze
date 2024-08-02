@@ -18,6 +18,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public CardinalDirection direction { get; set; }
 
@@ -52,7 +53,7 @@ namespace BallMaze.Obstacles
 
             wedge.name = "Wedge";
 
-            wedge.transform.position = position;
+            wedge.transform.position = position + offset;
             wedge.transform.localScale = new Vector3(100, 100, height);
             wedge.transform.rotation = Quaternion.Euler(-90, (int)direction * 90, 0);
 

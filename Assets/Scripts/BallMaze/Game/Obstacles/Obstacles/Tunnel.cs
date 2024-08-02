@@ -31,6 +31,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         [JsonProperty("tt")]
         public TunnelType tunnelType;
@@ -99,7 +100,7 @@ namespace BallMaze.Obstacles
 
             tunnel.name = "Tunnel";
 
-            tunnel.transform.position = position;
+            tunnel.transform.position = position + offset;
             tunnel.transform.rotation = Quaternion.Euler(0, (int)direction * 90, 0);
 
             if (Application.isPlaying)

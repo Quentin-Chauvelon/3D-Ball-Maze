@@ -20,6 +20,7 @@ namespace BallMaze
         MainMenu,
         ModeSelection,
         LevelSelection,
+        DailyLevelsSelection,
         Playing
     }
 
@@ -182,6 +183,11 @@ namespace BallMaze
                         (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
                         UIManager.Instance.Show(UIViewType.MainMenu);
                     }
+                    else if (_gameState == GameState.DailyLevelsSelection)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                    }
 
                     // Reload the remote config to get the new daily levels
                     RemoteConfigManager.LoadRemoteConfig();
@@ -225,6 +231,9 @@ namespace BallMaze
                     break;
                 case UIViewType.DefaultLevelSelection:
                     _gameState = GameState.LevelSelection;
+                    break;
+                case UIViewType.DailyLevels:
+                    _gameState = GameState.DailyLevelsSelection;
                     break;
                 case UIViewType.Playing:
                     _gameState = GameState.Playing;

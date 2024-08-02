@@ -18,6 +18,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
 
         public HalfSphere(int id, Vector3 position) : base(id)
@@ -45,7 +46,7 @@ namespace BallMaze.Obstacles
             }
 
             halfSphere.name = "HalfSphere";
-            halfSphere.transform.position = position;
+            halfSphere.transform.position = position + offset;
 
             if (Application.isPlaying)
             {

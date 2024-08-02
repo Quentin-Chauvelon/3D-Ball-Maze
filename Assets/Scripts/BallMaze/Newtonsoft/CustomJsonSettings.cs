@@ -17,6 +17,7 @@ namespace BallMaze.Newtonsoft.Helpers
                 Converters = new List<JsonConverter>
                 {
                     new Vector3Converter(),
+                    new QuaternionConverter()
                 }
             };
         }
