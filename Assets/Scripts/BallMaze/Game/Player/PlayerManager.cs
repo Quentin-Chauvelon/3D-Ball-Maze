@@ -101,20 +101,27 @@ namespace BallMaze
             DailyLevelsLevelManager.LastDailyLevelsPlayedDay = data.lastDailyLevelPlayedDay;
             DailyLevelsLevelManager.DailyLevelsStreak = data.dailyLevelStreak;
 
-            // If the last completed daily level dates from before yesterday or if was yesterday but the player didn't complete the extreme level, reset the streak
-            if (data.lastDailyLevelCompleted.Key < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
-                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
+            // If the player hasn't played today's daily levels, reset the highest daily level difficulty completed. Otherwise, load it
+            if (data.lastDailyLevelCompleted.Key <= GameManager.Instance.GetUtcNowTime().DayOfYear - 1)
             {
                 // Using unknown since it has a value of 0
                 DailyLevelsLevelManager.LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear - 1, DailyLevelDifficulty.Unknown);
-
-                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetStreak();
-                DailyLevelsLevelManager.DailyLevelsStreak = 0;
             }
             else
             {
                 DailyLevelsLevelManager.LastDailyLevelCompleted = data.lastDailyLevelCompleted;
+            }
 
+            // If the last completed daily level dates from before yesterday or if it was yesterday but the player didn't complete the extreme level, reset the streak
+            if (data.lastDailyLevelCompleted.Key < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
+                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
+            {
+                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetStreak();
+                DailyLevelsLevelManager.DailyLevelsStreak = 0;
+            }
+            // Otherwise, update the UI to match the current streak
+            else
+            {
                 (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).UpdateStreak((int)data.lastDailyLevelCompleted.Value);
             }
 

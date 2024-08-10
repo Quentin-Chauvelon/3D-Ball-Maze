@@ -66,7 +66,8 @@ namespace BallMaze.UI
 
             dailyLevelsStreakContainerClone.style.opacity = 0;
             dailyLevelsStreakContainerClone.style.position = Position.Absolute;
-            dailyLevelsStreakContainerClone.style.bottom = Length.Percent(3);
+            dailyLevelsStreakContainerClone.style.bottom = Length.Percent(8);
+            dailyLevelsStreakContainerClone.style.marginBottom = 0;
 
             _root.Add(dailyLevelsStreakContainerClone);
 
@@ -209,6 +210,7 @@ namespace BallMaze.UI
             // - Half of the duration of the connection bar animation --> for the connection bar
             // - Half of the Duration of the connection bar animation --> for the new day's container
             // - 1s delay
+            // - Half of the duration of the coin animation
             return
                 (int)((
                     UIManager.Instance.STREAK_FADE_ANIMATION_DURATION +
@@ -216,7 +218,7 @@ namespace BallMaze.UI
                     UIManager.Instance.STREAK_CONNECTION_BAR_ANIMATION_DURATION / 2 +
                     UIManager.Instance.STREAK_CONNECTION_BAR_ANIMATION_DURATION / 2 +
                     1 +
-                    UIManager.Instance.STREAK_NUMBER_OF_COINS_TO_ANIMATE * UIManager.Instance.STREAK_COIN_ANIMATION_DURATION
+                    UIManager.Instance.STREAK_NUMBER_OF_COINS_TO_ANIMATE * UIManager.Instance.STREAK_COIN_ANIMATION_DURATION / 2
                 ) * 1000);
         }
     }

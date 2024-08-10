@@ -295,8 +295,9 @@ public class DailyLevelsLevelManager : LevelManagerBase
             LevelEvents.NextStarTimeUpdated?.Invoke(nextStarTime);
         }
 
-        // If the player completed the last level and had not already done it, increase their streak and update the UI
-        if (difficulty == DailyLevelDifficulty.Extreme && LastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme)
+        // If the player completed the last level and had not already done it today, increase their streak and update the UI
+        if (difficulty == DailyLevelDifficulty.Extreme &&
+            (LastDailyLevelCompleted.Key != GameManager.Instance.GetUtcNowTime().DayOfYear || LastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
         {
             DailyLevelsStreak++;
 

@@ -218,13 +218,13 @@ namespace BallMaze.UI
             // Tween the stars the user just gained
             for (int i = starsAlreadygained; i < starsGained; i++)
             {
+                await UniTask.Delay(TimeSpan.FromMilliseconds(DELAY_BETWEEN_STARS_ANIMATION));
+
                 // If the UI has been hidden, stop tweening the stars
                 if (!isEnabled)
                 {
                     break;
                 }
-
-                await UniTask.Delay(TimeSpan.FromMilliseconds(DELAY_BETWEEN_STARS_ANIMATION));
 
                 if (_starsTweenSequence != null)
                 {

@@ -1,6 +1,7 @@
 using BallMaze.UI;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -188,6 +189,8 @@ namespace BallMaze
                         (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
                         UIManager.Instance.Show(UIViewType.MainMenu);
                     }
+
+                    DailyLevelsLevelManager.LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GetUtcNowTime().DayOfYear, DailyLevelDifficulty.Unknown);
 
                     // Reload the remote config to get the new daily levels
                     RemoteConfigManager.LoadRemoteConfig();
