@@ -67,6 +67,10 @@ MonoBehaviour:
     m_Key: ObstaclesAssetBundleLoadError
     m_Metadata:
       m_Items: []
+  - m_Id: 68122700207009792
+    m_Key: DailyLevelsDownloadingGenericError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -99,11 +99,11 @@ namespace BallMaze.UI
 
                 levelSelectionTemplateClone.AddToClassList("level-selection-item");
 
-                if (PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(levelSelection.id))
+                if (PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(levelSelection.id))
                 {
                     levelSelectionTemplateClone.AddToClassList("level-selection-item-unlocked");
 
-                    float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelSelection.id);
+                    float bestTime = PlayerManager.Instance.DefaultLevelsDataManager.GetLevelBestTime(levelSelection.id);
 
                     // Set the level's best time
                     levelSelectionTemplateClone.Q<Label>("default-level-selection-template__time-label").text = $"{bestTime.ToString("00.00")}s";
@@ -164,14 +164,14 @@ namespace BallMaze.UI
         public void LevelSelectionClicked(string id)
         {
             // If the level is locked, return
-            if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(id))
+            if (!PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(id))
             {
                 return;
             }
 
             UIManager.Instance.Show(UIViewType.Playing);
 
-            LevelManager.SwitchMode(LevelType.Default);
+            LevelEvents.LevelModeUpdated?.Invoke(LevelType.Default);
 
             LevelManager.Instance.LoadLevel(id);
         }

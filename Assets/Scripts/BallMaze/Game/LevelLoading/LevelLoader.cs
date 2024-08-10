@@ -25,17 +25,24 @@ namespace BallMaze
         /// <returns></returns>
         public Level DeserializeLevel(LevelType levelType, string levelId)
         {
-            try
+            if (levelType == LevelType.DailyLevel)
             {
-                // Get the level's json data as a string
-                string jsonData = GetLevelJsonAsString(levelType, levelId);
-
-                // Deserialize the json data
-                return JsonConvert.DeserializeObject<Level>(jsonData);
+                return DailyLevelsLevelManager.GetLevelFromDifficulty(DailyLevelsLevelManager.GetDailyLevelDifficultyFromId(levelId));
             }
-            catch (CouldNotLoadLevelException e)
+            else
             {
-                DisplayDefaultLevelLoadingException(e);
+                try
+                {
+                    // Get the level's json data as a string
+                    string jsonData = GetLevelJsonAsString(levelType, levelId);
+
+                    // Deserialize the json data
+                    return JsonConvert.DeserializeObject<Level>(jsonData);
+                }
+                catch (CouldNotLoadLevelException e)
+                {
+                    DisplayDefaultLevelLoadingException(e);
+                }
             }
 
             return null;

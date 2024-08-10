@@ -30,6 +30,7 @@ namespace BallMaze.UI
         private VisualElement _leaderboardTop3EntriesContainer;
         private VisualElement _leaderboardUserEntry;
         private Button _defaultLevelsListButton;
+        private Button _dailyLevelsListButton;
         private Button _homeButton;
         private Button _resumeButton;
         private Button _tryAgainButton;
@@ -66,13 +67,20 @@ namespace BallMaze.UI
             _leaderboardTop3EntriesContainer = _root.Q<VisualElement>("pause__leaderboard-top-3-entries-container");
             _leaderboardUserEntry = _root.Q<VisualElement>("pause__leaderboard-user-entry");
             _defaultLevelsListButton = _root.Q<Button>("pause__default-levels-list-button");
+            _dailyLevelsListButton = _root.Q<Button>("pause__daily-levels-list-button");
             _homeButton = _root.Q<Button>("pause__home-button");
             _resumeButton = _root.Q<Button>("pause__resume-button");
             _tryAgainButton = _root.Q<Button>("pause__try-again-button");
 
+            LevelEvents.LevelModeUpdated += (levelType) => { SwitchLevelTypeSource(levelType); };
+
             LevelEvents.LevelNameUpdated += (levelName) => { _levelNameLabel.text = levelName; };
 
+            LevelEvents.DailyLevelDifficultyUpdated += (difficulty) => { SetLevelDifficulty(difficulty); };
+
             LevelEvents.DefaultLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
+
+            LevelEvents.DailyLevelBestTimeUpdated += (_, time) => { _bestTimeLabel.text = $"BEST TIME: {time.ToString("00.00")}s"; };
 
             LevelEvents.BestTimeUpdated += (bestTime) => { _bestTimeLabel.text = $"BEST TIME: {bestTime.ToString("00.00")}s"; };
 
@@ -107,6 +115,15 @@ namespace BallMaze.UI
 
                 LevelManager.Instance.QuitLevel();
                 UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+            };
+
+
+            _dailyLevelsListButton.clicked += () =>
+            {
+                _hasInteractedBeforeHide = true;
+
+                LevelManager.Instance.QuitLevel();
+                UIManager.Instance.Show(UIViewType.DailyLevels);
             };
 
             _homeButton.clicked += () =>
@@ -168,6 +185,13 @@ namespace BallMaze.UI
         }
 
 
+        public void ForceHide()
+        {
+            _hasInteractedBeforeHide = true;
+            Hide();
+        }
+
+
         /// <summary>
         /// Toggle the state of the music button
         /// </summary>
@@ -206,9 +230,9 @@ namespace BallMaze.UI
         }
 
 
-        private void SetLevelDifficulty(DailyLevelDifficulty levelDifficulty = DailyLevelDifficulty.Unknown)
+        public void SetLevelDifficulty(DailyLevelDifficulty difficulty = DailyLevelDifficulty.Unknown)
         {
-            (string name, Color color) = levelDifficulty.GetDifficultyInfo();
+            (string name, Color color) = difficulty.GetDifficultyInfo();
 
             _levelDifficultyLabel.text = name;
             _levelDifficultyLabel.style.color = color;
@@ -271,6 +295,7 @@ namespace BallMaze.UI
                     _aspectRatioContainer.RemoveFromClassList("daily-levels");
                     _aspectRatioContainer.AddToClassList("default-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.Flex;
+                    _dailyLevelsListButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.None;
                     _levelDifficultyLabel.style.display = DisplayStyle.None;
                     break;
@@ -279,7 +304,8 @@ namespace BallMaze.UI
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("daily-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.Flex;
+                    _dailyLevelsListButton.style.display = DisplayStyle.Flex;
+                    _homeButton.style.display = DisplayStyle.None;
                     _levelDifficultyLabel.style.display = DisplayStyle.Flex;
                     break;
                 case LevelType.RankedLevel:
@@ -287,6 +313,7 @@ namespace BallMaze.UI
                     _aspectRatioContainer.RemoveFromClassList("daily-levels");
                     _aspectRatioContainer.AddToClassList("ranked-level");
                     _defaultLevelsListButton.style.display = DisplayStyle.None;
+                    _dailyLevelsListButton.style.display = DisplayStyle.None;
                     _homeButton.style.display = DisplayStyle.Flex;
                     break;
                 default:

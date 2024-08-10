@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using BallMaze.Events;
+using BallMaze.UI;
 using UnityEngine;
 
 
@@ -27,11 +30,19 @@ namespace BallMaze
             get { return _coinsManager; }
         }
 
-        private LevelDataManager _levelDataManager;
-        public LevelDataManager LevelDataManager
+        private DefaultLevelsDataManager _defaultLevelsDataManager;
+        public DefaultLevelsDataManager DefaultLevelsDataManager
         {
-            get { return _levelDataManager; }
+            get { return _defaultLevelsDataManager; }
         }
+
+        private DailyLevelsDataManager _dailyLevelsDataManager;
+        public DailyLevelsDataManager DailyLevelsDataManager
+        {
+            get { return _dailyLevelsDataManager; }
+        }
+
+        public bool Initialized = false;
 
 
         private void Awake()
@@ -40,7 +51,9 @@ namespace BallMaze
             DontDestroyOnLoad(gameObject);
 
             _coinsManager = new CoinsManager();
-            _levelDataManager = new LevelDataManager();
+
+            _defaultLevelsDataManager = new DefaultLevelsDataManager();
+            _dailyLevelsDataManager = new DailyLevelsDataManager();
         }
 
 
@@ -49,14 +62,70 @@ namespace BallMaze
         {
             _coinsManager.SetCoins(data.coins);
 
-            _levelDataManager.defaultLevelsUnlocked = data.defaultLevelsUnlocked;
-            _levelDataManager.defaultLevelsTimes = data.defaultLevelsTimes;
+            _defaultLevelsDataManager.defaultLevelsUnlocked = data.defaultLevelsUnlocked;
+            _defaultLevelsDataManager.defaultLevelsTimes = data.defaultLevelsTimes;
 
             // If there are no levels unlocked, add the first one
-            if (_levelDataManager.defaultLevelsUnlocked.Count == 0)
+            if (_defaultLevelsDataManager.defaultLevelsUnlocked.Count == 0)
             {
-                _levelDataManager.defaultLevelsUnlocked.Add("1");
+                _defaultLevelsDataManager.defaultLevelsUnlocked.Add("1");
             }
+
+            _dailyLevelsDataManager.dailyLevelsUnlocked.Add("DailyLevelVeryEasy");
+
+            // If the player has played today's daily levels, load the times and unlock the corresponding levels
+            if (data.lastDailyLevelPlayedDay == GameManager.Instance.GetUtcNowTime().DayOfYear)
+            {
+                foreach (KeyValuePair<string, decimal> entry in data.dailyLevelsTimes)
+                {
+                    // If the time is 0, that means the player hasn't completed that level, so we stop to not load the time nor unlock the next level
+                    if (entry.Value == 0m)
+                    {
+                        break;
+                    }
+
+                    // If level id is not the last level, unlock the next one
+                    if (entry.Key != "DailyLevelVeryExtreme")
+                    {
+                        string nextLevelId = DailyLevelsLevelManager.GetDailyLevelIdFromDifficulty(DailyLevelsLevelManager.GetDailyLevelDifficultyFromId(entry.Key) + 1);
+
+                        _dailyLevelsDataManager.dailyLevelsUnlocked.Add(nextLevelId);
+                        PlayerEvents.DailyLevelUnlocked?.Invoke(nextLevelId);
+                    }
+
+                    // Load the time for that level
+                    _dailyLevelsDataManager.dailyLevelsTimes.Add(entry.Key, entry.Value);
+                }
+            }
+
+            DailyLevelsLevelManager.LastDailyLevelsPlayedDay = data.lastDailyLevelPlayedDay;
+            DailyLevelsLevelManager.DailyLevelsStreak = data.dailyLevelStreak;
+
+            // If the player hasn't played today's daily levels, reset the highest daily level difficulty completed. Otherwise, load it
+            if (data.lastDailyLevelCompleted.Key <= GameManager.Instance.GetUtcNowTime().DayOfYear - 1)
+            {
+                // Using unknown since it has a value of 0
+                DailyLevelsLevelManager.LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear - 1, DailyLevelDifficulty.Unknown);
+            }
+            else
+            {
+                DailyLevelsLevelManager.LastDailyLevelCompleted = data.lastDailyLevelCompleted;
+            }
+
+            // If the last completed daily level dates from before yesterday or if it was yesterday but the player didn't complete the extreme level, reset the streak
+            if (data.lastDailyLevelCompleted.Key < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
+                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
+            {
+                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetStreak();
+                DailyLevelsLevelManager.DailyLevelsStreak = 0;
+            }
+            // Otherwise, update the UI to match the current streak
+            else
+            {
+                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).UpdateStreak((int)data.lastDailyLevelCompleted.Value);
+            }
+
+            Initialized = true;
         }
 
 
@@ -64,8 +133,14 @@ namespace BallMaze
         {
             data.coins = _coinsManager.Coins;
 
-            data.defaultLevelsUnlocked = _levelDataManager.defaultLevelsUnlocked;
-            data.defaultLevelsTimes = _levelDataManager.defaultLevelsTimes;
+            data.defaultLevelsUnlocked = _defaultLevelsDataManager.defaultLevelsUnlocked;
+            data.defaultLevelsTimes = _defaultLevelsDataManager.defaultLevelsTimes;
+
+            data.dailyLevelsTimes = _dailyLevelsDataManager.dailyLevelsTimes;
+
+            data.lastDailyLevelPlayedDay = DailyLevelsLevelManager.LastDailyLevelsPlayedDay;
+            data.dailyLevelStreak = DailyLevelsLevelManager.DailyLevelsStreak;
+            data.lastDailyLevelCompleted = DailyLevelsLevelManager.LastDailyLevelCompleted;
         }
     }
 }

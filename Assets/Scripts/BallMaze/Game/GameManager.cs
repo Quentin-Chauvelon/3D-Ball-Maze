@@ -1,5 +1,9 @@
 using BallMaze.UI;
+using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
@@ -17,8 +21,10 @@ namespace BallMaze
         MainMenu,
         ModeSelection,
         LevelSelection,
+        DailyLevelsSelection,
         Playing
     }
+
 
     public class GameManager : MonoBehaviour
     {
@@ -42,12 +48,19 @@ namespace BallMaze
 
         private DateTime _lastUnfocus;
 
+        private int _lastFrameMinute;
+
         public DefaultLevelSelection defaultLevelSelection;
 
         // These two variables are used to test the editor and act as different platforms.
         // This is primarly used for features like Cloud Save where WebGL and mobile have different implementations
-        [SerializeField] public bool editorIsWebGL;
-        [SerializeField] public bool editorIsMobile;
+        [SerializeField] public bool EditorIsWebGL;
+        [SerializeField] public bool EditorIsMobile;
+
+        [SerializeField] public RemoteConfigFetchState RemoteConfigFetchState;
+
+        [SerializeField] public bool MockNowTimeEnabled;
+        [SerializeField] public string MockNowTime;
 
         public static bool isQuitting = false;
 
@@ -70,6 +83,8 @@ namespace BallMaze
             Debug.Log("Initializing game");
             GameObject.Find("DataPersistenceManager").GetComponent<DataPersistenceManager>().Initialize();
             defaultLevelSelection.Initialize();
+
+            MockNowTime = DateTime.UtcNow.AddDays(1).Date.AddMinutes(1).ToString(); // Tomorrow at 00:01
         }
 
 
@@ -79,6 +94,9 @@ namespace BallMaze
         public void StartGame()
         {
             _gameState = GameState.MainMenu;
+
+            RemoteConfigManager.Initialize();
+            RemoteConfigManager.LoadRemoteConfig();
 
             UIManager.Instance.Initialize();
         }
@@ -125,6 +143,76 @@ namespace BallMaze
                     UIManager.Instance.Back();
                 }
             }
+
+            DateTime currentTime = GetUtcNowTime();
+
+            // If a minute has passed
+            if (currentTime.Minute != _lastFrameMinute)
+            {
+                Debug.Log("Current time: " + currentTime.ToString());
+                _lastFrameMinute = currentTime.Minute;
+
+                // If it's 23:50
+                if (currentTime.Hour == 23 && _lastFrameMinute == 51)
+                {
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 10 minutes!");
+                }
+                // If it's 23:55
+                else if (currentTime.Hour == 23 && _lastFrameMinute == 56)
+                {
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 5 minutes!");
+                }
+                // If it's 23:58
+                else if (currentTime.Hour == 23 && _lastFrameMinute == 59)
+                {
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 2 minutes!");
+                }
+                // If it's 23:59
+                else if (currentTime.Hour == 0 && _lastFrameMinute == 0)
+                {
+                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 1 minutes!");
+                }
+                // If it's 00:01
+                else if (currentTime.Hour == 0 && _lastFrameMinute == 1)
+                {
+
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        LevelManager.Instance.QuitLevel();
+
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                    }
+                    else if (_gameState == GameState.DailyLevelsSelection)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels have been updated. You have been redirected to the main menu!");
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                    }
+
+                    DailyLevelsLevelManager.LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GetUtcNowTime().DayOfYear, DailyLevelDifficulty.Unknown);
+
+                    // Reload the remote config to get the new daily levels
+                    RemoteConfigManager.LoadRemoteConfig();
+                }
+            }
+        }
+
+
+        public DateTime GetUtcNowTime()
+        {
+            if (!MockNowTimeEnabled)
+            {
+                return DateTime.UtcNow;
+            }
+            else
+            {
+                DateTime now = DateTime.UtcNow;
+
+                DateTime.TryParse(MockNowTime, out now);
+
+                return now;
+            }
         }
 
 
@@ -146,6 +234,9 @@ namespace BallMaze
                     break;
                 case UIViewType.DefaultLevelSelection:
                     _gameState = GameState.LevelSelection;
+                    break;
+                case UIViewType.DailyLevels:
+                    _gameState = GameState.DailyLevelsSelection;
                     break;
                 case UIViewType.Playing:
                     _gameState = GameState.Playing;
@@ -170,7 +261,7 @@ namespace BallMaze
             // If the game is paused, save the time it was paused at, this will allow to know how much time the game was paused for
             if (pause)
             {
-                _lastUnfocus = DateTime.UtcNow;
+                _lastUnfocus = GameManager.Instance.GetUtcNowTime();
 
                 // Save the game on Application.Pause() and not on Application.Quit().
                 // This is done because Application.Quit() is not always called on mobile devices (especially older ones)
@@ -234,11 +325,7 @@ namespace BallMaze
         /// <returns></returns>
         public static Vector2 GetScreenSize()
         {
-#if UNITY_EDITOR
-            return new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-#else
             return new Vector2(Screen.width, Screen.height);
-#endif
         }
     }
 }

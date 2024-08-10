@@ -34,4 +34,36 @@ namespace BallMaze.Newtonsoft.Helpers
             writer.WriteEndObject();
         }
     }
+
+
+    /// <summary>
+    /// Custom JSON converter to serialize and deserialize Quaternion objects.
+    /// Needed because Unity's objects are not serializable by default with Newtonsoft.Json.
+    /// </summary>
+    public class QuaternionConverter : JsonConverter<Quaternion>
+    {
+        public override Quaternion ReadJson(JsonReader reader, Type objectType, Quaternion existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            JObject jObject = JObject.Load(reader);
+            float x = jObject.Value<float>("x");
+            float y = jObject.Value<float>("y");
+            float z = jObject.Value<float>("z");
+            float w = jObject.Value<float>("w");
+            return new Quaternion(x, y, z, w);
+        }
+
+        public override void WriteJson(JsonWriter writer, Quaternion value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WritePropertyName("z");
+            writer.WriteValue(value.z);
+            writer.WritePropertyName("w");
+            writer.WriteValue(value.w);
+            writer.WriteEndObject();
+        }
+    }
 }

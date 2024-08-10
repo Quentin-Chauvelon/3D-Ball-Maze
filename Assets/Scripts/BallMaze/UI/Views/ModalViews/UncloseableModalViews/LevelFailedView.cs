@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Cysharp.Threading.Tasks;
+using BallMaze.Events;
 
 
 namespace BallMaze.UI
@@ -47,6 +48,8 @@ namespace BallMaze.UI
             _homeButton = _root.Q<Button>("level-failed__home-button");
             _tryAgainRadialProgress = _root.Q<RadialProgress>("level-failed__try-again-radial-progress");
             _tryAgainButton = _root.Q<Button>("level-failed__try-again-button");
+
+            LevelEvents.LevelModeUpdated += (levelType) => { SwitchLevelTypeSource(levelType); };
         }
 
 
@@ -69,7 +72,20 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
-                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                switch (LevelManager.Instance.levelType)
+                {
+                    case LevelType.Default:
+                        UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                        break;
+                    case LevelType.DailyLevel:
+                        UIManager.Instance.Show(UIViewType.DailyLevels);
+                        break;
+                    default:
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                        break;
+
+                }
+
                 UIManager.Instance.Hide(UIViewType.LevelFailed);
             };
 
@@ -171,8 +187,8 @@ namespace BallMaze.UI
                     _restartWhereYouFailedLabel.text = "Restart where you failed?";
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("default-levels");
-                    _defaultLevelsListButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.Flex;
+                    _defaultLevelsListButton.style.display = DisplayStyle.Flex;
+                    _homeButton.style.display = DisplayStyle.None;
                     break;
                 case LevelType.RankedLevel:
                     _restartWhereYouFailedLabel.text = "Try again?";

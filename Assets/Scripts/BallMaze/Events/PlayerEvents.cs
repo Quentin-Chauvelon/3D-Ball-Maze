@@ -11,5 +11,6 @@ namespace BallMaze.Events
         public static Action<int, int> CoinsUpdated;
 
         public static Action<string> DefaultLevelUnlocked;
+        public static Action<string> DailyLevelUnlocked;
     }
 }

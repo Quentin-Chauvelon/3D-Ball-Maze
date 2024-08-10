@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using BallMaze;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -193,10 +195,52 @@ namespace UnityExtensionMethods
 
         public static async UniTask TweenToPosition(this VisualElement element, float endPosition, float duration = 0.5f, Ease ease = Ease.OutExpo)
         {
-            Debug.Log($"tweening to {endPosition} in {duration} seconds");
-
-            // Skip the first 15% of the screen height since it's the permanent UI, then move the UI to the center of the 85% left
             await DOTween.To(() => element.style.top.value.value, x => element.style.top = x, endPosition, duration).SetEase(ease).AsyncWaitForCompletion();
+        }
+
+
+        /// <summary>
+        /// Wait for the given task to complete. If it takes longer than the given timeout, the task is cancelled and timeoutCallback is called.
+        /// </summary>
+        /// <param name="task">The task to wait for completion</param>
+        /// <param name="timeout">The duration in seconds to wait before the timeout</param>
+        /// <param name="timeoutCallback">The callback function to call if the task times out</param>
+        /// <returns>True if the task completed successfully, false if it timed out</returns>
+        public static async UniTask<bool> TimeoutAndRunCallback(this UniTask task, int timeout, Action timeoutCallback)
+        {
+            try
+            {
+                await task.Timeout(TimeSpan.FromSeconds(timeout));
+
+                return true;
+            }
+            catch (TimeoutException)
+            {
+                timeoutCallback();
+
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Wait for the given task to complete. If it takes longer than the given timeout, the task is cancelled and the TimeoutException is returned.
+        /// </summary>
+        /// <param name="task">The task to wait for completion</param>
+        /// <param name="timeout">The duration in seconds to wait before the timeout</param>
+        /// <returns>The TimeoutException if the task timed out, null ohterwise</returns>
+        public static async UniTask<TimeoutException> Timeout(this UniTask task, int timeout)
+        {
+            try
+            {
+                await task.Timeout(TimeSpan.FromSeconds(timeout));
+
+                return null;
+            }
+            catch (TimeoutException e)
+            {
+                return e;
+            }
         }
     }
 }

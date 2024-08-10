@@ -21,6 +21,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public Floor(int id, Vector3 position) : base(id)
         {
@@ -35,7 +36,7 @@ namespace BallMaze.Obstacles
             GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
             floor.name = "Floor";
             floor.transform.localScale = new Vector3(1, 0.1f, 1);
-            floor.transform.position = position;
+            floor.transform.position = position + offset;
 
             // If the game is in play mode (not run from an editor script), get the material from the loaded asset bundle
             // This can't be done outside play mode since the asset bundle hasn't been loaded yet

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +32,7 @@ namespace BallMaze.UI
         Exception,
         ExceptionDetails,
         ExceptionSendToSupport,
+        Notification,
         NoInternet
     }
 
@@ -75,6 +77,44 @@ namespace BallMaze.UI
         {
             get { return _isModalOpened; }
         }
+
+
+        [Header("ANIMATIONS PROPERTIES")]
+        [Header("Coin animation")]
+        // The number of milliseconds to wait before animating the next coin
+        [SerializeField][Range(20, 300)][Tooltip("The number of milliseconds to wait before animating the next coin")] public int DELAY_BETWEEN_COINS = 100;
+
+        // The number of coins to spawn and animate
+        [SerializeField][Range(0, 20)][Tooltip("The number of coins to spawn and animate")] public int DEFAULT_NUMBER_OF_COINS_TO_ANIMATE = 6;
+
+        // The duration of the coin animation in seconds
+        [SerializeField][Range(0f, 1f)][Tooltip("The duration of the coin animation in seconds")] public float ANIMATION_DURATION = 0.25f;
+
+
+        [Header("Daily levels streak animation")]
+        // Fade in/out animation duration
+        [SerializeField][Range(0f, 2f)][Tooltip("The color of the streak days and connection bars when they are active")] public float STREAK_FADE_ANIMATION_DURATION = 0.5f;
+
+        // Fade in easing function
+        [SerializeField][Tooltip("Fade in easing function")] public Ease STREAK_FADE_IN_EASING_FUNCTION = Ease.InQuart;
+
+        // Fade out easing function
+        [SerializeField][Tooltip("Fade out easing function")] public Ease STREAK_FADE_OUT_EASING_FUNCTION = Ease.OutQuart;
+
+        // The color of the streak days and connection bars when they are active
+        [SerializeField][Tooltip("The color of the streak days and connection bars when they are active")] public Color STREAK_ACTIVE_COLOR = new Color(0.318f, 0.698f, 0.224f);
+
+        // The duration of the connection bar animation in seconds
+        [SerializeField][Range(0f, 3f)][Tooltip("The duration of the connection bar animation in seconds")] public float STREAK_CONNECTION_BAR_ANIMATION_DURATION = 2.2f;
+
+        // The size of the coins that will be animated (in pixels). Should match the value in the USS file
+        [SerializeField][Range(0, 100)][Tooltip("The size of the coins that will be animated (in pixels). Should match the value in the USS file")] public int STREAK_COIN_SIZE = 50;
+
+        // Number of coins to animate
+        [SerializeField][Range(0, 20)][Tooltip("Number of coins to animate")] public int STREAK_NUMBER_OF_COINS_TO_ANIMATE = 8;
+
+        // Amount of time for one coin to go from the start to the end position (in seconds)
+        [SerializeField][Range(0f, 1f)][Tooltip("Amount of time for one coin to go from the start to the end position (in seconds)")] public float STREAK_COIN_ANIMATION_DURATION = 0.5f;
 
 
         private void Awake()
@@ -140,6 +180,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.GameQuitConfirmation, new GameQuitConfirmationView(root.Q<VisualElement>("game-quit-confirmation")));
             _uiViews.Add(UIViewType.Skip, new SkipView(root.Q<VisualElement>("skip-container")));
             _uiViews.Add(UIViewType.Pause, new PauseView(root.Q<VisualElement>("pause-container")));
+            _uiViews.Add(UIViewType.Notification, new NotificationView(root.Q<VisualElement>("notification")));
 
             // Uncloseable modal views
             _uiViews.Add(UIViewType.NoInternet, new NoInternetView(root.Q<VisualElement>("no-internet")));

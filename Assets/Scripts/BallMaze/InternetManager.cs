@@ -90,8 +90,6 @@ namespace BallMaze
                     await UniTask.Delay(TimeSpan.FromSeconds(5));
                 }
             }
-
-            InternetManagerEvents.intialized?.Invoke();
         }
 
 

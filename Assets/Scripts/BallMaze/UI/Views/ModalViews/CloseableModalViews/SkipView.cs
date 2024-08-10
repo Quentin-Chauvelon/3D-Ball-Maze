@@ -73,9 +73,9 @@ namespace BallMaze.UI
                 if (nextLevelId != null)
                 {
                     // Unlock the next level if it hasn't already been unlocked
-                    if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevelId))
+                    if (!PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(nextLevelId))
                     {
-                        PlayerManager.Instance.LevelDataManager.UnlockDefaultLevel(nextLevelId);
+                        PlayerManager.Instance.DefaultLevelsDataManager.UnlockLevel(nextLevelId);
 
                         PlayerManager.Instance.CoinsManager.UpdateCoins(-COINS_TO_UNLOCK_NEXT_LEVEL);
 
@@ -153,6 +153,13 @@ namespace BallMaze.UI
             await UIUtitlities.TweenModalViewToTopAndWait(_root, UI_HEIGHT_PERCENTAGE);
 
             base.Hide();
+        }
+
+
+        public void ForceHide()
+        {
+            _hasInteractedBeforeHide = true;
+            Hide();
         }
     }
 }

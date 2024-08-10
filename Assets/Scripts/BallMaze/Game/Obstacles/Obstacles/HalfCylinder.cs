@@ -18,6 +18,7 @@ namespace BallMaze.Obstacles
         public override bool canKill => false;
 
         public Vector3 position { get; set; }
+        public Vector3 offset { get; set; }
 
         public CardinalDirection direction { get; set; }
 
@@ -48,7 +49,7 @@ namespace BallMaze.Obstacles
 
             halfCylinder.name = "HalfCylinder";
 
-            halfCylinder.transform.position = position;
+            halfCylinder.transform.position = position + offset;
 
             switch (direction)
             {

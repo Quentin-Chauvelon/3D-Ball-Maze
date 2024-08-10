@@ -72,7 +72,7 @@ namespace BallMaze.UI
                 {
                     string nextLevel = LevelManager.Instance.GetNextLevel();
 
-                    if (!String.IsNullOrEmpty(nextLevel) && PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevel))
+                    if (!String.IsNullOrEmpty(nextLevel) && PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(nextLevel))
                     {
                         LevelManager.Instance.LoadLevel(nextLevel);
 
@@ -129,8 +129,8 @@ namespace BallMaze.UI
                     _pauseButton.style.display = DisplayStyle.Flex;
                     _settingsButton.style.display = DisplayStyle.Flex;
 
-                    // Show the skip button only for default and daily levels
-                    _skipButton.style.display = LevelManager.Instance.levelType == LevelType.Default || LevelManager.Instance.levelType == LevelType.DailyLevel
+                    // Show the skip button only for default
+                    _skipButton.style.display = LevelManager.Instance.levelType == LevelType.Default
                         ? DisplayStyle.Flex
                         : DisplayStyle.None;
 

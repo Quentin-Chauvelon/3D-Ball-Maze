@@ -262,7 +262,10 @@ namespace BallMaze
 
             _maze.ResetMazeOrientation();
 
-            _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
+            if (_lastRespawnableObstacle != null)
+            {
+                _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
+            }
         }
 
         /// <summary>
@@ -331,7 +334,6 @@ namespace BallMaze
 
                     UIManager.Instance.Show(UIViewType.LevelFailed);
                 }
-
             }
         }
 
@@ -421,6 +423,32 @@ namespace BallMaze
         {
             PauseLevel();
 
+            if (UIManager.Instance.UIViews[UIViewType.Pause].isEnabled)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Pause] as PauseView).ForceHide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.Skip].isEnabled)
+            {
+                (UIManager.Instance.UIViews[UIViewType.Skip] as SkipView).ForceHide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.LevelCompleted].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.LevelCompleted].Hide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.SecondChance].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.SecondChance].Hide();
+            }
+
+            if (UIManager.Instance.UIViews[UIViewType.LevelFailed].isEnabled)
+            {
+                UIManager.Instance.UIViews[UIViewType.LevelFailed].Hide();
+            }
+
+
             _ball.SetBallVisible(false);
             _ball.FreezeBall(true);
 
@@ -448,8 +476,7 @@ namespace BallMaze
             _usedSecondChance = false;
 
             // Update the UI to match the selected mode
-            ((PauseView)UIManager.Instance.UIViews[UIViewType.Pause]).SwitchLevelTypeSource(levelType);
-            ((LevelFailedView)UIManager.Instance.UIViews[UIViewType.LevelFailed]).SwitchLevelTypeSource(levelType);
+            LevelEvents.LevelModeUpdated?.Invoke(levelType);
         }
     }
 }

@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Label tabindex="-1" name="notification__sizing-label" text="" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; -unity-text-align: middle-center; font-size: 30px; -unity-font-style: bold; opacity: 0;" />
+    <ui:Button name="notification__background" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" style="position: absolute; width: 4%; height: 5%; top: 3%; background-color: #FFF; border-radius: 30px; flex-direction: row; padding: 0; margin: 0; border-width: 0;">
+        <ui:VisualElement name="notification__image-background" style="flex-grow: 0; justify-content: center; width: 100%; height: auto; background-color: #0FF; border-radius: 30px 30px 30px 30px;">
+            <ui:VisualElement name="notification__image" style="flex-grow: 0; height: 80%; background-image: url(&apos;project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=4584671053970592468&amp;guid=0cc435c0017d4474384fdb998936fa19&amp;type=3#console.warnicon&apos;); -unity-background-scale-mode: scale-to-fit;" />
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" name="notification__text" picking-mode="Ignore" text="" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-grow: 1; -unity-text-align: middle-center; font-size: 30px; -unity-font-style: bold; display: flex; margin: 0; padding: 0;" />
+    </ui:Button>
+</ui:UXML>

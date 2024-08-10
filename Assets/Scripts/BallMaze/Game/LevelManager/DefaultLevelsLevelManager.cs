@@ -101,7 +101,7 @@ namespace BallMaze
         {
             base.LoadLevel(levelId);
 
-            float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(_currentLevelId);
+            float bestTime = PlayerManager.Instance.DefaultLevelsDataManager.GetLevelBestTime(_currentLevelId);
 
             if (GameManager.DEBUG)
             {
@@ -152,7 +152,7 @@ namespace BallMaze
 
         public override int GetNumberOfStarsForLevel(string levelId, float? bestTime = null)
         {
-            bestTime ??= PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(levelId);
+            bestTime ??= PlayerManager.Instance.DefaultLevelsDataManager.GetLevelBestTime(levelId);
 
             if (bestTime.Value > 0f)
             {
@@ -210,7 +210,7 @@ namespace BallMaze
             base.TargetReached();
 
             float time = _levelTimer.GetTime();
-            float bestTime = PlayerManager.Instance.LevelDataManager.GetDefaultLevelBestTime(_currentLevelId);
+            float bestTime = PlayerManager.Instance.DefaultLevelsDataManager.GetLevelBestTime(_currentLevelId);
 
             bool newBestTime = bestTime == 0f || time < bestTime;
 
@@ -226,7 +226,7 @@ namespace BallMaze
             if (newBestTime)
             {
                 // Save the time of the current level
-                PlayerManager.Instance.LevelDataManager.SetDefaultLevelTime(_currentLevelId, time);
+                PlayerManager.Instance.DefaultLevelsDataManager.SetLevelTime(_currentLevelId, time);
             }
 
             string nextLevelId = GetNextLevel();
@@ -234,9 +234,9 @@ namespace BallMaze
             if (nextLevelId != null)
             {
                 // Unlock the next level if it hasn't already been unlocked
-                if (!PlayerManager.Instance.LevelDataManager.IsDefaultLevelUnlocked(nextLevelId))
+                if (!PlayerManager.Instance.DefaultLevelsDataManager.IsLevelUnlocked(nextLevelId))
                 {
-                    PlayerManager.Instance.LevelDataManager.UnlockDefaultLevel(nextLevelId);
+                    PlayerManager.Instance.DefaultLevelsDataManager.UnlockLevel(nextLevelId);
                 }
             }
 

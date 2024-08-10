@@ -1,4 +1,5 @@
 using System;
+using BallMaze.Events;
 using UnityEngine;
 
 
@@ -71,21 +72,39 @@ namespace BallMaze
             }
         }
 
+        public static bool Initialized = false;
+
+        private static DefaultLevelsLevelManager _defaultLevelsLevelManager;
+        private static DailyLevelsLevelManager _dailyLevelsLevelManager;
+
         private void Awake()
         {
-            SwitchMode(LevelType.Default);
+            _instance = new DefaultLevelsLevelManager();
+
             DontDestroyOnLoad(gameObject);
         }
 
 
         void Start()
         {
-            _instance.Start();
+            _defaultLevelsLevelManager = new DefaultLevelsLevelManager();
+            _dailyLevelsLevelManager = new DailyLevelsLevelManager();
+
+            SwitchMode(LevelType.Default);
+
+            _defaultLevelsLevelManager.Start();
+            _dailyLevelsLevelManager.Start();
+
+            _instance = _defaultLevelsLevelManager;
 
             if (_config.setLevelToLoad)
             {
                 levelToLoad = _config.levelToLoad;
             }
+
+            LevelEvents.LevelModeUpdated += (levelType) => { SwitchMode(levelType); };
+
+            Initialized = true;
         }
 
 
@@ -106,12 +125,26 @@ namespace BallMaze
             switch (newLevelType)
             {
                 case LevelType.Default:
-                    _instance = new DefaultLevelsLevelManager();
+                    _instance = _defaultLevelsLevelManager;
                     break;
-                    // case LevelType.DailyLevel:
-                    //     _instance = new DailyLevelsLevelManager();
-                    //     break;
+                case LevelType.DailyLevel:
+                    _instance = _dailyLevelsLevelManager;
+                    break;
             }
+        }
+
+
+        public static LevelManagerBase GetLevelManagerModeInstance(LevelType levelType)
+        {
+            switch (levelType)
+            {
+                case LevelType.Default:
+                    return _defaultLevelsLevelManager;
+                case LevelType.DailyLevel:
+                    return _dailyLevelsLevelManager;
+            }
+
+            return null;
         }
     }
 }

@@ -90,6 +90,12 @@ MonoBehaviour:
       connexion internet et r\xE9essayer..."
     m_Metadata:
       m_Items: []
+  - m_Id: 68122700207009792
+    m_Localized: "Erreur lors du chargement des niveaux du jour. Merci de v\xE9rifier
+      votre connexion internet et r\xE9essayer... Si le probl\xE8me persiste, veuillez
+      tenter de red\xE9marrer le jeu."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

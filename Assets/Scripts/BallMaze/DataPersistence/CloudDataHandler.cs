@@ -17,7 +17,10 @@ namespace BallMaze
         coins,
         defaultLevelsUnlocked,
         defaultLevelsTimes,
-        lastUpdated
+        dailyLevelsTimes,
+        lastDailyLevelPlayedDay,
+        lastUpdated,
+        unknowned
     }
 
 

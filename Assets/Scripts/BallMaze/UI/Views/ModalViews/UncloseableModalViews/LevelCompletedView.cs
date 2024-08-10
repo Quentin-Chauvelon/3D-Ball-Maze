@@ -87,7 +87,20 @@ namespace BallMaze.UI
 
             _defaultLevelsListButton.clicked += () =>
             {
-                UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                switch (LevelManager.Instance.levelType)
+                {
+                    case LevelType.Default:
+                        UIManager.Instance.Show(UIViewType.DefaultLevelSelection);
+                        break;
+                    case LevelType.DailyLevel:
+                        UIManager.Instance.Show(UIViewType.DailyLevels);
+                        break;
+                    default:
+                        UIManager.Instance.Show(UIViewType.MainMenu);
+                        break;
+
+                }
+
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
@@ -205,13 +218,13 @@ namespace BallMaze.UI
             // Tween the stars the user just gained
             for (int i = starsAlreadygained; i < starsGained; i++)
             {
+                await UniTask.Delay(TimeSpan.FromMilliseconds(DELAY_BETWEEN_STARS_ANIMATION));
+
                 // If the UI has been hidden, stop tweening the stars
                 if (!isEnabled)
                 {
                     break;
                 }
-
-                await UniTask.Delay(TimeSpan.FromMilliseconds(DELAY_BETWEEN_STARS_ANIMATION));
 
                 if (_starsTweenSequence != null)
                 {
@@ -285,7 +298,7 @@ namespace BallMaze.UI
                 DELAY_BEFORE_STARS_ANIMATION +
                 numberOfStarsGained * (DELAY_BETWEEN_STARS_ANIMATION + STAR_SCALE_ANIMATION_DURATION) +
                 DELAY_BETWEEN_STARS_AND_COINS_ANIMATION +
-                AnimationView.DELAY_BETWEEN_COINS_ANIMATION * AnimationView.DEFAULT_NUMBER_OF_COINS_TO_ANIMATE;
+                UIManager.Instance.DELAY_BETWEEN_COINS * UIManager.Instance.DEFAULT_NUMBER_OF_COINS_TO_ANIMATE;
         }
 
 
