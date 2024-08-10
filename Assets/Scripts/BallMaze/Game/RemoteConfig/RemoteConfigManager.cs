@@ -9,6 +9,7 @@ using System;
 using UnityEngine.AI;
 using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 
 namespace BallMaze
@@ -39,6 +40,7 @@ namespace BallMaze
     {
         public Level[] dailyLevelsEvenDays;
         public Level[] dailyLevelsOddDays;
+        public int[] dailyLevelsStreakRewards;
     }
 
 
@@ -99,8 +101,16 @@ namespace BallMaze
         /// Apply the remote settings once they have been successfully fetched from the server
         /// </summary>
         /// <param name="configResponse"></param>
-        public static void ApplyRemoteSettings(ConfigResponse configResponse)
+        public async static void ApplyRemoteSettings(ConfigResponse configResponse)
         {
+            // If the data hasn't been loaded yet, wait until it is
+            if (!PlayerManager.Instance.Initialized)
+            {
+                await UniTask.WaitUntil(() => PlayerManager.Instance.Initialized);
+            }
+
+            DailyLevelsLevelManager.PopulateStreakRewards(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsStreakRewards").ToObject<int[]>());
+
             if (GameManager.Instance.GetUtcNowTime().DayOfYear % 2 == 0)
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsEvenDays").ToObject<Level[]>());
@@ -127,8 +137,16 @@ namespace BallMaze
         /// This is used for testing only
         /// </summary>
         /// <param name="data"></param>
-        public static void ApplyRemoteSettingsStub(RemoteConfigData data)
+        public async static void ApplyRemoteSettingsStub(RemoteConfigData data)
         {
+            // If the data hasn't been loaded yet, wait until it is
+            if (!PlayerManager.Instance.Initialized)
+            {
+                await UniTask.WaitUntil(() => PlayerManager.Instance.Initialized);
+            }
+
+            DailyLevelsLevelManager.PopulateStreakRewards(data.dailyLevelsStreakRewards);
+
             if (GameManager.Instance.GetUtcNowTime().DayOfYear % 2 == 0)
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(data.dailyLevelsEvenDays);

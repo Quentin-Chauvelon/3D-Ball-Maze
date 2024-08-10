@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using BallMaze;
 using BallMaze.Events;
@@ -20,6 +21,14 @@ public class DailyLevelsLevelManager : LevelManagerBase
     // The day the player last completed a daily level. Used when saving locally to a file
     public static int LastDailyLevelsPlayedDay;
 
+    public static int DailyLevelsStreak = 0;
+
+    public static int[] DailyLevelsStreakRewards = new int[7] { 500, 575, 650, 750, 850, 1000, 0 };
+
+    // The highest daily level difficulty the player has completed on the last day they played.
+    // This allows to know when to increment or reset the streak based on the day and the difficulty.
+    // The key represents the day number in the year
+    public static KeyValuePair<int, DailyLevelDifficulty> LastDailyLevelCompleted;
 
     public DailyLevelsLevelManager()
     {
@@ -91,6 +100,14 @@ public class DailyLevelsLevelManager : LevelManagerBase
             ? GetNextStarTime(difficulty, 3 - numberOfStars)
             : null
         );
+    }
+
+
+    public static void PopulateStreakRewards(int[] dailyLevelsStreakRewards)
+    {
+        DailyLevelsStreakRewards = dailyLevelsStreakRewards;
+
+        (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).PopulateStreakRewards(dailyLevelsStreakRewards);
     }
 
 
@@ -277,6 +294,24 @@ public class DailyLevelsLevelManager : LevelManagerBase
 
             LevelEvents.NextStarTimeUpdated?.Invoke(nextStarTime);
         }
+
+        // If the player completed the last level and had not already done it, increase their streak and update the UI
+        if (difficulty == DailyLevelDifficulty.Extreme && LastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme)
+        {
+            DailyLevelsStreak++;
+
+            (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).UpdateStreak(DailyLevelsStreak);
+
+            PlayerManager.Instance.CoinsManager.UpdateCoins(DailyLevelsStreakRewards[DailyLevelsStreak], AnimationView.GetDailyLevelCompletedAnimationDuration());
+            (UIManager.Instance.UIViews[UIViewType.Animation] as AnimationView).AnimateDailyLevelStreak(DailyLevelsStreak);
+        }
+
+        // If the player beat their highest difficulty for the day, update it
+        if (difficulty > LastDailyLevelCompleted.Value)
+        {
+            LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear, difficulty);
+        }
+
 
         // The number of stars the player has gained for completing the level
         int numberOfStarsGained = numberOfStars - numberOfStarsAlreadyGained;

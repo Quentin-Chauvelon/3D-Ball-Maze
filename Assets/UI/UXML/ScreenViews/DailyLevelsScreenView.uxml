@@ -17,7 +17,9 @@
         <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-4" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
         <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-5" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
         <ui:Instance template="DailyLevelsStreakDayTemplate" name="daily-levels__streak-day-6" class="daily-levels__streak-day-template daily-levels__streak-day-inactive" />
-        <BallMaze.UI.AspectRatio name="daily-levels__streak-day-7" aspect-ratio-x="1" aspect-ratio-y="1" class="daily-levels__streak-day-inactive" style="flex-grow: 0; height: 100%; width: 40%;" />
+        <BallMaze.UI.AspectRatio name="daily-levels__streak-day-7" aspect-ratio-x="1" aspect-ratio-y="1" class="daily-levels__streak-day-inactive" style="flex-grow: 0; height: 100%; width: 40%;">
+            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__streak-day-number" enable-rich-text="false" style="flex-grow: 1; -unity-text-align: middle-center; -unity-font-style: bold; font-size: 100%; background-color: rgba(255, 255, 255, 0);" />
+        </BallMaze.UI.AspectRatio>
     </ui:VisualElement>
     <ui:Label tabindex="-1" text="UPDATES IN 00:00:00" parse-escape-sequences="true" display-tooltip-when-elided="true" name="daily-levels__updates-in-label" enable-rich-text="false" style="font-size: 30px; -unity-text-align: middle-center; -unity-font-style: bold;" />
 </ui:UXML>

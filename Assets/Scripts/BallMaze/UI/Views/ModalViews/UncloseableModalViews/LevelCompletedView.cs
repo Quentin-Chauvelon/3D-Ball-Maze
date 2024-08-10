@@ -298,7 +298,7 @@ namespace BallMaze.UI
                 DELAY_BEFORE_STARS_ANIMATION +
                 numberOfStarsGained * (DELAY_BETWEEN_STARS_ANIMATION + STAR_SCALE_ANIMATION_DURATION) +
                 DELAY_BETWEEN_STARS_AND_COINS_ANIMATION +
-                AnimationView.DELAY_BETWEEN_COINS_ANIMATION * AnimationView.DEFAULT_NUMBER_OF_COINS_TO_ANIMATE;
+                UIManager.Instance.DELAY_BETWEEN_COINS * UIManager.Instance.DEFAULT_NUMBER_OF_COINS_TO_ANIMATE;
         }
 
 

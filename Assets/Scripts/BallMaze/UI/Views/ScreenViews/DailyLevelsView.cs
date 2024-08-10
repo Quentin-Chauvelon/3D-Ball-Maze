@@ -19,14 +19,12 @@ namespace BallMaze.UI
 {
     public class DailyLevelsView : ScreenView
     {
-        private short _dailyLevelsCompletedToday;
-        private short _dailyLevelsStreak;
-
         public bool AreDailyLevelsLoaded = false;
 
         // Visual Elements
         private Label _dailyLevelsTitle;
         private VisualElement _dailyLevelsButtonsContainer;
+        private VisualElement _dailyLevelsStreakContainer;
         private Dictionary<DailyLevelDifficulty, Action> _dailyLevelsButtonClickAction;
         private VisualElement[] _dailyLevelsStreakDays = new VisualElement[7];
         private Label _dailyLevelsUpdatesInLabel;
@@ -41,9 +39,6 @@ namespace BallMaze.UI
 
         public DailyLevelsView(VisualElement root) : base(root)
         {
-            _dailyLevelsCompletedToday = 0;
-            _dailyLevelsStreak = 0;
-
             _dailyLevelsButtonClickAction = new Dictionary<DailyLevelDifficulty, Action>();
 
             _defaultLevelSelectionTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("DefaultLevelSelectionTemplate");
@@ -56,6 +51,7 @@ namespace BallMaze.UI
             _dailyLevelsTitle = _root.Q<Label>("daily-levels__title");
 
             _dailyLevelsButtonsContainer = _root.Q<VisualElement>("daily-levels__levels-container");
+            _dailyLevelsStreakContainer = _root.Q<VisualElement>("daily-levels__streak-container");
 
             for (int i = 0; i < 7; i++)
             {
@@ -93,6 +89,22 @@ namespace BallMaze.UI
                     ExceptionManager.ShowExceptionMessage(timeoutException, "ExceptionMessagesTable", "DailyLevelsDownloadingGenericError", ExceptionActionType.BackToMainMenu);
                 }
             }
+        }
+
+
+        public void PopulateStreakRewards(int[] dailyLevelsStreakRewards)
+        {
+            ResetStreak();
+
+            for (int i = 1; i <= 7; i++)
+            {
+                if (i != 7)
+                {
+                    _dailyLevelsStreakContainer.Q<VisualElement>($"daily-levels__streak-day-{i}").Q<Label>("daily-levels__streak-day-number").text = dailyLevelsStreakRewards[i - 1].ToString();
+                }
+            }
+
+            UpdateStreak(DailyLevelsLevelManager.DailyLevelsStreak);
         }
 
 
@@ -348,7 +360,7 @@ namespace BallMaze.UI
         /// Update the streak days visual elements from day 1 to the given streak day
         /// </summary>
         /// <param name="streak"></param>
-        private void UpdateStreak(short streak)
+        public void UpdateStreak(int streak)
         {
             for (int i = 0; i < streak; i++)
             {
@@ -361,13 +373,19 @@ namespace BallMaze.UI
         /// <summary>
         /// Resets the streak days visual elements to their initial state
         /// </summary>
-        private void ResetStreak()
+        public void ResetStreak()
         {
             foreach (VisualElement streakDay in _dailyLevelsStreakDays)
             {
                 streakDay.RemoveFromClassList("daily-levels__streak-day-active");
                 streakDay.AddToClassList("daily-levels__streak-day-inactive");
             }
+        }
+
+
+        public VisualElement GetStreakElement()
+        {
+            return _dailyLevelsStreakContainer;
         }
 
 

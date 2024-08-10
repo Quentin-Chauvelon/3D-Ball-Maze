@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BallMaze.Events;
+using BallMaze.UI;
 using UnityEngine;
 
 
@@ -40,6 +41,8 @@ namespace BallMaze
         {
             get { return _dailyLevelsDataManager; }
         }
+
+        public bool Initialized = false;
 
 
         private void Awake()
@@ -96,6 +99,26 @@ namespace BallMaze
             }
 
             DailyLevelsLevelManager.LastDailyLevelsPlayedDay = data.lastDailyLevelPlayedDay;
+            DailyLevelsLevelManager.DailyLevelsStreak = data.dailyLevelStreak;
+
+            // If the last completed daily level dates from before yesterday or if was yesterday but the player didn't complete the extreme level, reset the streak
+            if (data.lastDailyLevelCompleted.Key < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
+                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
+            {
+                // Using unknown since it has a value of 0
+                DailyLevelsLevelManager.LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear - 1, DailyLevelDifficulty.Unknown);
+
+                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetStreak();
+                DailyLevelsLevelManager.DailyLevelsStreak = 0;
+            }
+            else
+            {
+                DailyLevelsLevelManager.LastDailyLevelCompleted = data.lastDailyLevelCompleted;
+
+                (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).UpdateStreak((int)data.lastDailyLevelCompleted.Value);
+            }
+
+            Initialized = true;
         }
 
 
@@ -109,6 +132,8 @@ namespace BallMaze
             data.dailyLevelsTimes = _dailyLevelsDataManager.dailyLevelsTimes;
 
             data.lastDailyLevelPlayedDay = DailyLevelsLevelManager.LastDailyLevelsPlayedDay;
+            data.dailyLevelStreak = DailyLevelsLevelManager.DailyLevelsStreak;
+            data.lastDailyLevelCompleted = DailyLevelsLevelManager.LastDailyLevelCompleted;
         }
     }
 }
