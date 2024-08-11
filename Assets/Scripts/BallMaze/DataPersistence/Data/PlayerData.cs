@@ -18,7 +18,7 @@ namespace BallMaze
         public Dictionary<string, decimal> defaultLevelsTimes;
 
         [JsonIgnore]
-        public List<string> dailyLevelsUnlocked; // Not saved, filled at runtime based on the dailyLevelsTimes and lastDailyLevelPlayedDate
+        public List<string> dailyLevelsUnlocked; // Not saved, filled at runtime based on the dailyLevelsTimes and lastDailyLevelPlayedDay
         public Dictionary<string, decimal> dailyLevelsTimes;
         public int lastDailyLevelPlayedDay; // Not saved on SaveData, it is saved everytime the player finishes a daily level
         public int dailyLevelStreak;

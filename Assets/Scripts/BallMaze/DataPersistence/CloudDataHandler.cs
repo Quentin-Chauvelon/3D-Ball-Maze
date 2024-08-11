@@ -19,6 +19,8 @@ namespace BallMaze
         defaultLevelsTimes,
         dailyLevelsTimes,
         lastDailyLevelPlayedDay,
+        dailyLevelStreak,
+        lastDailyLevelCompleted,
         lastUpdated,
         unknowned
     }
@@ -87,6 +89,10 @@ namespace BallMaze
             _cloudSaveKeys.Add(CloudSaveKey.coins, new CloudSaveKeyInfo("coins", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.defaultLevelsUnlocked, new CloudSaveKeyInfo("defaultLevelsUnlocked", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.defaultLevelsTimes, new CloudSaveKeyInfo("defaultLevelsTimes", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.dailyLevelsTimes, new CloudSaveKeyInfo("dailyLevelsTimes", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.lastDailyLevelPlayedDay, new CloudSaveKeyInfo("lastDailyLevelPlayedDay", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.dailyLevelStreak, new CloudSaveKeyInfo("dailyLevelStreak", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.lastDailyLevelCompleted, new CloudSaveKeyInfo("lastDailyLevelCompleted", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.lastUpdated, new CloudSaveKeyInfo("lastUpdated", new SaveOptions(new DefaultWriteAccessClassOptions())));
         }
 
@@ -129,6 +135,42 @@ namespace BallMaze
                 else
                 {
                     Debug.Log($"key defaultLevelsTimes not found!");
+                }
+
+                if (data.TryGetValue("dailyLevelsTimes", out var dailyLevelsTimes))
+                {
+                    playerData.dailyLevelsTimes = dailyLevelsTimes.Value.GetAs<Dictionary<string, decimal>>();
+                }
+                else
+                {
+                    Debug.Log($"key dailyLevelsTimes not found!");
+                }
+
+                if (data.TryGetValue("lastDailyLevelPlayedDay", out var lastDailyLevelPlayedDay))
+                {
+                    playerData.lastDailyLevelPlayedDay = lastDailyLevelPlayedDay.Value.GetAs<int>();
+                }
+                else
+                {
+                    Debug.Log($"key lastDailyLevelPlayedDay not found!");
+                }
+
+                if (data.TryGetValue("dailyLevelStreak", out var dailyLevelStreak))
+                {
+                    playerData.dailyLevelStreak = dailyLevelStreak.Value.GetAs<int>();
+                }
+                else
+                {
+                    Debug.Log($"key dailyLevelStreak not found!");
+                }
+
+                if (data.TryGetValue("lastDailyLevelCompleted", out var lastDailyLevelCompleted))
+                {
+                    playerData.lastDailyLevelCompleted = lastDailyLevelCompleted.Value.GetAs<KeyValuePair<int, DailyLevelDifficulty>>();
+                }
+                else
+                {
+                    Debug.Log($"key lastDailyLevelCompleted not found!");
                 }
 
                 if (data.TryGetValue("lastUpdated", out var lastUpdated))

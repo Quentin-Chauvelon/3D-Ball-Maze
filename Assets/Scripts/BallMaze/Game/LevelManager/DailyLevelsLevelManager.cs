@@ -305,12 +305,24 @@ public class DailyLevelsLevelManager : LevelManagerBase
 
             PlayerManager.Instance.CoinsManager.UpdateCoins(DailyLevelsStreakRewards[DailyLevelsStreak], AnimationView.GetDailyLevelCompletedAnimationDuration());
             (UIManager.Instance.UIViews[UIViewType.Animation] as AnimationView).AnimateDailyLevelStreak(DailyLevelsStreak);
+
+            // If Cloud Save is enabled, save to the cloud
+            if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
+            {
+                await DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.dailyLevelStreak, DailyLevelsStreak);
+            }
         }
 
         // If the player beat their highest difficulty for the day, update it
         if (difficulty > LastDailyLevelCompleted.Value)
         {
             LastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear, difficulty);
+
+            // If Cloud Save is enabled, save to the cloud
+            if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
+            {
+                await DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.lastDailyLevelCompleted, LastDailyLevelCompleted);
+            }
         }
 
 
