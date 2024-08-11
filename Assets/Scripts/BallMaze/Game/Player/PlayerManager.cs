@@ -112,9 +112,11 @@ namespace BallMaze
                 DailyLevelsLevelManager.LastDailyLevelCompleted = data.lastDailyLevelCompleted;
             }
 
-            // If the last completed daily level dates from before yesterday or if it was yesterday but the player didn't complete the extreme level, reset the streak
+            // If the last completed daily level dates from before yesterday or if it was yesterday but the player didn't complete the extreme level
+            // or if they reached a streak of 7 days, reset the streak
             if (data.lastDailyLevelCompleted.Key < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
-                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme))
+                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.lastDailyLevelCompleted.Value != DailyLevelDifficulty.Extreme) ||
+                (data.lastDailyLevelCompleted.Key == GameManager.Instance.GetUtcNowTime().DayOfYear - 1 && data.dailyLevelStreak == 7))
             {
                 (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).ResetStreak();
                 DailyLevelsLevelManager.DailyLevelsStreak = 0;
