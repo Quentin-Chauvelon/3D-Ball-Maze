@@ -50,6 +50,8 @@ namespace BallMaze
         public static bool cloudDataHandlerInitialized = false;
         public static bool isCloudSaveEnabled = false;
 
+        public static bool DataLoaded = false;
+
 
         private void Awake()
         {
@@ -174,6 +176,13 @@ namespace BallMaze
             {
                 dataPersistenceObj.LoadData(latestPlayerData);
             }
+
+            if (GameManager.DEBUG)
+            {
+                Debug.Log("Data loaded!");
+            }
+
+            DataLoaded = true;
         }
 
 

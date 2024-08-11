@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 using UnityEngine.UIElements;
 using BallMaze.UI;
-using UnityEngine.Localization.Settings;
 
 
 namespace BallMaze
@@ -15,7 +14,7 @@ namespace BallMaze
         private int _numberOfTasksCompleted = 0;
 
         private static readonly int TIMEOUT = 20;
-        private readonly int NUMBER_OF_TASKS = 1;
+        private readonly int NUMBER_OF_TASKS = 2;
 
 
         private void Awake()
@@ -57,7 +56,9 @@ namespace BallMaze
                     (DataPersistenceManager.isCloudSaveEnabled
                         ? UniTask.WaitUntil(() => DataPersistenceManager.cloudDataHandlerInitialized)
                         : UniTask.CompletedTask
-                    ).ContinueWith(UpdateProgress)
+                    ).ContinueWith(UpdateProgress),
+                    // Wait for the data to be loaded
+                    UniTask.WaitUntil(() => DataPersistenceManager.DataLoaded).ContinueWith(UpdateProgress)
                 ),
                 UniTask.Delay(TimeSpan.FromSeconds(TIMEOUT))
             );
