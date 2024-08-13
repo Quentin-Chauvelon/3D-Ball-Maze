@@ -117,6 +117,12 @@ namespace BallMaze.UI
         [SerializeField][Range(0f, 1f)][Tooltip("Amount of time for one coin to go from the start to the end position (in seconds)")] public float STREAK_COIN_ANIMATION_DURATION = 0.5f;
 
 
+        [Header("Daily rewards coin animation")]
+
+        // The size of the coins that will be animated (in pixels). Should match the value in the USS file
+        [SerializeField][Range(0, 100)][Tooltip("The size of the coins that will be animated (in pixels). Should match the value in the USS file")] public int DAILY_REWARD_COIN_SIZE = 50;
+
+
         private void Awake()
         {
             _instance = this;

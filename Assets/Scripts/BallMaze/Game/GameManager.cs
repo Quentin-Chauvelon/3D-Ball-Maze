@@ -155,26 +155,57 @@ namespace BallMaze
                 // If it's 23:50
                 if (currentTime.Hour == 23 && _lastFrameMinute == 51)
                 {
-                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 10 minutes!");
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 10 minutes!");
+                    }
                 }
                 // If it's 23:55
                 else if (currentTime.Hour == 23 && _lastFrameMinute == 56)
                 {
-                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 5 minutes!");
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 5 minutes!");
+                    }
                 }
                 // If it's 23:58
                 else if (currentTime.Hour == 23 && _lastFrameMinute == 59)
                 {
-                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 2 minutes!");
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 2 minutes!");
+                    }
                 }
                 // If it's 23:59
                 else if (currentTime.Hour == 0 && _lastFrameMinute == 0)
                 {
-                    (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 1 minutes!");
+                    // If the player is playing the daily levels, move them back to the main menu
+                    if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)
+                    {
+                        (UIManager.Instance.UIViews[UIViewType.Notification] as NotificationView).Notify("Daily levels will be updated in 1 minutes!");
+                    }
                 }
                 // If it's 00:01
                 else if (currentTime.Hour == 0 && _lastFrameMinute == 1)
                 {
+                    // Hide the daily reward button until the rewards are loaded from remote config
+                    (UIManager.Instance.UIViews[UIViewType.MainMenu] as MainMenuView).SetDailyRewardsButtonVisibility(false);
+
+                    // If the player didn't collect the reward yesterday or today or if they reached day 7 yesterday or before, reset their streak
+                    if (DailyReward.LastDailyRewardClaimedDay < GetUtcNowTime().DayOfYear - 1 ||
+                        (DailyReward.DailyRewardStreak == 7 && DailyReward.LastDailyRewardClaimedDay != GetUtcNowTime().DayOfYear))
+                    {
+                        DailyReward.DailyRewardStreak = 0;
+                    }
+
+                    DailyReward.Collected = false;
+
+                    (UIManager.Instance.UIViews[UIViewType.DailyReward] as DailyRewardView).ResetDailyRewardDays();
+                    (UIManager.Instance.UIViews[UIViewType.DailyReward] as DailyRewardView).UnbindDailyRewardDaysButtonsClicks();
+                    (UIManager.Instance.UIViews[UIViewType.DailyReward] as DailyRewardView).BindDailyRewardDayButtonClick();
 
                     // If the player is playing the daily levels, move them back to the main menu
                     if (_gameState == GameState.Playing && LevelManager.Instance.levelType == LevelType.DailyLevel)

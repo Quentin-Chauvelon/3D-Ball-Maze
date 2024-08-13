@@ -10,6 +10,7 @@ using UnityEngine.AI;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using BallMaze.UI;
 
 
 namespace BallMaze
@@ -41,6 +42,7 @@ namespace BallMaze
         public Level[] dailyLevelsEvenDays;
         public Level[] dailyLevelsOddDays;
         public int[] dailyLevelsStreakRewards;
+        public object[] dailyRewards;
     }
 
 
@@ -120,6 +122,8 @@ namespace BallMaze
                 DailyLevelsLevelManager.PopulateDailyLevels(RemoteConfigService.Instance.appConfig.config.GetValue("dailyLevelsOddDays").ToObject<Level[]>());
             }
 
+            DailyReward.PopulateDailyRewards(RemoteConfigService.Instance.appConfig.config.GetValue("dailyRewards").ToObject<object[]>());
+
             Initialized = true;
         }
 
@@ -155,6 +159,11 @@ namespace BallMaze
             {
                 DailyLevelsLevelManager.PopulateDailyLevels(data.dailyLevelsOddDays);
             }
+
+            DailyReward.PopulateDailyRewards(data.dailyRewards);
+
+            // Once the daily rewards are loaded, we can show the daily rewards button on the home screen
+            (UIManager.Instance.UIViews[UIViewType.MainMenu] as MainMenuView).SetDailyRewardsButtonVisibility(true);
 
             Initialized = true;
         }

@@ -512,7 +512,7 @@ namespace BallMaze.UI
         /// </summary>
         private async void StartUpdatesInTimer()
         {
-            DateTime midnightUtc = GameManager.Instance.GetUtcNowTime().MidnightUtc();
+            DateTime midnightUtc = GameManager.Instance.GetUtcNowTime().MidnightUtc().AddMinutes(1);
 
             while (isEnabled)
             {

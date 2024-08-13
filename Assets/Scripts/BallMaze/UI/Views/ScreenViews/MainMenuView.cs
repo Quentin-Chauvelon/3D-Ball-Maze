@@ -31,6 +31,8 @@ namespace BallMaze.UI
             _dailyRewardButton = _root.Q<Button>("main-menu__daily-reward-button");
             _playButton = _root.Q<Button>("main-menu__play-button");
             _bottomInfoLabel = _root.Q<Label>("main-menu__bottom-info");
+
+            SetDailyRewardsButtonVisibility(false);
         }
 
 
@@ -40,6 +42,12 @@ namespace BallMaze.UI
             _playButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.ModeSelection); };
 
             _dailyRewardButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.DailyReward); };
+        }
+
+
+        public void SetDailyRewardsButtonVisibility(bool visible)
+        {
+            _dailyRewardButton.style.visibility = visible ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
