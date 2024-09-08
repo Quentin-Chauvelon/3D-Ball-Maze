@@ -42,6 +42,8 @@ namespace BallMaze.UI
             _playButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.ModeSelection); };
 
             _dailyRewardButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.DailyReward); };
+
+            _skinsButton.clicked += () => { UIManager.Instance.Show(UIViewType.Skins); };
         }
 
 

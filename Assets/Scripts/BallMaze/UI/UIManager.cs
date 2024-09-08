@@ -19,6 +19,7 @@ namespace BallMaze.UI
         DefaultLevelSelection,
         DailyLevels,
         RankedLevel,
+        Skins,
         Settings,
         DailyReward,
         LevelQuitConfirmation,
@@ -178,6 +179,7 @@ namespace BallMaze.UI
             _uiViews.Add(UIViewType.DefaultLevelSelection, new DefaultLevelSelectionView(root.Q<VisualElement>("level-selection")));
             _uiViews.Add(UIViewType.DailyLevels, new DailyLevelsView(root.Q<VisualElement>("daily-levels")));
             _uiViews.Add(UIViewType.RankedLevel, new RankedLevelView(root.Q<VisualElement>("ranked-level")));
+            _uiViews.Add(UIViewType.Skins, new SkinsView(root.Q<VisualElement>("skins")));
 
             // Closeable modal views
             _uiViews.Add(UIViewType.Settings, new SettingsView(root.Q<VisualElement>("settings")));
