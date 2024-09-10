@@ -3,7 +3,7 @@
     <Style src="project://database/Assets/UI/USS/ScreenViews/Skins.uss?fileID=7433441132597879392&amp;guid=0268325775cb194cd97b0f211a943312&amp;type=3#Skins" />
     <ui:VisualElement name="skins__background" style="flex-grow: 1; flex-direction: row;">
         <ui:VisualElement name="skins__main-container" style="flex-grow: 1;">
-            <ui:ScrollView name="skins__categories-container" mode="Horizontal" horizontal-scroller-visibility="Hidden" style="margin-bottom: 2%; mouse-wheel-scroll-size: 200;">
+            <ui:ScrollView name="skins__categories-container" mode="Horizontal" view-data-key="skins__categories-container" horizontal-scroller-visibility="Hidden" style="margin-bottom: 2%; mouse-wheel-scroll-size: 200;">
                 <ui:Button text="COMMON" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__category-common" class="skins__category-item" />
                 <ui:Button text="RARE" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__category-rare" class="skins__category-item" />
                 <ui:Button text="EPIC" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__category-epic" class="skins__category-item" />
@@ -11,21 +11,7 @@
                 <ui:Button text="FLAGS" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__category-flags" class="skins__category-item" />
             </ui:ScrollView>
             <ui:ScrollView name="skins__skins-vertical-container" mode="VerticalAndHorizontal" horizontal-page-size="5" vertical-page-size="-1" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" style="flex-direction: row; justify-content: flex-start; align-items: stretch; flex-grow: 1; padding-right: 0;">
-                <ui:VisualElement name="skins__skins-horizontal-container" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 1200px; padding: 2%;">
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-red" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-blue" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                    <ui:Instance template="SkinItemTemplate" name="skins__item-green" />
-                </ui:VisualElement>
+                <ui:VisualElement name="skins__skins-horizontal-container" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 1200px; padding: 2%;" />
             </ui:ScrollView>
         </ui:VisualElement>
         <ui:VisualElement name="skins__separator" style="flex-grow: 0; width: 5px; background-color: rgb(47, 47, 47); margin: 0 3%;" />

@@ -68,6 +68,28 @@ namespace BallMaze
         }
 
 
+
+        /// <summary>
+        /// Return a list of all the skins
+        /// </summary>
+        /// <returns></returns>
+        public Skin[] GetSkinsList()
+        {
+            return _skinsList;
+        }
+
+
+        /// <summary>
+        /// Return a list of all the skins from the given category
+        /// </summary>
+        /// <param name="rarity"></param>
+        /// <returns></returns>
+        public Skin[] GetSkinsFromCategory(SkinRarity rarity)
+        {
+            return Array.FindAll(GetSkinsList(), skin => skin.category == rarity);
+        }
+
+
         public static string GetSkinRarityName(SkinRarity rarity)
         {
             switch (rarity)

@@ -96,6 +96,20 @@ MonoBehaviour:
       tenter de red\xE9marrer le jeu."
     m_Metadata:
       m_Items: []
+  - m_Id: 84030473155719168
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement des skins. Merci de v\xE9rifier votre connexion internet
+      et r\xE9essayer... Si le probl\xE8me persiste, veuillez tenter de red\xE9marrer
+      le jeu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 84039890483884032
+    m_Localized: "Nous sommes d\xE9sol\xE9s, il semble y avoir eu un probl\xE8me
+      lors du chargement des skins. Merci de v\xE9rifier votre connexion internet
+      et r\xE9essayer... Si le probl\xE8me persiste, veuillez tenter de red\xE9marrer
+      le jeu."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

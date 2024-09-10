@@ -71,6 +71,14 @@ MonoBehaviour:
     m_Key: DailyLevelsDownloadingGenericError
     m_Metadata:
       m_Items: []
+  - m_Id: 84030473155719168
+    m_Key: SkinsListLoadingError
+    m_Metadata:
+      m_Items: []
+  - m_Id: 84039890483884032
+    m_Key: SkinItemTemplateLoadingError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

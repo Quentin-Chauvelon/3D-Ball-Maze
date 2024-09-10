@@ -90,6 +90,18 @@ MonoBehaviour:
       the game.
     m_Metadata:
       m_Items: []
+  - m_Id: 84030473155719168
+    m_Localized: Sorry, there seems to have been a problem loading the skins. Please,
+      try checking your internet connection and try again... If the issue persists,
+      try relaunching the game.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 84039890483884032
+    m_Localized: Sorry, there seems to have been a problem loading the skins. Please,
+      try checking your internet connection and try again... If the issue persists,
+      try relaunching the game.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
