@@ -1,0 +1,32 @@
+[
+    {
+      "id": 0,  
+      "name": "Red",
+      "category": 0,
+      "price": 10,
+      "materialPath": "Materials/Red.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    },
+    {
+      "id": 1,  
+      "name": "Blue",
+      "category": 0,
+      "price": 15,
+      "materialPath": "Materials/Blue.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    },
+    {
+      "id": 2,  
+      "name": "Star",
+      "category": 1,
+      "price": 25,
+      "materialPath": "Materials/Star.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    }
+]

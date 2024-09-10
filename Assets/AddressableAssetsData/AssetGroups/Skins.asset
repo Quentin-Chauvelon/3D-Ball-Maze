@@ -10,25 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: UI_Group
+  m_Name: Skins
   m_EditorClassIdentifier: 
-  m_GroupName: UI_Group
+  m_GroupName: Skins
   m_Data:
     m_SerializedData: []
-  m_GUID: ae8af397a284fabfcb9f5082d08f22d3
+  m_GUID: b9f0ee7231ca681a685554df48808ba7
   m_SerializeEntries:
-  - m_GUID: dbd514e0432219042a8db055ffb92b69
-    m_Address: DefaultLevelSelectionTemplate
+  - m_GUID: e579b58ff290e358b8947fecac9559fc
+    m_Address: Materials
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b589a4b97f377d57847692a70fb4a95
-    m_Address: CoinTemplate
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2c60857c286462a31bb87335cc5899fe
-    m_Address: SkinItemTemplate
+  - m_GUID: 579e6cca7198aa0d8b182a72083a6cfb
+    m_Address: SkinsList
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -36,5 +31,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 6cc21c7ad23caf743b1c4ef064b50e23, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 0dd78dacad34c06ac98231a265fca8b5, type: 2}
-    - {fileID: 11400000, guid: 7b63f17f49315cdd686b2791ddbabcf7, type: 2}
+    - {fileID: 11400000, guid: 290c5755826d2a129bb5b53dbf39dc87, type: 2}
+    - {fileID: 11400000, guid: 332ba30a46eab515b8944194cbd19f88, type: 2}
