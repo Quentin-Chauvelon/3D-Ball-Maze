@@ -20,7 +20,7 @@ namespace BallMaze.UI
 
         private Dictionary<int, Action> _skinItemClicksCallbacks;
 
-        private SkinRarity _lastSelectedCategory = SkinRarity.Common;
+        private SkinCategory _lastSelectedCategory = SkinCategory.Common;
 
         // Adressable handle to load the default level selection template
         private AsyncOperationHandle<VisualTreeAsset> _skinItemTemplateHandle;
@@ -44,11 +44,11 @@ namespace BallMaze.UI
             _skinsScrollViewContainer = _root.Q<VisualElement>("skins__skins-vertical-container");
 
             // Bind clicks to the category buttons
-            _root.Q<Button>("skins__category-common").clicked += () => { PopulateCategory(SkinRarity.Common); };
-            _root.Q<Button>("skins__category-rare").clicked += () => { PopulateCategory(SkinRarity.Rare); };
-            _root.Q<Button>("skins__category-epic").clicked += () => { PopulateCategory(SkinRarity.Epic); };
-            _root.Q<Button>("skins__category-unique").clicked += () => { PopulateCategory(SkinRarity.Unique); };
-            _root.Q<Button>("skins__category-flags").clicked += () => { PopulateCategory(SkinRarity.Flags); };
+            _root.Q<Button>("skins__category-common").clicked += () => { PopulateCategory(SkinCategory.Common); };
+            _root.Q<Button>("skins__category-rare").clicked += () => { PopulateCategory(SkinCategory.Rare); };
+            _root.Q<Button>("skins__category-epic").clicked += () => { PopulateCategory(SkinCategory.Epic); };
+            _root.Q<Button>("skins__category-unique").clicked += () => { PopulateCategory(SkinCategory.Unique); };
+            _root.Q<Button>("skins__category-flags").clicked += () => { PopulateCategory(SkinCategory.Flags); };
 
             // Update the size of the children when the size of the container changes
             _skinsContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
@@ -97,7 +97,7 @@ namespace BallMaze.UI
         }
 
 
-        public void PopulateCategory(SkinRarity category)
+        public void PopulateCategory(SkinCategory category)
         {
             if (category == _lastSelectedCategory && _skinsContainer.childCount > 0)
             {
@@ -106,7 +106,7 @@ namespace BallMaze.UI
 
             _lastSelectedCategory = category;
 
-            Skin[] skins = SkinManager.Instance.GetSkinsFromCategory(category);
+            Skin[] skins = PlayerManager.Instance.SkinManager.GetSkinsFromCategory(category);
 
             UnbindClicks();
 

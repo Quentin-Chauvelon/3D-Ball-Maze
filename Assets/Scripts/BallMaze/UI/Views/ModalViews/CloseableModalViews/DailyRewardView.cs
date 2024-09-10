@@ -98,7 +98,7 @@ namespace BallMaze.UI
                         dailyRewardDay.Q<Label>("daily-reward-day-template__reward-value-label").text = RewardsManager.GetCoinReward(rewards[i - 1]).amount.ToString();
                         break;
                     case RewardType.Skin:
-                        dailyRewardDay.Q<Label>("daily-reward-day-template__reward-value-label").text = SkinManager.GetSkinRarityName(RewardsManager.GetSkinReward(rewards[i - 1]).rarity);
+                        dailyRewardDay.Q<Label>("daily-reward-day-template__reward-value-label").text = SkinManager.GetSkinCategoryName(RewardsManager.GetSkinReward(rewards[i - 1]).category);
                         break;
                     default:
                         dailyRewardDay.Q<Label>("daily-reward-day-template__reward-value-label").text = "???";

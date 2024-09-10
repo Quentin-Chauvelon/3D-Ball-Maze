@@ -38,7 +38,7 @@ namespace BallMaze
     {
         public int id;
         public bool random;
-        public SkinRarity rarity;
+        public SkinCategory category;
         public int amount;
 
 
@@ -46,7 +46,7 @@ namespace BallMaze
         {
             id = skinReward.GetValue("id").Value<int>();
             random = skinReward.GetValue("random").Value<bool>();
-            rarity = (SkinRarity)skinReward.GetValue("rarity").Value<int>();
+            category = (SkinCategory)skinReward.GetValue("category").Value<int>();
             amount = skinReward.GetValue("amount").Value<int>();
         }
     }

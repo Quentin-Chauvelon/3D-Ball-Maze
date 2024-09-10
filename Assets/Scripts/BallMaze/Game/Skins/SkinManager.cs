@@ -9,7 +9,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace BallMaze
 {
-    public enum SkinRarity
+    public enum SkinCategory
     {
         Common,
         Rare,
@@ -24,7 +24,7 @@ namespace BallMaze
     {
         public int id { get; set; }
         public string name { get; set; }
-        public SkinRarity category { get; set; }
+        public SkinCategory category { get; set; }
         public int price { get; set; }
         public string materialPath { get; set; }
         public string meshPath { get; set; }
@@ -82,27 +82,27 @@ namespace BallMaze
         /// <summary>
         /// Return a list of all the skins from the given category
         /// </summary>
-        /// <param name="rarity"></param>
+        /// <param name="category"></param>
         /// <returns></returns>
-        public Skin[] GetSkinsFromCategory(SkinRarity rarity)
+        public Skin[] GetSkinsFromCategory(SkinCategory category)
         {
-            return Array.FindAll(GetSkinsList(), skin => skin.category == rarity);
+            return Array.FindAll(GetSkinsList(), skin => skin.category == category);
         }
 
 
-        public static string GetSkinRarityName(SkinRarity rarity)
+        public static string GetSkinCategoryName(SkinCategory category)
         {
-            switch (rarity)
+            switch (category)
             {
-                case SkinRarity.Common:
+                case SkinCategory.Common:
                     return "Common";
-                case SkinRarity.Rare:
+                case SkinCategory.Rare:
                     return "Rare";
-                case SkinRarity.Epic:
+                case SkinCategory.Epic:
                     return "Epic";
-                case SkinRarity.Unique:
+                case SkinCategory.Unique:
                     return "Unique";
-                case SkinRarity.Flags:
+                case SkinCategory.Flags:
                     return "Flags";
                 default:
                     return "???";
