@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -17,6 +18,8 @@ namespace BallMaze.UI
         // The skins cards are parented to this container
         private VisualElement _skinsContainer;
         private VisualElement _skinsScrollViewContainer;
+        private Button _buyButton;
+        private Button _equipButton;
 
         private Dictionary<int, Action> _skinItemClicksCallbacks;
 
@@ -42,6 +45,8 @@ namespace BallMaze.UI
         {
             _skinsContainer = _root.Q<VisualElement>("skins__skins-horizontal-container");
             _skinsScrollViewContainer = _root.Q<VisualElement>("skins__skins-vertical-container");
+            _buyButton = _root.Q<Button>("skins__buy-button");
+            _equipButton = _root.Q<Button>("skins__equip-button");
 
             // Bind clicks to the category buttons
             _root.Q<Button>("skins__category-common").clicked += () => { PopulateCategory(SkinCategory.Common); };
@@ -174,7 +179,7 @@ namespace BallMaze.UI
 
             cardBackground.Q<Label>("skins__skin-item-price").text = skin.price.ToString();
 
-            if (false)
+            if (PlayerManager.Instance.SkinManager.IsSkinUnlocked(skin.id))
             {
                 cardBackground.RemoveFromClassList("skin-locked");
                 cardBackground.AddToClassList("skin-unlocked");
@@ -236,12 +241,12 @@ namespace BallMaze.UI
         }
 
 
-        private void PreviewSkin(int skin)
+        private void PreviewSkin(int id)
         {
-            Debug.Log($"Previewing skin {skin}");
+            Debug.Log($"Previewing skin {id}");
             List<Material> materials = new List<Material>();
 
-            switch (skin)
+            switch (id)
             {
                 case 0:
                     materials.Add(Resources.Load<Material>("Red"));
@@ -259,7 +264,17 @@ namespace BallMaze.UI
                     materials.Add(Resources.Load<Material>("Red"));
                     GameObject.Find("Ball").GetComponent<MeshRenderer>().SetMaterials(materials);
                     break;
+            }
 
+            if (PlayerManager.Instance.SkinManager.IsSkinUnlocked(id))
+            {
+                _buyButton.style.display = DisplayStyle.None;
+                _equipButton.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                _buyButton.style.display = DisplayStyle.Flex;
+                _equipButton.style.display = DisplayStyle.None;
             }
         }
 

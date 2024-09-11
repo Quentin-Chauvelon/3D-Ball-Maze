@@ -55,17 +55,23 @@
 }
 
 /* Skin card locked */
-.skins__skin-item.skin-locked > #skins__skin-locked-tint {
-    display: flex;
-}
 .skins__skin-item.skin-locked > #skins__skin-lock-image {
     display: flex;
 }
+.skins__skin-item.skin-locked > #skins__skin-price-container {
+    display: flex;
+}
+/* .skins__skin-item.skin-locked > #skins__skin-locked-tint {
+    display: flex;
+} */
 
 /* Skin card unlocked */
-.skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
-    display: none;
-}
 .skins__skin-item.skin-unlocked > #skins__skin-lock-image {
     display: none;
 }
+.skins__skin-item.skin-unlocked > #skins__skin-price-container {
+    display: none;
+}
+/* .skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
+    display: none;
+} */
