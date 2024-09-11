@@ -42,6 +42,12 @@ namespace BallMaze
             get { return _dailyLevelsDataManager; }
         }
 
+        private SkinManager _skinManager;
+        public SkinManager SkinManager
+        {
+            get { return _skinManager; }
+        }
+
         public bool Initialized = false;
 
 
@@ -54,6 +60,7 @@ namespace BallMaze
 
             _defaultLevelsDataManager = new DefaultLevelsDataManager();
             _dailyLevelsDataManager = new DailyLevelsDataManager();
+            _skinManager = new SkinManager();
         }
 
 
@@ -143,6 +150,9 @@ namespace BallMaze
                 DailyReward.Collected = true;
             }
 
+            SkinManager.SetUnlockedSkins(data.unlockedSkins);
+            SkinManager.EquippedSkin = data.equippedSkin;
+
             Initialized = true;
         }
 
@@ -162,6 +172,9 @@ namespace BallMaze
 
             data.dailyRewardStreak = DailyReward.DailyRewardStreak;
             data.lastDailyRewardClaimedDay = DailyReward.LastDailyRewardClaimedDay;
+
+            data.unlockedSkins = SkinManager.GetUnlockedSkins();
+            data.equippedSkin = SkinManager.EquippedSkin;
         }
     }
 }

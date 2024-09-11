@@ -35,21 +35,7 @@ namespace BallMaze
 
     public class SkinManager : MonoBehaviour
     {
-        // Singleton pattern
-        private static SkinManager _instance;
-        public static SkinManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    Debug.LogError("SkinManager is null!");
-                }
-                return _instance;
-            }
-        }
-
-        // A list of all the skins and their properties (name, rarity, price, materials...)
+        // A list of all the skins and their properties (name, category, price, materials...)
         private Skin[] _skinsList;
 
         private AsyncOperationHandle<TextAsset> _skinsListLoadHandle;
@@ -57,16 +43,52 @@ namespace BallMaze
         public static bool IsSkinListLoaded = false;
         public static Exception SkinListLoadingException = null;
 
+        private List<int> _unlockedSkins;
 
-        private void Awake()
+        public int EquippedSkin = 0;
+
+
+        public SkinManager()
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-
             _skinsListLoadHandle = Addressables.LoadAssetAsync<TextAsset>("SkinsList");
             _skinsListLoadHandle.Completed += OnSkinsListLoaded;
         }
 
+
+        /// <summary>
+        /// Load the list of unlocked skins from the player data.
+        /// It also sorts the list to be able to use binary search to check if a skin is unlocked
+        /// </summary>
+        /// <param name="unlockedSkins"></param>
+        public void SetUnlockedSkins(List<int> unlockedSkins)
+        {
+            _unlockedSkins = unlockedSkins;
+            _unlockedSkins.Sort();
+        }
+
+
+        public List<int> GetUnlockedSkins()
+        {
+            return _unlockedSkins;
+        }
+
+
+        /// <summary>
+        /// Check if the given id is in the list of unlocked skins using a binary search
+        /// since the list is sorted on each new skin unlocked
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsSkinUnlocked(int id)
+        {
+            return _unlockedSkins.BinarySearch(id) >= 0;
+        }
+
+
+        public void EquipSkin(int id)
+        {
+            EquippedSkin = id;
+        }
 
 
         /// <summary>

@@ -30,7 +30,8 @@ namespace BallMaze
         public int dailyRewardStreak;
         public int lastDailyRewardClaimedDay;
 
-        public List<int> ownedSkins;
+        public List<int> unlockedSkins;
+        public int equippedSkin;
 
 
         public PlayerData()
@@ -43,7 +44,8 @@ namespace BallMaze
             lastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear, DailyLevelDifficulty.Unknown);
             dailyRewardStreak = 0;
             lastDailyRewardClaimedDay = 0;
-            ownedSkins = new List<int>();
+            unlockedSkins = new List<int>(0);
+            equippedSkin = 0;
         }
     }
 }
