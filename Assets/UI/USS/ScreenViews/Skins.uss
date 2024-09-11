@@ -35,6 +35,11 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+/* Same margin for the price container and the owned label so that card stays the same height */
+.skins__skin-item > #skins__skin-price-container,
+.skins__skin-item > #skins__skin-item-owned {
     margin: 4% 0;
 }
 
@@ -48,11 +53,13 @@
 }
 
 /* Skin card price */
-.skins__skin-item > #skins__skin-price-container > #skins__skin-item-price {
+.skins__skin-item Label {
     -unity-font-style: bold;
     font-size: 30px;
-    color: rgb(231, 209, 0);
+    margin: 0;
+    padding: 0;
 }
+
 
 /* Skin card locked */
 .skins__skin-item.skin-locked > #skins__skin-lock-image {
@@ -60,6 +67,9 @@
 }
 .skins__skin-item.skin-locked > #skins__skin-price-container {
     display: flex;
+}
+.skins__skin-item.skin-locked > #skins__skin-item-owned {
+    display: none;
 }
 /* .skins__skin-item.skin-locked > #skins__skin-locked-tint {
     display: flex;
@@ -71,6 +81,9 @@
 }
 .skins__skin-item.skin-unlocked > #skins__skin-price-container {
     display: none;
+}
+.skins__skin-item.skin-unlocked > #skins__skin-item-owned {
+    display: flex;
 }
 /* .skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
     display: none;

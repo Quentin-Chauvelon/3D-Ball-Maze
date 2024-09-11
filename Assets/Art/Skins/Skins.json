@@ -4,7 +4,8 @@
       "name": "Red",
       "category": 0,
       "price": 10,
-      "materialPath": "Materials/Red.mat",
+      "imagePath": "Red.png",
+      "materialPath": "Red.mat",
       "meshPath": "",
       "isBuyable": true,
       "lockText": ""
@@ -14,7 +15,8 @@
       "name": "Blue",
       "category": 0,
       "price": 15,
-      "materialPath": "Materials/Blue.mat",
+      "imagePath": "Blue.png",
+      "materialPath": "Blue.mat",
       "meshPath": "",
       "isBuyable": true,
       "lockText": ""
@@ -24,7 +26,8 @@
       "name": "Star",
       "category": 1,
       "price": 25,
-      "materialPath": "Materials/Star.mat",
+      "imagePath": "Star.png",
+      "materialPath": "Star.mat",
       "meshPath": "",
       "isBuyable": true,
       "lockText": ""

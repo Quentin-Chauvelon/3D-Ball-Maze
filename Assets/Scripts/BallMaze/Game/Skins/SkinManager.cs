@@ -26,6 +26,7 @@ namespace BallMaze
         public string name { get; set; }
         public SkinCategory category { get; set; }
         public int price { get; set; }
+        public string imagePath { get; set; }
         public string materialPath { get; set; }
         public string meshPath { get; set; }
         public bool isBuyable { get; set; }
@@ -152,11 +153,6 @@ namespace BallMaze
             }
 
             _skinsListLoadHandle.Completed -= OnSkinsListLoaded;
-        }
-
-
-        private void OnDestroy()
-        {
             Addressables.Release(_skinsListLoadHandle);
         }
     }

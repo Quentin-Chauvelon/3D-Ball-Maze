@@ -23,6 +23,9 @@ namespace BallMaze.UI
 
         private Dictionary<int, Action> _skinItemClicksCallbacks;
 
+        private Dictionary<int, Texture2D> _skinImages = new Dictionary<int, Texture2D>();
+        private Dictionary<int, AsyncOperationHandle<Texture2D>> _skinImagesHandles = new Dictionary<int, AsyncOperationHandle<Texture2D>>();
+
         private SkinCategory _lastSelectedCategory = SkinCategory.Common;
 
         // Adressable handle to load the default level selection template
@@ -33,6 +36,7 @@ namespace BallMaze.UI
 
         private const int NUMBER_OF_ITEMS_PER_ROW = 4;
 
+        private const int SKIN_ITEM_IMAGE_MARGIN_PERCENT = 15;
         private const int SKINS_ITEMS_CONTAINER_PADDING_PERCENT = 2;
 
         public SkinsView(VisualElement root) : base(root)
@@ -146,6 +150,8 @@ namespace BallMaze.UI
                     IntanstiateCard(skins[i]);
                 }
             }
+
+            OnGeometryChanged(null);
         }
 
 
@@ -173,9 +179,22 @@ namespace BallMaze.UI
         {
             ButtonWithValue cardBackground = card.Q<ButtonWithValue>("skins__skin-item-background");
 
-            cardBackground.CustomValue = skin.id;
+            // If the image is already cached, use it, otherwise load it from adressables
+            if (_skinImages.ContainsKey(skin.id))
+            {
+                card.Q<VisualElement>("skins__skin-item-image").style.backgroundImage = _skinImages[skin.id];
+            }
+            else
+            {
+                // Remove the image from the card, so that it doesn't show the previous image while the new one is loading
+                card.Q<VisualElement>("skins__skin-item-image").style.backgroundImage = null;
 
-            // cardImage.style.backgroundImage = skin.materialPath;
+                AsyncOperationHandle<Texture2D> skinImageHandle = Addressables.LoadAssetAsync<Texture2D>($"Images/{skin.imagePath}");
+                skinImageHandle.Completed += (operation) => UpdateCardImageFromHandle(cardBackground, operation);
+                _skinImagesHandles.Add(skin.id, skinImageHandle);
+            }
+
+            cardBackground.CustomValue = skin.id;
 
             cardBackground.Q<Label>("skins__skin-item-price").text = skin.price.ToString();
 
@@ -189,6 +208,32 @@ namespace BallMaze.UI
                 cardBackground.RemoveFromClassList("skin-unlocked");
                 cardBackground.AddToClassList("skin-locked");
             }
+        }
+
+
+        /// <summary>
+        /// Update the image on the given card with the texture from the given handle once it has been loaded
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="operation"></param>
+        private void UpdateCardImageFromHandle(ButtonWithValue card, AsyncOperationHandle<Texture2D> operation)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                _skinImages.Add(card.CustomValue, operation.Result);
+
+                card.Q<VisualElement>("skins__skin-item-image").style.backgroundImage = operation.Result;
+            }
+            else
+            {
+                card.Q<VisualElement>("skins__skin-item-image").style.backgroundImage = null;
+            }
+
+
+            _skinImagesHandles[card.CustomValue].Completed -= (operation) => UpdateCardImageFromHandle(card, operation);
+            _skinImagesHandles.Remove(card.CustomValue);
+
+            Addressables.Release(operation);
         }
 
 
@@ -279,9 +324,15 @@ namespace BallMaze.UI
         }
 
 
+        /// <summary>
+        /// Update the size of the skin cards and their container.
+        /// Called when the UI is resized or after populating the skins
+        /// </summary>
+        /// <param name="evt"></param>
         private void OnGeometryChanged(GeometryChangedEvent evt)
         {
-            if (evt.oldRect.size == evt.newRect.size)
+            // evt can be null when the method is called manually (eg: after populating the skins)
+            if (evt != null && evt.oldRect.size == evt.newRect.size)
             {
                 return;
             }
@@ -310,18 +361,28 @@ namespace BallMaze.UI
                 // sometimes the 4th item is wrapped to the following row, leaving one less item for each row
                 float itemSize = (containerWidth - SKINS_ITEMS_CONTAINER_PADDING_PERCENT * 2 - itemMargin * (NUMBER_OF_ITEMS_PER_ROW * 2)) / NUMBER_OF_ITEMS_PER_ROW - 3;
 
+                item.style.width = itemSize;
+
                 // Set the margin of each item
                 item.style.marginTop = itemMargin;
                 item.style.marginRight = itemMargin;
                 item.style.marginBottom = itemMargin;
                 item.style.marginLeft = itemMargin;
 
+                // Resize the image to take into account the margin around it
+                float imageSize = itemSize - 2 * (SKIN_ITEM_IMAGE_MARGIN_PERCENT / 100f * itemSize);
+
                 // Set the size of each item
                 VisualElement itemImage = item.Q<VisualElement>("skins__skin-item-image");
-                itemImage.style.minWidth = itemSize;
-                itemImage.style.maxWidth = itemSize;
-                itemImage.style.minHeight = itemSize;
-                itemImage.style.maxHeight = itemSize;
+                itemImage.style.minWidth = imageSize;
+                itemImage.style.maxWidth = imageSize;
+                itemImage.style.minHeight = imageSize;
+                itemImage.style.maxHeight = imageSize;
+
+                itemImage.style.marginTop = Length.Percent(SKIN_ITEM_IMAGE_MARGIN_PERCENT);
+                itemImage.style.marginRight = Length.Percent(SKIN_ITEM_IMAGE_MARGIN_PERCENT);
+                itemImage.style.marginBottom = Length.Percent(SKIN_ITEM_IMAGE_MARGIN_PERCENT / 2);
+                itemImage.style.marginLeft = Length.Percent(SKIN_ITEM_IMAGE_MARGIN_PERCENT);
             }
         }
 
