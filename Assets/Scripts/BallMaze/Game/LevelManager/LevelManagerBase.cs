@@ -29,6 +29,10 @@ namespace BallMaze
         }
 
         private Ball _ball;
+        public Ball Ball
+        {
+            get { return _ball; }
+        }
 
         private CameraManager _camera;
 

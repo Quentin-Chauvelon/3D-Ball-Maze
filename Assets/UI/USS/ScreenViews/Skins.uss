@@ -1,0 +1,138 @@
+:root {
+    --equip-color : rgb(39, 159, 181);
+}
+
+.skins__category-item {
+    -unity-font-style: bold;
+    font-size: 50px;
+    margin: 0 2%;
+}
+
+.skins__skin-call-to-action {
+    display: none; /* Hidden by default */
+    width: 40%;
+    -unity-font-style: bold;
+    font-size: 50px;
+    color: rgb(0, 0, 0);
+}
+
+
+#skins__equip-button {
+    background-color: var(--equip-color);
+}
+
+
+/* SKIN BUY BUTTON STATES */
+
+/* Enough money to buy the skin */
+#skins__buy-button.button-enabled {
+    background-color: rgb(53, 164, 25);
+}
+
+/* Not enough money to buy the skin */
+#skins__buy-button.button-disabled {
+    background-color: rgb(157, 21, 21);
+}
+
+
+.coin-image {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: rgb(255, 236, 0);
+}
+
+
+/* SKIN ITEM TEMPLATE */
+
+.skins__skin-item {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set the image size, and thus the whole card size */
+.skins__skin-item > #skins__skin-item-image {
+    min-width: 350px;
+    max-width: 350px;
+    min-height: 350px;
+    max-height: 350px;
+}
+
+.skins__skin-item > #skins__skin-item-name {
+    -unity-font-style: bold;
+    font-size: 30px;
+    margin: 0 2%;
+}
+
+.skins__skin-item > #skins__skin-price-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Same margin for the price container and the owned label so that card stays the same height */
+.skins__skin-item > #skins__skin-price-container,
+.skins__skin-item > #skins__skin-item-owned {
+    margin: 4% 0;
+    color: rgb(50, 168, 70);
+}
+
+
+/* Skin card image */
+.skins__skin-item > #skins__skin-price-container > #skins__skin-item-price-image {
+    width: 20%;
+    height: 100%;
+}
+
+/* Skin card price */
+.skins__skin-item Label,
+.skins__skin-call-to-action > #skins__skin-price {
+    -unity-font-style: bold;
+    font-size: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Skin card locked */
+.skins__skin-item.skin-locked > #skins__skin-lock-image {
+    display: flex;
+}
+.skins__skin-item.skin-locked > #skins__skin-price-container {
+    display: flex;
+}
+.skins__skin-item.skin-locked > #skins__skin-item-owned {
+    display: none;
+}
+/* .skins__skin-item.skin-locked > #skins__skin-locked-tint {
+    display: flex;
+} */
+
+/* Skin card unlocked */
+.skins__skin-item.skin-unlocked > #skins__skin-lock-image {
+    display: none;
+}
+.skins__skin-item.skin-unlocked > #skins__skin-price-container {
+    display: none;
+}
+.skins__skin-item.skin-unlocked > #skins__skin-item-owned {
+    display: flex;
+}
+/* .skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
+    display: none;
+} */
+
+
+/* SELECTED CARD */
+.selected {
+    border-width: 5px;
+    border-color: #FFF;
+}
+
+
+/* EQUIPPED CARD */
+.equipped {
+    background-color: var(--equip-color);
+}
+.equipped > #skins__skin-item-owned {
+    color: #FFF;
+}

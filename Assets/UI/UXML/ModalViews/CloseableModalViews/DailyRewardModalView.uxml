@@ -22,10 +22,15 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="daily-reward__day-7-reward-container" style="flex-grow: 0; height: 100%; padding: 0; border-width: 0;">
-                <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-7-reward" style="width: 100%; height: 100%;" class="day-7" />
+                <ui:Instance template="DailyRewardDayTemplate" name="daily-reward__day-7-reward" class="day-7" style="width: 100%; height: 100%;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label name="daily-reward__info-label" tabindex="-1" enable-rich-text="false" text="CLAIM YOUR DAILY REWARD!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; font-size: 30px; -unity-font-style: bold;" />
         <ui:Button name="daily-reward__claim-reward-button" enable-rich-text="false" text="CLAIM REWARD" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin: 2% 0; -unity-text-align: middle-left; font-size: 40px; -unity-font-style: bold;" />
+        <ui:VisualElement name="daily-reward__images-container" style="flex-grow: 1; display: none">
+            <ui:VisualElement name="daily-reward__coin-image" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Joystick%20Pack/Sprites/Handles/Handle_Ridged.png?fileID=2800000&amp;guid=3a74f678ee8f3bd49aacf3de1ae4bcaa&amp;type=3#Handle_Ridged&apos;);" />
+            <ui:VisualElement name="daily-reward__skin-image" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=-2236324273849735119&amp;guid=0cc435c0017d4474384fdb998936fa19&amp;type=3#arrow-left@2x&apos;);" />
+            <ui:VisualElement name="daily-reward__unknowned-image" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=8228938214290033325&amp;guid=0cc435c0017d4474384fdb998936fa19&amp;type=3#console.erroricon&apos;);" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

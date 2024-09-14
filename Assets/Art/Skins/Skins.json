@@ -1,0 +1,35 @@
+[
+    {
+      "id": 0,  
+      "name": "Red",
+      "category": 0,
+      "price": 10,
+      "imagePath": "Red.png",
+      "materialPath": "Red.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    },
+    {
+      "id": 1,  
+      "name": "Blue",
+      "category": 0,
+      "price": 15,
+      "imagePath": "Blue.png",
+      "materialPath": "Blue.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    },
+    {
+      "id": 2,  
+      "name": "Star",
+      "category": 1,
+      "price": 10000,
+      "imagePath": "Star.png",
+      "materialPath": "Star.mat",
+      "meshPath": "",
+      "isBuyable": true,
+      "lockText": ""
+    }
+]

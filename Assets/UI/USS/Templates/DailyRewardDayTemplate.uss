@@ -18,7 +18,11 @@
 }
 
 
-/* Change the background color of the button based on if it's a day 1-6 or day 7 button */
+/* Change the background color of the button based on if it's a day 1-6 or day 7 button and if it's active or not*/
+.day-1-6 #daily-reward-day-template__button-container.button-active {
+    background-color: rgb(185, 185, 185);
+}
+
 .day-1-6 #daily-reward-day-template__button-container {
     background-color: rgb(149, 149, 149);
 }

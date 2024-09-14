@@ -42,6 +42,12 @@ namespace BallMaze
             get { return _dailyLevelsDataManager; }
         }
 
+        private SkinManager _skinManager;
+        public SkinManager SkinManager
+        {
+            get { return _skinManager; }
+        }
+
         public bool Initialized = false;
 
 
@@ -54,6 +60,7 @@ namespace BallMaze
 
             _defaultLevelsDataManager = new DefaultLevelsDataManager();
             _dailyLevelsDataManager = new DailyLevelsDataManager();
+            _skinManager = new SkinManager();
         }
 
 
@@ -127,6 +134,31 @@ namespace BallMaze
                 (UIManager.Instance.UIViews[UIViewType.DailyLevels] as DailyLevelsView).UpdateStreak((int)data.lastDailyLevelCompleted.Value);
             }
 
+            DailyReward.DailyRewardStreak = data.dailyRewardStreak;
+            DailyReward.LastDailyRewardClaimedDay = data.lastDailyRewardClaimedDay;
+
+            // If the player didn't collect the reward yesterday or today or if they reached day 7 yesterday or before, reset their streak
+            if (data.lastDailyRewardClaimedDay < GameManager.Instance.GetUtcNowTime().DayOfYear - 1 ||
+                (data.dailyRewardStreak == 7 && data.lastDailyRewardClaimedDay != GameManager.Instance.GetUtcNowTime().DayOfYear))
+            {
+                DailyReward.DailyRewardStreak = 0;
+            }
+
+            // If the player collected the reward today, mark it as collected
+            if (data.lastDailyRewardClaimedDay == GameManager.Instance.GetUtcNowTime().DayOfYear)
+            {
+                DailyReward.Collected = true;
+            }
+
+            // If for some reasons, the player has no unlocked skins, add the default one
+            if (data.unlockedSkins.Count == 0)
+            {
+                data.unlockedSkins.Add(0);
+            }
+
+            SkinManager.SetUnlockedSkins(data.unlockedSkins);
+            SkinManager.EquippedSkin = data.equippedSkin;
+
             Initialized = true;
         }
 
@@ -143,6 +175,12 @@ namespace BallMaze
             data.lastDailyLevelPlayedDay = DailyLevelsLevelManager.LastDailyLevelsPlayedDay;
             data.dailyLevelStreak = DailyLevelsLevelManager.DailyLevelsStreak;
             data.lastDailyLevelCompleted = DailyLevelsLevelManager.LastDailyLevelCompleted;
+
+            data.dailyRewardStreak = DailyReward.DailyRewardStreak;
+            data.lastDailyRewardClaimedDay = DailyReward.LastDailyRewardClaimedDay;
+
+            data.unlockedSkins = SkinManager.GetUnlockedSkins();
+            data.equippedSkin = SkinManager.EquippedSkin;
         }
     }
 }

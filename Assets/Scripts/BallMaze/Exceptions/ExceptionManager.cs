@@ -152,12 +152,16 @@ namespace BallMaze
             {
                 friendlyMessage = string.IsNullOrEmpty(message) ? e.Message : message,
                 message = message,
-                stackTrace = e.StackTrace,
+                // If the stack trace is empty, display the exception message which can contain useful information
+                stackTrace = string.IsNullOrEmpty(e.StackTrace) ? e.Message : e.StackTrace,
                 action = Instance._actions[action],
                 sentToSupport = false,
                 additionalInformation = "",
                 date = DateTime.Now
             };
+
+            // Add the inner exception to the stack trace
+            Instance._currentException.stackTrace += "\n" + e.InnerException;
 
             (UIManager.Instance.UIViews[UIViewType.Exception] as ExceptionView).UpdateException(Instance._currentException);
             UIManager.Instance.UIViews[UIViewType.Exception].Show();
@@ -216,7 +220,14 @@ namespace BallMaze
 
             try
             {
-                string result = await CloudCodeService.Instance.CallModuleEndpointAsync("ExceptionSendToSupport", "ExceptionSendEmailToSupport", new Dictionary<string, object>() { { "exception", cloudCodeException } });
+                if (GameManager.DEBUG)
+                {
+                    Debug.Log($"Exception sent to support: {cloudCodeException}");
+                }
+                else
+                {
+                    string result = await CloudCodeService.Instance.CallModuleEndpointAsync("ExceptionSendToSupport", "ExceptionSendEmailToSupport", new Dictionary<string, object>() { { "exception", cloudCodeException } });
+                }
             }
             catch { }
         }

@@ -27,7 +27,11 @@ namespace BallMaze
         // The key represents the day number in the year
         public KeyValuePair<int, DailyLevelDifficulty> lastDailyLevelCompleted;
 
-        public List<int> ownedSkins;
+        public int dailyRewardStreak;
+        public int lastDailyRewardClaimedDay;
+
+        public List<int> unlockedSkins;
+        public int equippedSkin;
 
 
         public PlayerData()
@@ -36,8 +40,12 @@ namespace BallMaze
             defaultLevelsUnlocked = new List<string>();
             defaultLevelsTimes = new Dictionary<string, decimal>();
             dailyLevelsTimes = new Dictionary<string, decimal>();
-            lastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear, DailyLevelDifficulty.Easy);
-            ownedSkins = new List<int>();
+            dailyLevelStreak = 0;
+            lastDailyLevelCompleted = new KeyValuePair<int, DailyLevelDifficulty>(GameManager.Instance.GetUtcNowTime().DayOfYear, DailyLevelDifficulty.Unknown);
+            dailyRewardStreak = 0;
+            lastDailyRewardClaimedDay = 0;
+            unlockedSkins = new List<int>(0);
+            equippedSkin = 0;
         }
     }
 }

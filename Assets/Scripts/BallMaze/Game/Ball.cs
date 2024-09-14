@@ -12,6 +12,7 @@ namespace BallMaze
     public class Ball : MonoBehaviour
     {
         private Rigidbody _rigidbody;
+        private MeshRenderer _meshRenderer;
 
         private GameObject _lastHitObstacle;
 
@@ -21,6 +22,7 @@ namespace BallMaze
         void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _meshRenderer = GetComponent<MeshRenderer>();
         }
 
         void Update()
@@ -82,7 +84,7 @@ namespace BallMaze
         /// <param name="visible"></param>
         public void SetBallVisible(bool visible)
         {
-            gameObject.SetActive(visible);
+            _meshRenderer.enabled = visible;
         }
 
 
@@ -193,6 +195,19 @@ namespace BallMaze
         public void AddForce(Vector2 direction)
         {
             _rigidbody.AddForce(new Vector3(direction.x, 0f, direction.y) / FORCE_SPEED_DIVIDER, ForceMode.Impulse);
+        }
+
+
+        /// <summary>
+        /// Update the ball's material when the player is equipping a new skin
+        /// </summary>
+        /// <param name="material"></param>
+        public void UpdateBallMaterial(bool materialLoaded, Material material)
+        {
+            if (materialLoaded)
+            {
+                _meshRenderer.material = material;
+            }
         }
     }
 }
