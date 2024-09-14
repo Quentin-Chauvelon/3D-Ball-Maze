@@ -180,6 +180,13 @@ namespace BallMaze
                     _unlockedSkins.Add(id);
                     _unlockedSkins.Sort();
 
+
+                    // If Cloud Save is enabled, save to the cloud
+                    if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
+                    {
+                        _ = DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.unlockedSkins, _unlockedSkins);
+                    }
+
                     PlayerManager.Instance.CoinsManager.UpdateCoins(-skin.price);
 
                     return true;
@@ -207,6 +214,13 @@ namespace BallMaze
                 else
                 {
                     LoadMaterialFromAddressables(id, GetSkinFromId(id).materialPath, LevelManager.Instance.Ball.UpdateBallMaterial);
+                }
+
+
+                // If Cloud Save is enabled, save to the cloud
+                if (DataPersistenceManager.isCloudSaveEnabled && DataPersistenceManager.cloudDataHandlerInitialized)
+                {
+                    _ = DataPersistenceManager.Instance.cloudDataHandler.Save(CloudSaveKey.equippedSkin, EquippedSkin);
                 }
             }
         }

@@ -23,6 +23,8 @@ namespace BallMaze
         lastDailyLevelCompleted,
         dailyRewardStreak,
         lastDailyRewardClaimedDay,
+        unlockedSkins,
+        equippedSkin,
 
         lastUpdated,
         unknowned
@@ -98,6 +100,8 @@ namespace BallMaze
             _cloudSaveKeys.Add(CloudSaveKey.lastDailyLevelCompleted, new CloudSaveKeyInfo("lastDailyLevelCompleted", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.dailyRewardStreak, new CloudSaveKeyInfo("dailyRewardStreak", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.lastDailyRewardClaimedDay, new CloudSaveKeyInfo("lastDailyRewardClaimedDay", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.unlockedSkins, new CloudSaveKeyInfo("unlockedSkins", new SaveOptions(new DefaultWriteAccessClassOptions())));
+            _cloudSaveKeys.Add(CloudSaveKey.equippedSkin, new CloudSaveKeyInfo("equippedSkin", new SaveOptions(new DefaultWriteAccessClassOptions())));
             _cloudSaveKeys.Add(CloudSaveKey.lastUpdated, new CloudSaveKeyInfo("lastUpdated", new SaveOptions(new DefaultWriteAccessClassOptions())));
         }
 
@@ -194,6 +198,24 @@ namespace BallMaze
                 else
                 {
                     Debug.Log($"key lastDailyRewardClaimedDay not found!");
+                }
+
+                if (data.TryGetValue("unlockedSkins", out var unlockedSkins))
+                {
+                    playerData.unlockedSkins = unlockedSkins.Value.GetAs<List<int>>();
+                }
+                else
+                {
+                    Debug.Log($"key unlockedSkins not found!");
+                }
+
+                if (data.TryGetValue("equippedSkin", out var equippedSkin))
+                {
+                    playerData.equippedSkin = equippedSkin.Value.GetAs<int>();
+                }
+                else
+                {
+                    Debug.Log($"key equippedSkin not found!");
                 }
 
                 if (data.TryGetValue("lastUpdated", out var lastUpdated))
