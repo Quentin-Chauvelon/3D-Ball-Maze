@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -50,6 +48,8 @@ namespace BallMaze
         public static bool IsSkinListLoaded = false;
         public static Exception SkinListLoadingException = null;
 
+        // To check more efficently if a skin is unlocked, we use a binary search.
+        // Thus, the list of unlocked skins must be sorted at all times
         private List<int> _unlockedSkins;
 
         public int EquippedSkin = 0;
@@ -169,6 +169,31 @@ namespace BallMaze
         }
 
 
+        public bool BuySkin(int id)
+        {
+            if (!IsSkinUnlocked(id))
+            {
+                Skin skin = GetSkinFromId(id);
+
+                if (PlayerManager.Instance.CoinsManager.HasEnoughCoins(skin.price))
+                {
+                    _unlockedSkins.Add(id);
+                    _unlockedSkins.Sort();
+
+                    PlayerManager.Instance.CoinsManager.UpdateCoins(-skin.price);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// Equip the skin matching the given id by applying the skin's material to the ball
+        /// </summary>
+        /// <param name="id"></param>
         public void EquipSkin(int id)
         {
             if (IsSkinUnlocked(id))

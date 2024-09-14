@@ -44,6 +44,7 @@ namespace BallMaze.UI
         private bool _isSkinItemTemplateLoaded = false;
         private Exception _skinItemTemplateLoadingError = null;
 
+        private ButtonWithValue _selectedCard;
         private int _selectedSkinId = -1;
 
         private bool firstTimeOpened = true;
@@ -85,10 +86,24 @@ namespace BallMaze.UI
             _skinItemTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("SkinItemTemplate");
             _skinItemTemplateHandle.Completed += SkinItemTemplateHandleCompleted;
 
+            _buyButton.clicked += () =>
+            {
+                if (PlayerManager.Instance.SkinManager.BuySkin(_selectedSkinId))
+                {
+
+                    _selectedCard.RemoveFromClassList("skin-locked");
+                    _selectedCard.AddToClassList("skin-unlocked");
+
+                    // Preview the skin again to update the visuals (buy button --> equip button)
+                    PreviewSkin(PlayerManager.Instance.SkinManager.GetSkinFromId(_selectedSkinId));
+
+                    EquipSkin(_selectedSkinId);
+                }
+            };
+
             _equipButton.clicked += () =>
             {
-                PlayerManager.Instance.SkinManager.EquipSkin(_selectedSkinId);
-                UIManager.Instance.Show(UIViewType.MainMenu);
+                EquipSkin(_selectedSkinId);
             };
         }
 
@@ -240,17 +255,45 @@ namespace BallMaze.UI
 
             cardBackground.CustomValue = skin.id;
 
-            cardBackground.Q<Label>("skins__skin-item-price").text = skin.price.ToString();
+            // If we change the category, the selected card might not be valid anymore (except if we return to the same category)
+            if (skin.id == _selectedSkinId)
+            {
+                cardBackground.AddToClassList("selected");
+            }
+            else
+            {
+                cardBackground.RemoveFromClassList("selected");
+            }
 
+            // Remove the equipped status from the card if it's not equipped
+            if (skin.id == PlayerManager.Instance.SkinManager.EquippedSkin)
+            {
+                cardBackground.RemoveFromClassList("equipped");
+            }
+
+            // Handle equipped and owned status
             if (PlayerManager.Instance.SkinManager.IsSkinUnlocked(skin.id))
             {
                 cardBackground.RemoveFromClassList("skin-locked");
                 cardBackground.AddToClassList("skin-unlocked");
+
+                if (skin.id == PlayerManager.Instance.SkinManager.EquippedSkin)
+                {
+                    cardBackground.AddToClassList("equipped");
+                    cardBackground.Q<Label>("skins__skin-item-owned").text = "EQUIPPED";
+                }
+                else
+                {
+                    cardBackground.Q<Label>("skins__skin-item-owned").text = "OWNED";
+                }
             }
             else
             {
+                cardBackground.RemoveFromClassList("equipped");
                 cardBackground.RemoveFromClassList("skin-unlocked");
                 cardBackground.AddToClassList("skin-locked");
+
+                cardBackground.Q<Label>("skins__skin-item-price").text = skin.price.ToString();
             }
         }
 
@@ -293,7 +336,17 @@ namespace BallMaze.UI
             }
 
             // The custom value of the card is the id of the skin
-            Action skinItemClickedHandler = () => { PreviewSkin(PlayerManager.Instance.SkinManager.GetSkinFromId(card.CustomValue)); };
+            Action skinItemClickedHandler = () =>
+            {
+                // Update the selected card visuals
+                _selectedCard?.RemoveFromClassList("selected");
+                card.AddToClassList("selected");
+
+                _selectedCard = card;
+
+                PreviewSkin(PlayerManager.Instance.SkinManager.GetSkinFromId(card.CustomValue));
+            };
+
             card.clicked += skinItemClickedHandler;
             _skinItemClicksCallbacks.Add(card.CustomValue, skinItemClickedHandler);
         }
@@ -356,6 +409,16 @@ namespace BallMaze.UI
             {
                 _buyButton.style.display = DisplayStyle.None;
                 _equipButton.style.display = DisplayStyle.Flex;
+
+                // Update the visibility of the equip button since based on the equipped skin
+                if (skin.id == PlayerManager.Instance.SkinManager.EquippedSkin)
+                {
+                    _equipButton.style.visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    _equipButton.style.visibility = Visibility.Visible;
+                }
             }
             else
             {
@@ -396,6 +459,37 @@ namespace BallMaze.UI
                 _skinTextureLoading.style.display = DisplayStyle.None;
                 _skinTextureLoadingError.style.display = DisplayStyle.Flex;
             }
+        }
+
+
+        /// <summary>
+        /// Equip the skin and update the corresponding cards visuals
+        /// </summary>
+        /// <param name="id"></param>
+        private void EquipSkin(int id)
+        {
+            int previouslyEquippedSkinId = PlayerManager.Instance.SkinManager.EquippedSkin;
+
+            // Update the equipped skin visuals
+            foreach (VisualElement child in _skinsContainer.Children())
+            {
+                ButtonWithValue card = child.Q<ButtonWithValue>("skins__skin-item-background");
+
+                if (card.CustomValue == previouslyEquippedSkinId)
+                {
+                    card.RemoveFromClassList("equipped");
+                    card.Q<Label>("skins__skin-item-owned").text = "OWNED";
+
+                    break;
+                }
+            }
+
+            _selectedCard.AddToClassList("equipped");
+            _selectedCard.Q<Label>("skins__skin-item-owned").text = "EQUIPPED";
+
+            PlayerManager.Instance.SkinManager.EquipSkin(id);
+
+            _equipButton.style.visibility = Visibility.Hidden;
         }
 
 
