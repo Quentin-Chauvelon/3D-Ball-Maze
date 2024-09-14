@@ -18,21 +18,38 @@ namespace BallMaze.UI
         // The skins cards are parented to this container
         private VisualElement _skinsContainer;
         private VisualElement _skinsScrollViewContainer;
+        private Label _skinTextureLoading;
+        private Label _skinTextureLoadingError;
         private Button _buyButton;
         private Button _equipButton;
+        private Label _buyButtonPriceLabel;
 
+        // GameObject on which the skins are applied to preview them
+        private GameObject _previewBall;
+        private MeshRenderer _previewBallMeshRenderer;
+
+        // Dictionary to keep track of the callbacks for each skin card click
         private Dictionary<int, Action> _skinItemClicksCallbacks;
 
+        // Cache the images for the skins, so that we don't have to load them each time we populate a category
         private Dictionary<int, Texture2D> _skinImages = new Dictionary<int, Texture2D>();
+        // Dictionary of handles to keep track of the images that are being loaded
         private Dictionary<int, AsyncOperationHandle<Texture2D>> _skinImagesHandles = new Dictionary<int, AsyncOperationHandle<Texture2D>>();
+
+        // Cache the materials for the skins, so that we don't have to load them each time we preview a skin
+        private Dictionary<int, Material> _skinMaterials = new Dictionary<int, Material>();
+        // Handle to load material for the skin preview
+        private AsyncOperationHandle<Material> _skinMaterialHandle;
 
         private SkinCategory _lastSelectedCategory = SkinCategory.Common;
 
-        // Adressable handle to load the default level selection template
+        // Handle to load the skin item card template
         private AsyncOperationHandle<VisualTreeAsset> _skinItemTemplateHandle;
         private VisualTreeAsset _skinItemTemplate;
         private bool _isSkinItemTemplateLoaded = false;
         private Exception _skinItemTemplateLoadingError = null;
+
+        private bool firstTimeOpened = true;
 
         private const int NUMBER_OF_ITEMS_PER_ROW = 4;
 
@@ -42,6 +59,9 @@ namespace BallMaze.UI
         public SkinsView(VisualElement root) : base(root)
         {
             _skinItemClicksCallbacks = new Dictionary<int, Action>();
+
+            _previewBall = GameObject.Find("PreviewBall");
+            _previewBallMeshRenderer = _previewBall.GetComponent<MeshRenderer>();
         }
 
 
@@ -49,8 +69,11 @@ namespace BallMaze.UI
         {
             _skinsContainer = _root.Q<VisualElement>("skins__skins-horizontal-container");
             _skinsScrollViewContainer = _root.Q<VisualElement>("skins__skins-vertical-container");
+            _skinTextureLoading = _root.Q<Label>("skins__skin-texture-loading-label");
+            _skinTextureLoadingError = _root.Q<Label>("skins__skin-texture-loading-error-label");
             _buyButton = _root.Q<Button>("skins__buy-button");
             _equipButton = _root.Q<Button>("skins__equip-button");
+            _buyButtonPriceLabel = _buyButton.Q<Label>("skins__skin-price");
 
             // Bind clicks to the category buttons
             _root.Q<Button>("skins__category-common").clicked += () => { PopulateCategory(SkinCategory.Common); };
@@ -103,6 +126,24 @@ namespace BallMaze.UI
             }
 
             PopulateCategory(_lastSelectedCategory);
+
+            _previewBallMeshRenderer.enabled = true;
+
+            // If the player is opening the skins UI for the first time, preview their equipped skin
+            if (firstTimeOpened)
+            {
+                firstTimeOpened = false;
+
+                PreviewSkin(PlayerManager.Instance.SkinManager.GetSkinFromId(PlayerManager.Instance.SkinManager.EquippedSkin));
+            }
+        }
+
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            _previewBallMeshRenderer.enabled = false;
         }
 
 
@@ -249,7 +290,7 @@ namespace BallMaze.UI
             }
 
             // The custom value of the card is the id of the skin
-            Action skinItemClickedHandler = () => { PreviewSkin(card.CustomValue); };
+            Action skinItemClickedHandler = () => { PreviewSkin(PlayerManager.Instance.SkinManager.GetSkinFromId(card.CustomValue)); };
             card.clicked += skinItemClickedHandler;
             _skinItemClicksCallbacks.Add(card.CustomValue, skinItemClickedHandler);
         }
@@ -286,32 +327,27 @@ namespace BallMaze.UI
         }
 
 
-        private void PreviewSkin(int id)
+        private void PreviewSkin(Skin skin)
         {
-            Debug.Log($"Previewing skin {id}");
-            List<Material> materials = new List<Material>();
+            _skinTextureLoading.style.display = DisplayStyle.None;
+            _skinTextureLoadingError.style.display = DisplayStyle.None;
 
-            switch (id)
+            _buyButtonPriceLabel.text = skin.price.ToString();
+
+            // Update the buy button based on the player's coins
+            if (PlayerManager.Instance.CoinsManager.HasEnoughCoins(skin.price))
             {
-                case 0:
-                    materials.Add(Resources.Load<Material>("Red"));
-                    GameObject.Find("Ball").GetComponent<MeshRenderer>().SetMaterials(materials);
-                    break;
-                case 1:
-                    materials.Add(Resources.Load<Material>("Blue"));
-                    GameObject.Find("Ball").GetComponent<MeshRenderer>().SetMaterials(materials);
-                    break;
-                case 2:
-                    materials.Add(Resources.Load<Material>("Star"));
-                    GameObject.Find("Ball").GetComponent<MeshRenderer>().SetMaterials(materials);
-                    break;
-                default:
-                    materials.Add(Resources.Load<Material>("Red"));
-                    GameObject.Find("Ball").GetComponent<MeshRenderer>().SetMaterials(materials);
-                    break;
+                _buyButton.RemoveFromClassList("button-disabled");
+                _buyButton.AddToClassList("button-enabled");
+            }
+            else
+            {
+                _buyButton.RemoveFromClassList("button-enabled");
+                _buyButton.AddToClassList("button-disabled");
             }
 
-            if (PlayerManager.Instance.SkinManager.IsSkinUnlocked(id))
+            // Show the buy or equip button based on whether the skin is unlocked
+            if (PlayerManager.Instance.SkinManager.IsSkinUnlocked(skin.id))
             {
                 _buyButton.style.display = DisplayStyle.None;
                 _equipButton.style.display = DisplayStyle.Flex;
@@ -321,6 +357,58 @@ namespace BallMaze.UI
                 _buyButton.style.display = DisplayStyle.Flex;
                 _equipButton.style.display = DisplayStyle.None;
             }
+
+            // If the material is already cached, use it, otherwise load it from adressables
+            if (_skinMaterials.ContainsKey(skin.id))
+            {
+                UpdatePreviewBallMaterial(_skinMaterials[skin.id]);
+            }
+            else
+            {
+                _previewBallMeshRenderer.enabled = false;
+                _skinTextureLoading.style.display = DisplayStyle.Flex;
+
+                _skinMaterialHandle = Addressables.LoadAssetAsync<Material>($"Materials/{skin.materialPath}");
+                _skinMaterialHandle.Completed += (operation) => UpdatePreviewBallMaterial(skin, operation);
+            }
+        }
+
+
+        /// <summary>
+        /// Update the material on the preview ball with the given material
+        /// </summary>
+        /// <param name="material"></param>
+        private void UpdatePreviewBallMaterial(Material material)
+        {
+            _previewBallMeshRenderer.material = material;
+            _previewBallMeshRenderer.enabled = true;
+
+            _skinTextureLoading.style.display = DisplayStyle.None;
+        }
+
+
+        /// <summary>
+        /// Update the material on the preview ball with the material from the given handle once it has been loaded
+        /// </summary>
+        /// <param name="skin"></param>
+        /// <param name="operation"></param>
+        private void UpdatePreviewBallMaterial(Skin skin, AsyncOperationHandle<Material> operation)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                // Cache the material so that we don't have to load it again next time
+                _skinMaterials.Add(skin.id, operation.Result);
+
+                UpdatePreviewBallMaterial(operation.Result);
+            }
+            else
+            {
+                _skinTextureLoading.style.display = DisplayStyle.None;
+                _skinTextureLoadingError.style.display = DisplayStyle.Flex;
+            }
+
+            _skinMaterialHandle.Completed -= (operation) => UpdatePreviewBallMaterial(skin, operation);
+            Addressables.Release(operation);
         }
 
 

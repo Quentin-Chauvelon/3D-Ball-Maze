@@ -2,7 +2,7 @@
     <BallMaze.UI.ButtonWithValue parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-item-background" class="skins__skin-item skin-locked" style="overflow: visible;">
         <ui:VisualElement name="skins__skin-item-image" />
         <ui:VisualElement name="skins__skin-price-container">
-            <ui:VisualElement name="skins__skin-item-price-image" />
+            <ui:VisualElement name="skins__skin-item-price-image" class="coin-image" />
             <ui:Label tabindex="-1" text="0" enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-item-price" style="color: rgb(231, 209, 0); margin-left: 5%;" />
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="OWNED" enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-item-owned" style="color: rgb(50, 168, 70)" />

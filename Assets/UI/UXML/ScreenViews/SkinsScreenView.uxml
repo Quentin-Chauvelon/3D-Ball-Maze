@@ -1,5 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="SkinItemTemplate" src="project://database/Assets/UI/UXML/Templates/SkinItemTemplate.uxml?fileID=9197481963319205126&amp;guid=2c60857c286462a31bb87335cc5899fe&amp;type=3#SkinItemTemplate" />
     <Style src="project://database/Assets/UI/USS/ScreenViews/Skins.uss?fileID=7433441132597879392&amp;guid=0268325775cb194cd97b0f211a943312&amp;type=3#Skins" />
     <ui:VisualElement name="skins__background" style="flex-grow: 1; flex-direction: row;">
         <ui:VisualElement name="skins__main-container" style="flex-grow: 1;">
@@ -15,11 +14,16 @@
             </ui:ScrollView>
         </ui:VisualElement>
         <ui:VisualElement name="skins__separator" style="flex-grow: 0; width: 5px; background-color: rgb(47, 47, 47); margin: 0 3%;" />
-        <ui:VisualElement name="skins__preview-container" style="flex-grow: 1; min-width: 35%; max-width: 35%; align-items: center; padding-bottom: 2%;">
-            <ui:VisualElement name="skins__preview-image" style="flex-grow: 1; align-self: stretch; margin: 5%;" />
-            <ui:Button text="BUY" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__buy-button" class="skins__skin-action" />
-            <ui:Button text="EQUIP" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__equip-button" class="skins__skin-action" style="display: none;" />
-            <ui:Label tabindex="-1" text="Label" enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-item-name" class="skins__skin-action" style="display: none;" />
+        <ui:VisualElement name="skins__preview-container" style="flex-grow: 1; min-width: 35%; max-width: 35%; align-items: center; padding-bottom: 2%; margin-right: 3%;">
+            <ui:VisualElement name="skins__preview-image" style="flex-grow: 1; align-self: stretch; margin: 5% 0; justify-content: center; align-items: center; background-image: url(&apos;project://database/Assets/Art/Skins/SkinPreview.renderTexture?fileID=8400000&amp;guid=7bc990da5937ebb41a44ba693d83f48a&amp;type=2#SkinPreview&apos;); -unity-background-scale-mode: scale-to-fit;">
+                <ui:Label tabindex="-1" text="Loading..." enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-texture-loading-label" style="display: none; -unity-font-style: bold; font-size: 50px; color: rgb(255, 255, 255);" />
+                <ui:Label tabindex="-1" text="Couldn&apos;t load skin..." enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-texture-loading-error-label" style="display: none; -unity-font-style: bold; font-size: 50px; color: rgb(255, 255, 255);" />
+            </ui:VisualElement>
+            <ui:Button parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__buy-button" class="skins__skin-call-to-action" style="flex-direction: row; justify-content: center; align-items: center;">
+                <ui:VisualElement name="skins__skin-price-image" class="coin-image" style="width: 20%; height: 80%;" />
+                <ui:Label tabindex="-1" text="0" enable-rich-text="false" parse-escape-sequences="true" display-tooltip-when-elided="true" name="skins__skin-price" style="color: rgb(231, 209, 0); margin-left: 5%; -unity-font-style: bold; font-size: 50px;" />
+            </ui:Button>
+            <ui:Button text="EQUIP" parse-escape-sequences="true" enable-rich-text="false" display-tooltip-when-elided="true" name="skins__equip-button" class="skins__skin-call-to-action" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

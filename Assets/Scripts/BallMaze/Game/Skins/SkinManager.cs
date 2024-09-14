@@ -74,6 +74,20 @@ namespace BallMaze
         }
 
 
+        public Skin GetSkinFromId(int id)
+        {
+            foreach (Skin skin in _skinsList)
+            {
+                if (skin.id == id)
+                {
+                    return skin;
+                }
+            }
+
+            return _skinsList[0];
+        }
+
+
         /// <summary>
         /// Check if the given id is in the list of unlocked skins using a binary search
         /// since the list is sorted on each new skin unlocked

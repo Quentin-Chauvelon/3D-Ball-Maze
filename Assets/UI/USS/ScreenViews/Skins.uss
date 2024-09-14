@@ -4,9 +4,37 @@
     margin: 0 2%;
 }
 
-.skins__skin-action {
+.skins__skin-call-to-action {
+    display: none; /* Hidden by default */
+    width: 40%;
     -unity-font-style: bold;
     font-size: 50px;
+    color: rgb(0, 0, 0);
+}
+
+
+#skins__equip-button {
+    background-color: rgb(39, 159, 181);
+}
+
+
+/* SKIN BUY BUTTON STATES */
+
+/* Enough money to buy the skin */
+#skins__buy-button.button-enabled {
+    background-color: rgb(53, 164, 25);
+}
+
+/* Not enough money to buy the skin */
+#skins__buy-button.button-disabled {
+    background-color: rgb(157, 21, 21);
+}
+
+
+.coin-image {
+    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: rgb(255, 236, 0);
 }
 
 
@@ -47,13 +75,11 @@
 .skins__skin-item > #skins__skin-price-container > #skins__skin-item-price-image {
     width: 20%;
     height: 100%;
-    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
-    -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: rgb(255, 236, 0);
 }
 
 /* Skin card price */
-.skins__skin-item Label {
+.skins__skin-item Label,
+.skins__skin-call-to-action > #skins__skin-price {
     -unity-font-style: bold;
     font-size: 30px;
     margin: 0;

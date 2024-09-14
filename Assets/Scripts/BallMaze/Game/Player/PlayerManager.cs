@@ -150,6 +150,12 @@ namespace BallMaze
                 DailyReward.Collected = true;
             }
 
+            // If for some reasons, the player has no unlocked skins, add the default one
+            if (data.unlockedSkins.Count == 0)
+            {
+                data.unlockedSkins.Add(0);
+            }
+
             SkinManager.SetUnlockedSkins(data.unlockedSkins);
             SkinManager.EquippedSkin = data.equippedSkin;
 

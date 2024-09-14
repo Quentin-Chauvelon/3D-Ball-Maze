@@ -25,7 +25,7 @@
       "id": 2,  
       "name": "Star",
       "category": 1,
-      "price": 25,
+      "price": 10000,
       "imagePath": "Star.png",
       "materialPath": "Star.mat",
       "meshPath": "",
