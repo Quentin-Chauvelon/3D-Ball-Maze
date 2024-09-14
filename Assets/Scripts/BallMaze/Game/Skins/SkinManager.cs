@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -40,6 +41,11 @@ namespace BallMaze
         private Skin[] _skinsList;
 
         private AsyncOperationHandle<TextAsset> _skinsListLoadHandle;
+
+        // Cache the materials for the skins, so that we don't have to load them each time we preview a skin
+        private static Dictionary<int, Material> _skinMaterials = new Dictionary<int, Material>();
+        // Handle to load material for the skin preview
+        private static AsyncOperationHandle<Material> _skinMaterialHandle;
 
         public static bool IsSkinListLoaded = false;
         public static Exception SkinListLoadingException = null;
@@ -100,9 +106,84 @@ namespace BallMaze
         }
 
 
+        /// <summary>
+        /// Return a boolean indicating if the material for the skin matching the given id is cached
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool IsMaterialCached(int id)
+        {
+            return _skinMaterials.ContainsKey(id);
+        }
+
+
+        /// <summary>
+        /// Return the material for the skin matching the given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Material GetMaterialFromCache(int id)
+        {
+            return _skinMaterials[id];
+        }
+
+
+        /// <summary>
+        /// Load the material at materialName from addressables and call the callback method with the result
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="materialName"></param>
+        /// <param name="callback"></param>
+        public static void LoadMaterialFromAddressables(int id, string materialName, Action<bool, Material> callback)
+        {
+            _skinMaterialHandle = Addressables.LoadAssetAsync<Material>($"Materials/{materialName}");
+            _skinMaterialHandle.Completed += operation => OnMaterialLoaded(id, operation, callback);
+        }
+
+
+        /// <summary>
+        /// Called asynchronously when the material for the skin is loaded.
+        /// It caches the material.
+        /// It also calls the callback method with the result (the first parameter
+        /// is a boolean indicating if the material was loaded successfully, and the
+        /// second one is the material itself, or null if it failed)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="operation"></param>
+        /// <param name="callback"></param>
+        private static void OnMaterialLoaded(int id, AsyncOperationHandle<Material> operation, Action<bool, Material> callback)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                _skinMaterials.Add(id, operation.Result);
+
+                callback(true, operation.Result);
+            }
+            else
+            {
+                callback(false, null);
+            }
+
+            _skinMaterialHandle.Completed -= operation => OnMaterialLoaded(id, operation, callback);
+            Addressables.Release(_skinMaterialHandle);
+        }
+
+
         public void EquipSkin(int id)
         {
-            EquippedSkin = id;
+            if (IsSkinUnlocked(id))
+            {
+                EquippedSkin = id;
+
+                if (IsMaterialCached(id))
+                {
+                    LevelManager.Instance.Ball.UpdateBallMaterial(true, GetMaterialFromCache(id));
+                }
+                else
+                {
+                    LoadMaterialFromAddressables(id, GetSkinFromId(id).materialPath, LevelManager.Instance.Ball.UpdateBallMaterial);
+                }
+            }
         }
 
 
@@ -159,6 +240,9 @@ namespace BallMaze
                 _skinsList = JsonConvert.DeserializeObject<Skin[]>(operation.Result.text);
 
                 IsSkinListLoaded = true;
+
+                // Once the skins list is loaded, we can equip the player's skin
+                EquipSkin(EquippedSkin);
             }
             else
             {

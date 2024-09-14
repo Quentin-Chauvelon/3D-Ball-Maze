@@ -36,11 +36,6 @@ namespace BallMaze.UI
         // Dictionary of handles to keep track of the images that are being loaded
         private Dictionary<int, AsyncOperationHandle<Texture2D>> _skinImagesHandles = new Dictionary<int, AsyncOperationHandle<Texture2D>>();
 
-        // Cache the materials for the skins, so that we don't have to load them each time we preview a skin
-        private Dictionary<int, Material> _skinMaterials = new Dictionary<int, Material>();
-        // Handle to load material for the skin preview
-        private AsyncOperationHandle<Material> _skinMaterialHandle;
-
         private SkinCategory _lastSelectedCategory = SkinCategory.Common;
 
         // Handle to load the skin item card template
@@ -48,6 +43,8 @@ namespace BallMaze.UI
         private VisualTreeAsset _skinItemTemplate;
         private bool _isSkinItemTemplateLoaded = false;
         private Exception _skinItemTemplateLoadingError = null;
+
+        private int _selectedSkinId = -1;
 
         private bool firstTimeOpened = true;
 
@@ -87,6 +84,12 @@ namespace BallMaze.UI
 
             _skinItemTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("SkinItemTemplate");
             _skinItemTemplateHandle.Completed += SkinItemTemplateHandleCompleted;
+
+            _equipButton.clicked += () =>
+            {
+                PlayerManager.Instance.SkinManager.EquipSkin(_selectedSkinId);
+                UIManager.Instance.Show(UIViewType.MainMenu);
+            };
         }
 
 
@@ -329,6 +332,8 @@ namespace BallMaze.UI
 
         private void PreviewSkin(Skin skin)
         {
+            _selectedSkinId = skin.id;
+
             _skinTextureLoading.style.display = DisplayStyle.None;
             _skinTextureLoadingError.style.display = DisplayStyle.None;
 
@@ -359,17 +364,16 @@ namespace BallMaze.UI
             }
 
             // If the material is already cached, use it, otherwise load it from adressables
-            if (_skinMaterials.ContainsKey(skin.id))
+            if (SkinManager.IsMaterialCached(skin.id))
             {
-                UpdatePreviewBallMaterial(_skinMaterials[skin.id]);
+                UpdatePreviewBallMaterial(true, SkinManager.GetMaterialFromCache(skin.id));
             }
             else
             {
                 _previewBallMeshRenderer.enabled = false;
                 _skinTextureLoading.style.display = DisplayStyle.Flex;
 
-                _skinMaterialHandle = Addressables.LoadAssetAsync<Material>($"Materials/{skin.materialPath}");
-                _skinMaterialHandle.Completed += (operation) => UpdatePreviewBallMaterial(skin, operation);
+                SkinManager.LoadMaterialFromAddressables(skin.id, skin.materialPath, UpdatePreviewBallMaterial);
             }
         }
 
@@ -378,37 +382,20 @@ namespace BallMaze.UI
         /// Update the material on the preview ball with the given material
         /// </summary>
         /// <param name="material"></param>
-        private void UpdatePreviewBallMaterial(Material material)
+        private void UpdatePreviewBallMaterial(bool materialLoaded, Material material)
         {
-            _previewBallMeshRenderer.material = material;
-            _previewBallMeshRenderer.enabled = true;
-
-            _skinTextureLoading.style.display = DisplayStyle.None;
-        }
-
-
-        /// <summary>
-        /// Update the material on the preview ball with the material from the given handle once it has been loaded
-        /// </summary>
-        /// <param name="skin"></param>
-        /// <param name="operation"></param>
-        private void UpdatePreviewBallMaterial(Skin skin, AsyncOperationHandle<Material> operation)
-        {
-            if (operation.Status == AsyncOperationStatus.Succeeded)
+            if (materialLoaded)
             {
-                // Cache the material so that we don't have to load it again next time
-                _skinMaterials.Add(skin.id, operation.Result);
+                _previewBallMeshRenderer.material = material;
+                _previewBallMeshRenderer.enabled = true;
 
-                UpdatePreviewBallMaterial(operation.Result);
+                _skinTextureLoading.style.display = DisplayStyle.None;
             }
             else
             {
                 _skinTextureLoading.style.display = DisplayStyle.None;
                 _skinTextureLoadingError.style.display = DisplayStyle.Flex;
             }
-
-            _skinMaterialHandle.Completed -= (operation) => UpdatePreviewBallMaterial(skin, operation);
-            Addressables.Release(operation);
         }
 
 
