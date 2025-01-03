@@ -1,0 +1,3 @@
+#permanent__skip-button #main-image-button__icon {
+    margin-left: 12px;
+}
