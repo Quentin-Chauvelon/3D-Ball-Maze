@@ -75,9 +75,12 @@ namespace BallMaze.UI
 		void FitToParent()
 		{
 			if (parent == null) return;
-			var parentW = parent.resolvedStyle.width * (resolvedStyle.width / parent.resolvedStyle.width);
-			var parentH = parent.resolvedStyle.height * (resolvedStyle.height / parent.resolvedStyle.height);
-            
+
+			var parentW = parent.resolvedStyle.width * ((resolvedStyle.width != 0 ? resolvedStyle.width : parent.resolvedStyle.width) / parent.resolvedStyle.width);
+			var parentH = parent.resolvedStyle.height * ((resolvedStyle.height != 0 ? resolvedStyle.height : parent.resolvedStyle.height) / parent.resolvedStyle.height);
+			// var parentW = parent.resolvedStyle.width * resolvedStyle.maxWidth.value;
+			// var parentH = parent.resolvedStyle.height * resolvedStyle.maxHeight.value;
+
 			if (float.IsNaN( parentW ) || float.IsNaN( parentH )) return;
 
 			// style.position = Position.Absolute;
@@ -93,9 +96,10 @@ namespace BallMaze.UI
 				return;
 			}
 
-			var ratio = Mathf.Min( parentW / AspectRatioX, parentH / AspectRatioY );
+			var ratio = Mathf.Min(parentW / AspectRatioX, parentH / AspectRatioY);
 			var targetW = Mathf.Floor( AspectRatioX * ratio );
 			var targetH = Mathf.Floor( AspectRatioY * ratio );
+
 			style.width = targetW;
 			style.height = targetH;
 

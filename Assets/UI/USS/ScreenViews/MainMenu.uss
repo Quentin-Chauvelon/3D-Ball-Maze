@@ -1,0 +1,5 @@
+#main-text-button__button {
+    padding-left: 25px;
+    padding-right: 90px;
+    -unity-text-align: middle-left;
+}
