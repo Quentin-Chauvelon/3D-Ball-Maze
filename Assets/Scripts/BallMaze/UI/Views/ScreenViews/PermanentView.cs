@@ -14,16 +14,13 @@ namespace BallMaze.UI
         // Visual Elements
         private VisualElement _navigationContainer;
         private Button _backButton;
-        private Button _homeButton;
         private VisualElement _trophiesContainer;
         private Label _trophiesLabel;
-        private VisualElement _coinsContainer;
-        private VisualElement _coinsImage;
+        private VisualElement _coinsBackground;
         private Label _coinsLabel;
-        private Button _moreCoinsButton;
-        private Button _skipButton;
-        private Button _pauseButton;
-        private Button _settingsButton;
+        private MainImageButton _skipButton;
+        private MainImageButton _pauseButton;
+        private MainImageButton _settingsButton;
 
         public const float UI_HEIGHT_PERCENTAGE = 0.15f;
 
@@ -38,16 +35,13 @@ namespace BallMaze.UI
         {
             _navigationContainer = _root.Q<VisualElement>("permanent__navigation-container");
             _backButton = _root.Q<Button>("permanent__back-button");
-            _homeButton = _root.Q<Button>("permanent__home-button");
             _trophiesContainer = _root.Q<VisualElement>("permanent__trophies-container");
             _trophiesLabel = _root.Q<Label>("permanent__trophies-label");
-            _coinsContainer = _root.Q<VisualElement>("permanent__coins-container");
-            _coinsImage = _root.Q<VisualElement>("permanent__coins-image");
+            _coinsBackground = _root.Q<VisualElement>("permanent__coins-background");
             _coinsLabel = _root.Q<Label>("permanent__coins-value-label");
-            _moreCoinsButton = _root.Q<Button>("permanent__more-coins-button");
-            _skipButton = _root.Q<Button>("permanent__skip-button");
-            _pauseButton = _root.Q<Button>("permanent__pause-button");
-            _settingsButton = _root.Q<Button>("permanent__settings-button");
+            _skipButton = _root.Q<MainImageButton>("permanent__skip-button");
+            _pauseButton = _root.Q<MainImageButton>("permanent__pause-button");
+            _settingsButton = _root.Q<MainImageButton>("permanent__settings-button");
         }
 
 
@@ -56,15 +50,12 @@ namespace BallMaze.UI
             // Go back to the previous screen view
             _backButton.clickable.clicked += () => { UIManager.Instance.Back(); };
 
-            // Go to the main menu
-            _homeButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.MainMenu); };
-
             // Open the settings modal view
-            _settingsButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Settings); };
+            _settingsButton.Button.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Settings); };
 
-            _pauseButton.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Pause); };
+            _pauseButton.Button.clickable.clicked += () => { UIManager.Instance.Show(UIViewType.Pause); };
 
-            _skipButton.clickable.clicked += () =>
+            _skipButton.Button.clickable.clicked += () =>
             {
                 // If the player is playing default levels, check if the next level is already unlocked.
                 // If it's the case, load the next level, otherwise show the skip modal view
@@ -104,7 +95,7 @@ namespace BallMaze.UI
         /// <returns>A vector 2 representing the position in pixels of the coin image from the top and left edges</returns>
         public Vector2 GetCoinsImagePosition()
         {
-            return new Vector2(_coinsImage.worldBound.xMin, _coinsImage.worldBound.yMin);
+            return new Vector2(_coinsBackground.worldBound.xMin, _coinsBackground.worldBound.yMin);
         }
 
 
@@ -117,7 +108,6 @@ namespace BallMaze.UI
             {
                 case UIViewType.MainMenu:
                     _backButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     _settingsButton.style.display = DisplayStyle.Flex;
@@ -125,7 +115,6 @@ namespace BallMaze.UI
 
                 case UIViewType.Playing:
                     _backButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.Flex;
                     _settingsButton.style.display = DisplayStyle.Flex;
 
@@ -138,7 +127,6 @@ namespace BallMaze.UI
 
                 case UIViewType.LevelCompleted:
                     _backButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     _settingsButton.style.display = DisplayStyle.None;
@@ -147,7 +135,6 @@ namespace BallMaze.UI
 
                 case UIViewType.SecondChance:
                     _backButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     _settingsButton.style.display = DisplayStyle.None;
@@ -156,7 +143,6 @@ namespace BallMaze.UI
 
                 case UIViewType.LevelFailed:
                     _backButton.style.display = DisplayStyle.None;
-                    _homeButton.style.display = DisplayStyle.None;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     _settingsButton.style.display = DisplayStyle.None;
@@ -165,7 +151,6 @@ namespace BallMaze.UI
 
                 default:
                     _backButton.style.display = DisplayStyle.Flex;
-                    _homeButton.style.display = DisplayStyle.Flex;
                     _skipButton.style.display = DisplayStyle.None;
                     _pauseButton.style.display = DisplayStyle.None;
                     _settingsButton.style.display = DisplayStyle.Flex;
