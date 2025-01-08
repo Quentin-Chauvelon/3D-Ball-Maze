@@ -1,0 +1,47 @@
+/* Animation properties */
+
+.ah__scale-1-05:hover {
+    scale: 1.05;
+}
+
+.ah__scale-1-05:hover {
+    scale: 1.05;
+}
+
+.ah__rotate-5:hover {
+    rotate: 5deg;
+}
+
+.ah__rotate-5:hover {
+    rotate: 5deg;
+}
+
+
+/* Animation active properties */
+
+.aa__scale-0-95:active {
+    scale: 0.95;
+}
+
+.aa__scale-0-95:active {
+    scale: 0.95;
+}
+
+.aa__rotate-5:active {
+    rotate: 5deg;
+}
+
+.aa__rotate-5:active {
+    rotate: 5deg;
+}
+
+
+/* Animation duration */
+
+.a__scale-0-1-ease-io-sine {
+    transition: scale 0.1s ease-in-out-sine;
+}
+
+.a__rotate-0-1-ease-io-sine {
+    transition: rotate 0.1s ease-in-out-sine;
+}
