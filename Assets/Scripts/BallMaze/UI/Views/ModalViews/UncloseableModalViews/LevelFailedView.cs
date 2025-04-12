@@ -15,13 +15,10 @@ namespace BallMaze.UI
         // Visual Elements
         private VisualElement _aspectRatioContainer;
         private Label _restartWhereYouFailedLabel;
-        private Button _restartCoinsButton;
-        private Button _restartAdButton;
-        private Button _unlimitedRestartsIAPButton;
-        private Button _defaultLevelsListButton;
-        private Button _homeButton;
+        private MainImageButton _defaultLevelsListButton;
+        private MainImageButton _homeButton;
         private RadialProgress _tryAgainRadialProgress;
-        private Button _tryAgainButton;
+        private MainImageButton _tryAgainButton;
 
         // The percentage of the screen height the UI will take. Must match the value in the UXML file
         private const float UI_HEIGHT_PERCENTAGE = 0.8f;
@@ -41,13 +38,10 @@ namespace BallMaze.UI
         {
             _aspectRatioContainer = _root.Q<VisualElement>("level-failed__aspect-ratio-container");
             _restartWhereYouFailedLabel = _root.Q<Label>("level-failed__level-failed-label");
-            _restartCoinsButton = _root.Q<Button>("level-failed__restart-where-you-failed-coins-button");
-            _restartAdButton = _root.Q<Button>("level-failed__restart-where-you-failed-ad-button");
-            _unlimitedRestartsIAPButton = _root.Q<Button>("level-failed__unlimited-restarts-iap-button");
-            _defaultLevelsListButton = _root.Q<Button>("level-failed__default-levels-list-button");
-            _homeButton = _root.Q<Button>("level-failed__home-button");
+            _defaultLevelsListButton = _root.Q<MainImageButton>("level-failed__default-levels-list-button");
+            _homeButton = _root.Q<MainImageButton>("level-failed__home-button");
             _tryAgainRadialProgress = _root.Q<RadialProgress>("level-failed__try-again-radial-progress");
-            _tryAgainButton = _root.Q<Button>("level-failed__try-again-button");
+            _tryAgainButton = _root.Q<MainImageButton>("level-failed__try-again-button");
 
             LevelEvents.LevelModeUpdated += (levelType) => { SwitchLevelTypeSource(levelType); };
         }
@@ -55,22 +49,7 @@ namespace BallMaze.UI
 
         protected override void RegisterButtonCallbacks()
         {
-            _restartCoinsButton.clicked += () =>
-            {
-                // TODO: pay coins to restart level (second chance), check if has enough coins and hide the UI + restart level if it's the case
-            };
-
-            _restartAdButton.clicked += () =>
-            {
-                // TODO: show ad and restart level if the ad was watched (second chance) (callback function?)
-            };
-
-            _unlimitedRestartsIAPButton.clicked += () =>
-            {
-                // TODO: show the unlimited restarts IAP UI, and if bought, show the second chance UI?
-            };
-
-            _defaultLevelsListButton.clicked += () =>
+            _defaultLevelsListButton.Button.clicked += () =>
             {
                 switch (LevelManager.Instance.levelType)
                 {
@@ -89,13 +68,13 @@ namespace BallMaze.UI
                 UIManager.Instance.Hide(UIViewType.LevelFailed);
             };
 
-            _homeButton.clicked += () =>
+            _homeButton.Button.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
                 UIManager.Instance.Hide(UIViewType.LevelFailed);
             };
 
-            _tryAgainButton.clicked += () =>
+            _tryAgainButton.Button.clicked += () =>
             {
                 LevelManager.Instance.ResetLevel();
 
@@ -177,14 +156,14 @@ namespace BallMaze.UI
             switch (levelType)
             {
                 case LevelType.Default:
-                    _restartWhereYouFailedLabel.text = "Restart where you failed?";
+                    _restartWhereYouFailedLabel.text = "Try again?";
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("default-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.Flex;
                     _homeButton.style.display = DisplayStyle.None;
                     break;
                 case LevelType.DailyLevel:
-                    _restartWhereYouFailedLabel.text = "Restart where you failed?";
+                    _restartWhereYouFailedLabel.text = "Try again?";
                     _aspectRatioContainer.RemoveFromClassList("ranked-level");
                     _aspectRatioContainer.AddToClassList("default-levels");
                     _defaultLevelsListButton.style.display = DisplayStyle.Flex;
