@@ -20,14 +20,12 @@ namespace BallMaze.UI
         // Visual Elements
         private Label _coinsEarnedLabel;
         private VisualElement _coinsEarnedImage;
-        private Button _doubleCoinsAdButton;
-        private Button _doubleCoinsIAPButton;
         private Label _timeLabel;
         private Label _secondTimeInfoLabel;
-        private Button _defaultLevelsListButton;
-        private Button _homeButton;
-        private Button _nextLevelButton;
-        private Button _tryAgainButton;
+        private MainImageButton _defaultLevelsListButton;
+        private MainImageButton _homeButton;
+        private MainImageButton _nextLevelButton;
+        private MainImageButton _tryAgainButton;
         private VisualElement _newBestTimeFrame;
 
         private Sequence _starsTweenSequence;
@@ -61,31 +59,19 @@ namespace BallMaze.UI
             _stars[2] = _root.Q<VisualElement>("level-completed__star-3");
             _coinsEarnedLabel = _root.Q<Label>("level-completed__coins-earned-label");
             _coinsEarnedImage = _root.Q<VisualElement>("level-completed__coins-earned-coin-image");
-            _doubleCoinsAdButton = _root.Q<Button>("level-completed__double-coins-ad-button");
-            _doubleCoinsIAPButton = _root.Q<Button>("level-completed__double-coins-iap-button");
             _timeLabel = _root.Q<Label>("level-completed__time-label");
             _secondTimeInfoLabel = _root.Q<Label>("level-completed__second-time-info-label");
-            _defaultLevelsListButton = _root.Q<Button>("level-completed__default-levels-list-button");
-            _homeButton = _root.Q<Button>("level-completed__home-button");
-            _nextLevelButton = _root.Q<Button>("level-completed__next-level-button");
-            _tryAgainButton = _root.Q<Button>("level-completed__try-again-button");
+            _defaultLevelsListButton = _root.Q<MainImageButton>("level-completed__default-levels-list-button");
+            _homeButton = _root.Q<MainImageButton>("level-completed__home-button");
+            _nextLevelButton = _root.Q<MainImageButton>("level-completed__next-level-button");
+            _tryAgainButton = _root.Q<MainImageButton>("level-completed__try-again-button");
             _newBestTimeFrame = _root.Q<VisualElement>("level-completed__new-best-time");
         }
 
 
         protected override void RegisterButtonCallbacks()
         {
-            _doubleCoinsAdButton.clicked += () =>
-            {
-                // TODO: show ad and double the coins earned (give + update label) if the ad was watched
-            };
-
-            _doubleCoinsIAPButton.clicked += () =>
-            {
-                // TODO: show the double coins permanently IAP UI, and if bought, double the coins + update Ui (doubleds)
-            };
-
-            _defaultLevelsListButton.clicked += () =>
+            _defaultLevelsListButton.Button.clicked += () =>
             {
                 switch (LevelManager.Instance.levelType)
                 {
@@ -104,13 +90,13 @@ namespace BallMaze.UI
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
-            _homeButton.clicked += () =>
+            _homeButton.Button.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
-            _nextLevelButton.clicked += () =>
+            _nextLevelButton.Button.clicked += () =>
             {
                 string nextLevel = LevelManager.Instance.GetNextLevel();
 
@@ -125,7 +111,7 @@ namespace BallMaze.UI
                 UIManager.Instance.Hide(UIViewType.LevelCompleted);
             };
 
-            _tryAgainButton.clicked += () =>
+            _tryAgainButton.Button.clicked += () =>
             {
                 LevelManager.Instance.ResetLevel();
 
@@ -172,8 +158,11 @@ namespace BallMaze.UI
             _coinsEarnedLabel.text = "0";
 
             // Hide the stars
+            _stars[0].AddToClassList("star");
             _stars[0].RemoveFromClassList("star-active");
+            _stars[1].AddToClassList("star");
             _stars[1].RemoveFromClassList("star-active");
+            _stars[2].AddToClassList("star");
             _stars[2].RemoveFromClassList("star-active");
 
             // Reset the colors of the stars since the animation doesn't use the class
@@ -207,6 +196,7 @@ namespace BallMaze.UI
             // Make the stars already gained active immediately
             for (int i = 0; i < starsAlreadygained; i++)
             {
+                _stars[i].RemoveFromClassList("star");
                 _stars[i].AddToClassList("star-active");
             }
 
@@ -239,8 +229,11 @@ namespace BallMaze.UI
                 // Tween the star back to its original size after the tween completes
                 _starsTweenSequence.Append(DOTween.To(() => endScale, x => _stars[i].style.scale = new StyleScale(new Vector2((float)x, (float)x)), 1f, STAR_SCALE_ANIMATION_DURATION / 1000f));
 
+                _stars[i].RemoveFromClassList("star");
+                _stars[i].AddToClassList("star-active");
+
                 // Tween the color of the star
-                _starsTweenSequence.Insert(0, DOTween.To(() => _stars[i].style.unityBackgroundImageTintColor.value, x => _stars[i].style.unityBackgroundImageTintColor = x, new Color(1f, 1f, 0f), _starsTweenSequence.Duration()));
+                // _starsTweenSequence.Insert(0, DOTween.To(() => _stars[i].style.unityBackgroundImageTintColor.value, x => _stars[i].style.unityBackgroundImageTintColor = x, new Color(1f, 1f, 0f), _starsTweenSequence.Duration()));
 
                 await _starsTweenSequence.Play().AsyncWaitForCompletion();
 
