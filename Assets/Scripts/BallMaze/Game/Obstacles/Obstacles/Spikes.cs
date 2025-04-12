@@ -55,6 +55,7 @@ namespace BallMaze.Obstacles
             }
 
             GameObject trigger = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            trigger.name = "HitBox";
             trigger.transform.localScale = new Vector3(0.75f, 0.3f, 0.75f);
             trigger.transform.position = spikes.transform.position + new Vector3(0, 0.275f, 0);
             trigger.GetComponent<MeshRenderer>().enabled = false;

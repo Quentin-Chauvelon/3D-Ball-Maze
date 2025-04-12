@@ -50,8 +50,9 @@ namespace BallMaze.Obstacles
 
             if (Application.isPlaying)
             {
-                halfSphere.transform.Find("HalfSphere_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                halfSphere.transform.Find("HalfSphere_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/floor.mat");
                 halfSphere.transform.Find("HalfSphere_Sphere").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                // halfSphere.transform.Find("HalfSphere_Sphere").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/halfsphere/halfspheretop.mat");
             }
 
             return halfSphere;

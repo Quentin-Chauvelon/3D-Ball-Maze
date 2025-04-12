@@ -132,6 +132,21 @@ namespace BallMaze.Obstacles
             {
                 rail.transform.Find("StraightRail_LeftRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
                 rail.transform.Find("StraightRail_RightRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+
+                if (!isFirstEndRail && !isLastEndRail)
+                {
+                    rail.transform.Find("StraightRail_LeftRail_HitBox1").GetComponent<MeshRenderer>().materials = new Material[0];
+                    rail.transform.Find("StraightRail_LeftRail_HitBox2").GetComponent<MeshRenderer>().materials = new Material[0];
+                    rail.transform.Find("StraightRail_RightRail_HitBox1").GetComponent<MeshRenderer>().materials = new Material[0];
+                    rail.transform.Find("StraightRail_RightRail_HitBox2").GetComponent<MeshRenderer>().materials = new Material[0];
+                }
+                else
+                {
+                    rail.transform.Find("StraightRail_LeftRail_HitBox").GetComponent<MeshRenderer>().materials = new Material[0];
+                    rail.transform.Find("StraightRail_RightRail_HitBox").GetComponent<MeshRenderer>().materials = new Material[0];
+                }
+                rail.transform.Find("StraightRail_Floor1").GetComponent<MeshRenderer>().materials = new Material[0];
+                rail.transform.Find("StraightRail_Floor2").GetComponent<MeshRenderer>().materials = new Material[0];
             }
 
             // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible

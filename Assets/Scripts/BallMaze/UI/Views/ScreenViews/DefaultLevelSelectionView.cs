@@ -90,7 +90,7 @@ namespace BallMaze.UI
             }
 
             // If the level selection files were not checked in the last 5 minutes, update the level selection
-            if (!GameManager.Instance.defaultLevelSelection.LastDefaultLevelFilesModifiedCheck.DateInTimeframe(60))
+            if (!GameManager.Instance.defaultLevelSelection.LastDefaultLevelFilesModifiedCheck.DateInTimeframe(300))
             {
                 GameManager.Instance.defaultLevelSelection.LoadDefaultLevelSelection();
                 return;
@@ -296,7 +296,11 @@ namespace BallMaze.UI
                 _currentLevelsPage = Mathf.CeilToInt(levelsSelection.numberOfLevels / numberOfLevelsPerPage);
             }
 
+            // Set the transition duration to 0 to disable the animation when moving to the correct page after loading the levels.
+            // This prevents the player from seeing the transition when loading the levels as it should directly display the page
+            _levelsContainer.style.transitionDuration = new List<TimeValue> { new TimeValue(0f, TimeUnit.Millisecond) };
             MoveToPage(_currentLevelsPage);
+            _levelsContainer.style.transitionDuration = new List<TimeValue> { new TimeValue(500f, TimeUnit.Millisecond) };
         }
 
 

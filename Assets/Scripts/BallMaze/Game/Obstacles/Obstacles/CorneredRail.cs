@@ -106,6 +106,12 @@ namespace BallMaze.Obstacles
             {
                 corneredRail.transform.Find("CorneredRail_InteriorRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
                 corneredRail.transform.Find("CorneredRail_ExteriorRail").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/rail/rail.mat");
+
+                corneredRail.transform.Find("CorneredRail_InteriorRail_HitBox").GetComponent<MeshRenderer>().materials = new Material[0];
+                corneredRail.transform.Find("CorneredRail_ExteriorRail_HitBox").GetComponent<MeshRenderer>().materials = new Material[0];
+                corneredRail.transform.Find("CorneredRail_Floor1").GetComponent<MeshRenderer>().materials = new Material[0];
+                corneredRail.transform.Find("CorneredRail_Floor2").GetComponent<MeshRenderer>().materials = new Material[0];
+                corneredRail.transform.Find("CorneredRail_Floor3").GetComponent<MeshRenderer>().materials = new Material[0];
             }
 
             // If debug mode is off, remove the hitboxes gameobjects since they shouldn't be visible

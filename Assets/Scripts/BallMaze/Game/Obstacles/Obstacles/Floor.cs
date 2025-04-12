@@ -42,7 +42,7 @@ namespace BallMaze.Obstacles
             // This can't be done outside play mode since the asset bundle hasn't been loaded yet
             if (Application.isPlaying)
             {
-                floor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                floor.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/floor.mat");
             }
 
             return floor;

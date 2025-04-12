@@ -153,10 +153,10 @@ namespace BallMaze
                 return;
             }
 
-            Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap);
+            Maze.RenderAllObstacles(_maze.obstaclesList, _maze.obstacles, _maze.obstaclesTypesMap, _maze.relativeObstaclesTypesMap);
 
             // Fit the maze in the camera's perspective
-            _camera.FitMazeInPerspective(_maze.GetMazeBounds());
+            _camera.FitMazeInPerspective(_maze.GetMazeBoundsPadded());
 
             ListenToTargetTrigger();
 
@@ -234,7 +234,7 @@ namespace BallMaze
             // Move the ball to the start position
             if (_maze.start != null)
             {
-                _ball.MoveBallToPosition(_maze.start.transform.position);
+                _ball.MoveBallToPosition(-_maze.gameObject.transform.parent.transform.position + _maze.start.transform.position);
             }
 
             if (SettingsManager.Instance.startOn == StartOnSettings.Touch)
@@ -268,7 +268,7 @@ namespace BallMaze
 
             if (_lastRespawnableObstacle != null)
             {
-                _ball.MoveBallToPosition(_lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
+                _ball.MoveBallToPosition(-_maze.gameObject.transform.parent.transform.position + _lastRespawnableObstacle.transform.position + new Vector3(0, 0.5f, 0));
             }
         }
 

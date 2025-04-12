@@ -1,4 +1,5 @@
 using BallMaze.Obstacles;
+using BallMaze.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,8 @@ namespace BallMaze
 
         // This represents a 2D map of the level and allows to easily get adjacents obstacles for example
         public int[,] obstaclesTypesMap;
+        // This represents a 2D map of the relatively positionnable obstacles (map of the obstacles above the maze in a sense)
+        public int[,] relativeObstaclesTypesMap;
 
         private AssetBundle _obstaclesAssetBundle;
         private AssetBundleCreateRequest _obstaclesAssetBundleCreateRequest;
@@ -95,15 +98,20 @@ namespace BallMaze
             obstacles.Clear();
             obstaclesList = null;
             obstaclesTypesMap = null;
+            relativeObstaclesTypesMap = null;
 
             // Update the void level based on the maze size. The formula uses trigonometry (a = c * sin(α)) and then multiplies by 5
             // to have a margin and negative to have the void level below the maze
             voidYLevel = level.mazeSize.x > level.mazeSize.z
-            ? level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f
-            : level.mazeSize.z / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f;
+                ? level.mazeSize.x / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f
+                : level.mazeSize.z / 2 * Mathf.Sin(Controls.MAX_MAZE_ORIENTATION * Mathf.Deg2Rad) * -5f;
+
+            voidYLevel -= gameObject.transform.parent.position.y;
+            Debug.Log("Void level: " + voidYLevel + " parent position: " + gameObject.transform.parent.position.y);
 
             obstaclesList = new Obstacle[level.nbObstacles];
-            obstaclesTypesMap = InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
+
+            InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z), out obstaclesTypesMap, out relativeObstaclesTypesMap);
 
             _maze.transform.Find("Start").position = level.startPosition;
 
@@ -128,7 +136,7 @@ namespace BallMaze
                 else if (obstacle is IRelativelyPositionnable)
                 {
                     obstaclesList[obstacle.id] = obstacle;
-                    AddObstacleToTypesMap(obstaclesTypesMap, obstacle);
+                    AddObstacleToTypesMap(relativeObstaclesTypesMap, obstacle, obstaclesList);
                 }
             }
 
@@ -136,19 +144,24 @@ namespace BallMaze
             foreach (Wall wall in level.walls)
             {
                 obstaclesList[wall.id] = wall;
-                AddObstacleToTypesMap(obstaclesTypesMap, wall);
+                AddObstacleToTypesMap(relativeObstaclesTypesMap, wall, obstaclesList);
             }
 
             // Corners
             foreach (Corner corner in level.corners)
             {
                 obstaclesList[corner.id] = corner;
-                AddObstacleToTypesMap(obstaclesTypesMap, corner);
+                AddObstacleToTypesMap(relativeObstaclesTypesMap, corner, obstaclesList);
             }
 
             // Target
             obstaclesList[level.target.id] = level.target;
-            AddObstacleToTypesMap(obstaclesTypesMap, level.target);
+            AddObstacleToTypesMap(relativeObstaclesTypesMap, level.target, obstaclesList);
+
+            Debug.Log("Obstacle types map:");
+            PrintTypesMap(obstaclesTypesMap);
+            Debug.Log("Relative obstacles types map:");
+            PrintTypesMap(relativeObstaclesTypesMap);
 
             return true;
         }
@@ -180,7 +193,7 @@ namespace BallMaze
         /// <param name="obstacles">A dictionary to link the newly instantiated GameObject with its obstacle</param>
         /// <param name="obstaclesTypesMap">A 2D int matrix representing the map viewed from above. This allows to get neighboring obstacles easily</param>
         /// <param name="mazeRootName">The name of the game object to which the maze will be parented to</param>
-        public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap, string mazeRootName = "Maze")
+        public static void RenderAllObstacles(Obstacle[] obstaclesList, Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap, int[,] relativeObstaclesTypesMap, string mazeRootName = "Maze")
         {
             GameObject maze = GameObject.Find(mazeRootName);
 
@@ -199,10 +212,11 @@ namespace BallMaze
 
             foreach (Obstacle obstacle in obstaclesList)
             {
-                GameObject obstacleGameObject = obstacle.Render(obstacles, obstaclesTypesMap);
+                GameObject obstacleGameObject = obstacle.Render(obstacles, obstacle is IAbsolutelyPositionnable ? obstaclesTypesMap : relativeObstaclesTypesMap);
 
                 if (obstacleGameObject == null)
                 {
+                    Debug.LogError($"Obstacle {obstacle.id} could not be rendered. Skipping it. ({obstacle.obstacleType})");
                     continue;
                 }
 
@@ -245,12 +259,27 @@ namespace BallMaze
         {
             Renderer[] renderers = _maze.GetComponentsInChildren<Renderer>();
             Bounds bounds = renderers[0].bounds;
-            
+
             for (int i = 1; i < renderers.Length; ++i)
             {
                 bounds.Encapsulate(renderers[i].bounds);
             }
 
+            return bounds;
+        }
+
+
+        /// <summary>
+        /// Returns the bounds of the maze + a padding at the top to take into account the UI (similar to shifting the maze down)
+        /// </summary>
+        /// <returns></returns>
+        public Bounds GetMazeBoundsPadded()
+        {
+            Bounds bounds = GetMazeBounds();
+            Debug.Log("Bounds: " + bounds);
+            bounds.Expand(new Vector3(0f, 0f, 5f));
+            bounds.center = new Vector3(bounds.center.x, bounds.center.y, bounds.center.z - 2.5f);
+            Debug.Log("Bounds padded: " + bounds);
             return bounds;
         }
 
@@ -306,9 +335,10 @@ namespace BallMaze
         /// <param name="m"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static int[,] InitObstaclesTypesMap(int m, int n)
+        public static void InitObstaclesTypesMap(int m, int n, out int[,] obstaclesTypesMap, out int[,] relativeObstaclesTypesMap)
         {
-            int[,] obstaclesTypesMap = new int[m, n];
+            obstaclesTypesMap = new int[m, n];
+            relativeObstaclesTypesMap = new int[m, n];
 
             // Initialize all values of the obstacles types map to -1
             for (int i = 0; i < m; i++)
@@ -316,12 +346,10 @@ namespace BallMaze
                 for (int j = 0; j < n; j++)
                 {
                     obstaclesTypesMap[i, j] = -1;
+                    relativeObstaclesTypesMap[i, j] = -1;
                 }
             }
-
-            return obstaclesTypesMap;
         }
-
 
         /// <summary>
         /// Add the given obstacle to the obstacles types 2D map
@@ -330,16 +358,23 @@ namespace BallMaze
         /// <param name="obstacle"></param>
         public static void AddObstacleToTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle)
         {
+            AddObstacleToTypesMap(obstaclesTypesMap, obstacle, new Obstacle[0]);
+        }
+
+        public static void AddObstacleToTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle, Obstacle[] obstacles)
+        {
             // If the obstacle is not positionned absolutely, it is above another obstacle
             // and thus we only want the obstacle under it
-            if (!(obstacle is IAbsolutelyPositionnable))
+            if (obstacle is IAbsolutelyPositionnable)
             {
-                return;
+                GetPositionInTypesMap(obstaclesTypesMap, obstacle, out int x, out int z, obstacles);
+                obstaclesTypesMap[x, z] = (int)obstacle.obstacleType;
             }
-
-            GetPositionInTypesMap(obstaclesTypesMap, obstacle, out int x, out int z);
-
-            obstaclesTypesMap[x, z] = (int)obstacle.obstacleType;
+            else
+            {
+                GetPositionInTypesMap(obstaclesTypesMap, obstacle, out int x, out int z, obstacles);
+                obstaclesTypesMap[x, z] = (int)obstacle.obstacleType;
+            }
         }
 
 
@@ -352,16 +387,13 @@ namespace BallMaze
         /// <param name="y"></param>
         public static void GetPositionInTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle, out int x, out int y)
         {
-            // If the obstacle is not positionned absolutely, it is above another obstacle
-            // and thus we only want the obstacle under it
-            if (!(obstacle is IAbsolutelyPositionnable))
-            {
-                x = 0;
-                y = 0;
+            GetPositionInTypesMap(obstaclesTypesMap, obstacle, out x, out y, new Obstacle[0]);
+        }
 
-                return;
-            }
 
+        public static void GetPositionInTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle, out int x, out int y, Obstacle[] obstacles)
+        {
+            // Debug.Log("GetPositionInTypesMap: " + obstacle.id + " of type " + obstacle.obstacleType + " size of obstacles: " + obstacles.Length);
             if (obstacle is IAbsolutelyPositionnable)
             {
                 IAbsolutelyPositionnable absolutelyPositionnable = (IAbsolutelyPositionnable)obstacle;
@@ -369,6 +401,83 @@ namespace BallMaze
                 // Translate the position of the obstacle to have the lower left point of the maze be at (0,0)
                 x = Mathf.FloorToInt(absolutelyPositionnable.position.x) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(0) / 2);
                 y = Mathf.FloorToInt(absolutelyPositionnable.position.z) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(1) / 2);
+
+                return;
+            }
+            else if (obstacle is IRelativelyPositionnable)
+            {
+                IRelativelyPositionnable relativelyPositionnable = (IRelativelyPositionnable)obstacle;
+                Vector3? position = null;
+
+                foreach (Obstacle o in obstacles)
+                {
+                    // Debug.Log("Obstacle: " + o.id + " compared with " + relativelyPositionnable.obstacleId);
+                    if (relativelyPositionnable.obstacleId == o.id)
+                    {
+                        position = (o as IAbsolutelyPositionnable).position;
+                        break;
+                    }
+                }
+
+                // Translate the position of the obstacle to have the lower left point of the maze be at (0,0)
+                if (position.HasValue)
+                {
+                    x = Mathf.FloorToInt(position.Value.x) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(0) / 2);
+                    y = Mathf.FloorToInt(position.Value.z) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(1) / 2);
+                }
+                else
+                {
+                    x = 0;
+                    y = 0;
+                    Debug.LogError($"Couldn't find obstacle under obstacle {obstacle.id}");
+                }
+
+                return;
+            }
+
+            x = 0;
+            y = 0;
+        }
+
+
+        public static void GetPositionInTypesMap(int[,] obstaclesTypesMap, Obstacle obstacle, out int x, out int y, Dictionary<GameObject, Obstacle> obstacles)
+        {
+            if (obstacle is IAbsolutelyPositionnable)
+            {
+                IAbsolutelyPositionnable absolutelyPositionnable = (IAbsolutelyPositionnable)obstacle;
+
+                // Translate the position of the obstacle to have the lower left point of the maze be at (0,0)
+                x = Mathf.FloorToInt(absolutelyPositionnable.position.x) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(0) / 2);
+                y = Mathf.FloorToInt(absolutelyPositionnable.position.z) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(1) / 2);
+
+                return;
+            }
+            else if (obstacle is IRelativelyPositionnable)
+            {
+                IRelativelyPositionnable relativelyPositionnable = (IRelativelyPositionnable)obstacle;
+                Vector3? position = null;
+
+                foreach (KeyValuePair<GameObject, Obstacle> o in obstacles)
+                {
+                    if (relativelyPositionnable.obstacleId == o.Value.id)
+                    {
+                        position = (o.Value as IAbsolutelyPositionnable).position;
+                        break;
+                    }
+                }
+
+                // Translate the position of the obstacle to have the lower left point of the maze be at (0,0)
+                if (position.HasValue)
+                {
+                    x = Mathf.FloorToInt(position.Value.x) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(0) / 2);
+                    y = Mathf.FloorToInt(position.Value.z) + Mathf.FloorToInt(obstaclesTypesMap.GetLength(1) / 2);
+                }
+                else
+                {
+                    x = 0;
+                    y = 0;
+                    Debug.LogError($"Couldn't find obstacle under obstacle {obstacle.id}");
+                }
 
                 return;
             }
@@ -489,6 +598,7 @@ namespace BallMaze
 
             foreach (string obstacleName in _obstaclesAssetBundle.GetAllAssetNames())
             {
+                // Debug.Log("Obstacle name: " + obstacleName);
                 _obstaclesGameObjects[obstacleName] = _obstaclesAssetBundle.LoadAsset<UnityEngine.Object>(obstacleName);
             }
 
@@ -525,7 +635,8 @@ namespace BallMaze
                 return (Material)_obstaclesGameObjects[path];
             }
 
-            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
+            Debug.Log("path: " + path);
+            ExceptionManager.ShowExceptionMessage(new Exception("Failed to load obstacle material from asset bundle"), "ExceptionMessagesTable", "ObstaclesAssetBundleLoadError");
             return null;
         }
 

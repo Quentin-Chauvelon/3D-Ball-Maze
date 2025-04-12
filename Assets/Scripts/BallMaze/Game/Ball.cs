@@ -1,9 +1,3 @@
-using BallMaze.Obstacles;
-using Microsoft.Unity.VisualStudio.Editor;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -30,7 +24,7 @@ namespace BallMaze
             if (LevelManager.Instance.LevelState == LevelState.Playing)
             {
                 // If the ball is below the void level, the player has lost
-                if (gameObject.transform.position.y <= LevelManager.Instance.Maze.voidYLevel)
+                if (gameObject.transform.localPosition.y <= LevelManager.Instance.Maze.voidYLevel)
                 {
                     LevelManager.Instance.Lost();
                     return;
@@ -99,7 +93,7 @@ namespace BallMaze
 
             if (resetRotation)
             {
-                gameObject.transform.rotation = Quaternion.identity;
+                gameObject.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
             }
         }
 

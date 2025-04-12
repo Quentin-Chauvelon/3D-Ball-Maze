@@ -34,45 +34,104 @@ namespace BallMaze.Obstacles
 
         public override GameObject Render(Dictionary<GameObject, Obstacle> obstacles, int[,] obstaclesTypesMap)
         {
-            GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            wall.name = "Wall";
+            GameObject wall;
 
-            // Adapt the wall's scale to the direction it's facing (equivalent to rotating the wall)
-            if (direction == CardinalDirection.North || direction == CardinalDirection.South)
-            {
-                wall.transform.localScale = new Vector3(1, 0.5f, 0.1f);
-            }
-            else
-            {
-                wall.transform.localScale = new Vector3(0.1f, 0.5f, 1);
-            }
+            Maze.GetPositionInTypesMap(obstaclesTypesMap, this, out int x, out int y, obstacles);
 
-            Vector3 offset = Vector3.zero;
-            // Add an offset to move the wall to the correct position based on the direction it's facing
-            switch (direction)
-            {
-                case CardinalDirection.North:
-                    offset = new Vector3(0, 0, -0.45f);
-                    break;
-                case CardinalDirection.East:
-                    offset = new Vector3(-0.45f, 0, 0);
-                    break;
-                case CardinalDirection.South:
-                    offset = new Vector3(0, 0, 0.45f);
-                    break;
-                case CardinalDirection.West:
-                    offset = new Vector3(0.45f, 0, 0);
-                    break;
-                default:
-                    Debug.LogWarning($"Invalid wall direction {direction} for wall {id}.");
-                    break;
-            }
-
-            PositionObstacleOverObstacleFromId(obstacles, wall.transform, obstacleId, offset + new Vector3(0, 0.2f, 0));
+            bool north = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, CardinalDirection.North) == ObstacleType.Wall;
+            bool east = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, CardinalDirection.East) == ObstacleType.Wall;
+            bool south = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, CardinalDirection.South) == ObstacleType.Wall;
+            bool west = Maze.GetAdjacentObstacleInDirection(obstaclesTypesMap, x, y, CardinalDirection.West) == ObstacleType.Wall;
+            bool mesh = !((north && south) || (east && west)); // true if the wall is a mesh (cornered, half rounded or rounded)
 
             if (Application.isPlaying)
             {
-                wall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                // If there are at least walls on both sides of the wall (north and south or east and west), use a basic flat cube (straight without rounded end)
+                if ((north && south) || (east && west))
+                {
+                    wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                }
+                // If there are walls on two adjacents sides (north and east, east and south, ...), the wall is a corner
+                else if ((north && east) || (east && south) || (south && west) || (west && north))
+                {
+                    wall = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/walls/cornered_wall.fbx");
+                }
+                // If there is only a wall on one side (rounded end)
+                else if (north || east || south || west)
+                {
+                    wall = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/walls/half_rounded_wall.fbx");
+                }
+                // Otherwise it's a standalone wall (fully rounded)
+                else
+                {
+                    wall = LevelManager.Instance.Maze.GetObstacleGameObjectFromPath("assets/art/models/obstacles/walls/rounded_wall.fbx");
+                }
+            }
+            else
+            {
+#if UNITY_EDITOR
+                if ((north && south) || (east && west))
+                {
+                    wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                }
+                else if ((north && east) || (east && south) || (south && west) || (west && north))
+                {
+                    wall = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Walls/Cornered_Wall.fbx", typeof(GameObject)));
+                }
+                else if (north || east || south || west)
+                {
+                    wall = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Walls/Half_Rounded_Wall.fbx", typeof(GameObject)));
+                }
+                else
+                {
+                    wall = (GameObject)PrefabUtility.InstantiatePrefab((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Art/Models/Obstacles/Walls/Rounded_Wall.fbx", typeof(GameObject)));
+                }
+#else
+            return null;
+#endif
+            }
+
+            wall.name = "Wall";
+
+            wall.transform.localScale = mesh ? new Vector3(1f, 1f, 0.5f) : new Vector3(1f, 0.5f, 1f);
+
+            PositionObstacleOverObstacleFromId(obstacles, wall.transform, obstacleId, new Vector3(0, 0.2f, 0));
+
+            if ((north && south) || (east && west)) { } // Nothing to do here but still needed so that we can use the last condition with all OR
+            else if ((north && east) || (east && south) || (south && west) || (west && north))
+            {
+                if (north && east)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, -90, 0);
+                }
+                else if (east && south)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, 180, 0);
+                }
+                else if (south && west)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, 90, 0);
+                }
+            }
+            else if (north || east || south || west)
+            {
+                if (north)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, 180, 0);
+                }
+                else if (east)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, -90, 0);
+                }
+                else if (west)
+                {
+                    wall.transform.rotation = Quaternion.Euler(-90, 90, 0);
+                }
+            }
+
+            if (Application.isPlaying)
+            {
+                wall.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/wall.mat");
             }
 
             return wall;

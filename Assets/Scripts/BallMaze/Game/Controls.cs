@@ -18,6 +18,8 @@ namespace BallMaze
 
         public const short MAX_MAZE_ORIENTATION = 10;
 
+        private const bool INVERT_CONTROLS = true;
+
 
         void Awake()
         {
@@ -47,11 +49,11 @@ namespace BallMaze
 
             if (SettingsManager.Instance.controls == ControlsSettings.Joystick)
             {
-                return GetJoystickOrientation();
+                return !INVERT_CONTROLS ? GetJoystickOrientation() : Quaternion.Euler(GetJoystickOrientation().eulerAngles * -1f);
             }
             else if (SettingsManager.Instance.controls == ControlsSettings.Accelerometer)
             {
-                return GetAccelerometerOrientation();
+                return !INVERT_CONTROLS ? GetAccelerometerOrientation() : Quaternion.Euler(GetAccelerometerOrientation().eulerAngles * -1f);
             }
             else
             {
@@ -70,7 +72,7 @@ namespace BallMaze
 
             if (SettingsManager.Instance.controls == ControlsSettings.Joystick)
             {
-                return Vector2.zero - _joystick.Direction;
+                return !INVERT_CONTROLS ? Vector2.zero - _joystick.Direction : _joystick.Direction;
             }
             else if (SettingsManager.Instance.controls == ControlsSettings.Accelerometer)
             {
@@ -162,7 +164,7 @@ namespace BallMaze
 
 
         /// <summary>
-        /// Enables and shows the controls.
+        /// Disables and shows the controls.
         /// </summary>
         public void DisableAndShowControls()
         {
@@ -172,7 +174,7 @@ namespace BallMaze
 
 
         /// <summary>
-        /// Enables and shows the controls.
+        /// Disables and shows the controls.
         /// </summary>
         public void DisableAndHideControls()
         {

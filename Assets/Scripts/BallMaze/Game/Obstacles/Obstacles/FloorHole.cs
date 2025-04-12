@@ -50,7 +50,7 @@ namespace BallMaze.Obstacles
 
             if (Application.isPlaying)
             {
-                floorHole.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
+                floorHole.GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/floor.mat");
             }
 
             return floorHole;

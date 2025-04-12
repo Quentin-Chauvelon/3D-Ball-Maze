@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 935538128013671980}
   - component: {fileID: 1968566445407593904}
   - component: {fileID: 8957383084520117085}
-  - component: {fileID: 5936643982233820218}
+  - component: {fileID: 306381430748282452}
   m_Layer: 0
   m_Name: StraightRail_RightRail_HitBox
   m_TagString: Untagged
@@ -65,7 +65,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1946140289872199279}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5936643982233820218
+--- !u!23 &306381430748282452
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,8 +84,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,7 +154,7 @@ GameObject:
   - component: {fileID: 3266887072966193307}
   - component: {fileID: 8255171679265572334}
   - component: {fileID: 4823487815616530863}
-  - component: {fileID: 1146572868202927606}
+  - component: {fileID: 9199406314206953545}
   m_Layer: 0
   m_Name: StraightRail_Floor1
   m_TagString: Untagged
@@ -208,7 +207,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2454995107683090869}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1146572868202927606
+--- !u!23 &9199406314206953545
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,8 +226,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -311,7 +309,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: af432dc62128ea5ae83b3cc4233e4e34, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -344,7 +342,7 @@ GameObject:
   - component: {fileID: 6266436173504536480}
   - component: {fileID: 4612695844355653751}
   - component: {fileID: 8901034664069025844}
-  - component: {fileID: 6616439240986261468}
+  - component: {fileID: 5972756657327269308}
   m_Layer: 0
   m_Name: StraightRail_Floor2
   m_TagString: Untagged
@@ -397,7 +395,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5032376943904541634}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6616439240986261468
+--- !u!23 &5972756657327269308
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -416,8 +414,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -450,7 +447,7 @@ GameObject:
   - component: {fileID: 4214356223461073512}
   - component: {fileID: 281806399165809780}
   - component: {fileID: 7774492707054480921}
-  - component: {fileID: 9090272254264251891}
+  - component: {fileID: 8759704321642978864}
   m_Layer: 0
   m_Name: StraightRail_LeftRail_HitBox
   m_TagString: Untagged
@@ -504,7 +501,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6157694201439764820}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &9090272254264251891
+--- !u!23 &8759704321642978864
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -523,8 +520,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -607,7 +603,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: af432dc62128ea5ae83b3cc4233e4e34, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

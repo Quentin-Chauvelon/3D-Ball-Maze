@@ -105,8 +105,8 @@ namespace BallMaze.Obstacles
 
             if (Application.isPlaying)
             {
-                tunnel.transform.Find("Tunnel_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/baseobstacle.mat");
-                tunnel.transform.Find("Tunnel_Exterior").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelexterior.mat");
+                tunnel.transform.Find("Tunnel_Floor").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/floor.mat");
+                tunnel.transform.Find("Tunnel_Exterior").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelinterior.mat");
                 tunnel.transform.Find("Tunnel_Interior").GetComponent<MeshRenderer>().material = LevelManager.Instance.Maze.GetObstacleMaterialFromPath("assets/art/materials/obstacles/tunnel/tunnelinterior.mat");
 
                 // Mark the tunnel itself as Ignore Raycast, this is used by the ball collision

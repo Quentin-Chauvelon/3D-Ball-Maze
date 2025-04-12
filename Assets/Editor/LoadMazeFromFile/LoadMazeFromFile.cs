@@ -65,7 +65,6 @@ namespace BallMaze.Editor
         {
             _obstacles.Clear();
             _obstaclesList = null;
-            _obstaclesTypesMap = null;
 
             Debug.Log("Loading: Loading level " + _id.value + " from file: " + _fileName.value);
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -84,7 +83,10 @@ namespace BallMaze.Editor
             Level level = JsonConvert.DeserializeObject<Level>(jsonData);
 
             _obstaclesList = new Obstacle[level.nbObstacles];
-            _obstaclesTypesMap = Maze.InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z));
+
+            int[,] _obstaclesTypesMap;
+            int[,] _relativeObstaclesTypesMap;
+            Maze.InitObstaclesTypesMap((int)Mathf.Round(level.mazeSize.x), (int)Mathf.Round(level.mazeSize.z), out _obstaclesTypesMap, out _relativeObstaclesTypesMap);
 
             GameObject maze = GameObject.Find("Maze");
             if (!maze)
@@ -129,7 +131,7 @@ namespace BallMaze.Editor
                 else if (obstacle is IRelativelyPositionnable)
                 {
                     _obstaclesList[obstacle.id] = obstacle;
-                    Maze.AddObstacleToTypesMap(_obstaclesTypesMap, obstacle);
+                    Maze.AddObstacleToTypesMap(_relativeObstaclesTypesMap, obstacle, _obstaclesList);
                 }
             }
 
@@ -137,21 +139,21 @@ namespace BallMaze.Editor
             foreach (Wall wall in level.walls)
             {
                 _obstaclesList[wall.id] = wall;
-                Maze.AddObstacleToTypesMap(_obstaclesTypesMap, wall);
+                Maze.AddObstacleToTypesMap(_relativeObstaclesTypesMap, wall, _obstaclesList);
             }
 
             // Corners
             foreach (Corner corner in level.corners)
             {
                 _obstaclesList[corner.id] = corner;
-                Maze.AddObstacleToTypesMap(_obstaclesTypesMap, corner);
+                Maze.AddObstacleToTypesMap(_relativeObstaclesTypesMap, corner, _obstaclesList);
             }
 
             // Target
             _obstaclesList[level.target.id] = level.target;
-            Maze.AddObstacleToTypesMap(_obstaclesTypesMap, level.target);
+            Maze.AddObstacleToTypesMap(_relativeObstaclesTypesMap, level.target, _obstaclesList);
 
-            Maze.RenderAllObstacles(_obstaclesList, _obstacles, _obstaclesTypesMap);
+            Maze.RenderAllObstacles(_obstaclesList, _obstacles, _obstaclesTypesMap, _relativeObstaclesTypesMap);
 
             stopwatch.Stop();
             Debug.Log("Loading: Done (" + stopwatch.ElapsedMilliseconds.ToString() + "ms)");

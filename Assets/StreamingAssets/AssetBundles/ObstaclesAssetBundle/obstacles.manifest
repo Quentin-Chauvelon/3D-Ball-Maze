@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2378544596
+CRC: 3550748963
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0dbdfa283a8b0bea08af9a95dec19588
+    Hash: 20ceef1664234a4253fda86364cfdf75
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 081c2eef531aa0dde013a8fb11a7ad58
+    Hash: a715337b101aca2e818fcb75ab52cad3
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0dbdfa283a8b0bea08af9a95dec19588
+    Hash: 20ceef1664234a4253fda86364cfdf75
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,6 +19,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 23
+  Script: {instanceID: 0}
+- Class: 28
   Script: {instanceID: 0}
 - Class: 33
   Script: {instanceID: 0}
@@ -37,24 +39,30 @@ Assets:
 - Assets/Art/Models/Obstacles/FlagTarget.fbx
 - Assets/Art/Models/Obstacles/Wedge.fbx
 - Assets/Art/Materials/Obstacles/Spikes/Spikes.mat
+- Assets/Art/Materials/Obstacles/Floor.mat
 - Assets/Art/Models/Obstacles/HalfCylinder.fbx
 - Assets/Art/Models/Obstacles/FlagTarget.prefab
 - Assets/Art/Models/Obstacles/Tunnels/2WayCornerTunnel.fbx
+- Assets/Art/Models/Obstacles/Walls/Cornered_Wall.fbx
 - Assets/Art/Materials/Obstacles/FlagTarget/Pole.mat
 - Assets/Art/Materials/Obstacles/FlagTarget/Flag.mat
 - Assets/Art/Materials/Obstacles/FlagTarget/PoleBase.mat
 - Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsLeft.fbx
 - Assets/Art/Materials/Obstacles/Tunnel/TunnelInterior.mat
 - Assets/Art/Models/Obstacles/FloorHole.fbx
-- Assets/Art/Models/Obstacles/Tunnels/4WayTunnel.fbx
+- Assets/Art/Materials/Obstacles/Floor.shadergraph
 - Assets/Art/Models/Obstacles/Rails/StraightRail1Connections.fbx
+- Assets/Art/Models/Obstacles/Tunnels/4WayTunnel.fbx
 - Assets/Art/Models/Obstacles/Rails/CorneredRail1ConnectionsRight.fbx
 - Assets/Art/Materials/Obstacles/Spikes/SpikesBase.mat
+- Assets/Art/Models/Obstacles/Walls/Half_Rounded_Wall.fbx
 - Assets/Art/Materials/Obstacles/Kill.mat
 - Assets/Art/Materials/Obstacles/Tunnel/TunnelExterior.mat
 - Assets/Art/Materials/Obstacles/BaseObstacle.mat
-- Assets/Art/Materials/Obstacles/UnlitBaseObstacle.mat
+- Assets/Art/Materials/Obstacles/Wall.mat
+- Assets/Art/Materials/Obstacles/HalfSphere/HalfSphereTop.mat
 - Assets/Art/Materials/Obstacles/Rail/Rail.mat
+- Assets/Art/Materials/Obstacles/Wall.shadergraph
 - Assets/Art/Models/Obstacles/Rails/CorneredRail0Connections.fbx
 - Assets/Art/Models/Obstacles/HalfSphere.fbx
 - Assets/Art/Models/Obstacles/Tunnels/3WayTunnel.fbx
@@ -63,4 +71,5 @@ Assets:
 - Assets/Art/Models/Obstacles/Rails/StraightRail0Connections.prefab
 - Assets/Art/Models/Obstacles/Spikes.fbx
 - Assets/Art/Models/Obstacles/Rails/CorneredRail2Connections.fbx
+- Assets/Art/Models/Obstacles/Walls/Rounded_Wall.fbx
 Dependencies: []
