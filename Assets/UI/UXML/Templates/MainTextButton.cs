@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -106,6 +107,11 @@ namespace BallMaze.UI
 
         void OnGeometryChangedEvent(GeometryChangedEvent e)
         {
+            if (e.newRect.width == 0 || e.newRect.height == 0)
+            {
+                return;
+            }
+
             UpdateFontSize();
         }
 
@@ -118,6 +124,8 @@ namespace BallMaze.UI
                 float fontSize = Mathf.Max(style.fontSize.value.value, 1); // Unity can return a font size of 0 which would break the auto fit
                 float heightDictatedFontSize = Mathf.Abs(Button.resolvedStyle.height) - Button.resolvedStyle.paddingTop - Button.resolvedStyle.paddingBottom;
                 float widthDictatedFontSize = Mathf.Abs((Button.resolvedStyle.width - Button.resolvedStyle.paddingLeft - Button.resolvedStyle.paddingRight) / textSize.x) * fontSize;
+                // Debug.Log($"width: {Button.resolvedStyle.width}, height: {Button.resolvedStyle.height}, padding: {Button.resolvedStyle.paddingLeft}, {Button.resolvedStyle.paddingRight}, text width: {textSize.x}, font size: {fontSize}");
+                // Debug.Log("Height dictated font size: " + heightDictatedFontSize + " Width dictated font size: " + widthDictatedFontSize);
                 float newFontSize = Mathf.FloorToInt(Mathf.Min(heightDictatedFontSize, widthDictatedFontSize));
                 newFontSize = Mathf.Clamp(newFontSize, 0, 200);
                 if (Mathf.Abs(newFontSize - fontSize) > 1)

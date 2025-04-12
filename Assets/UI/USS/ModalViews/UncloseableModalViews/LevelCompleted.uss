@@ -1,4 +1,11 @@
 .star {
+    background-image: url("project://database/Assets/UI/Textures/Common/Star_Grey.png");
+    width: 30%;
+    height: 70%;
+}
+
+.star-active {
+    background-image: url("project://database/Assets/UI/Textures/Common/Star_Yellow_With_Grey_Background.png");
     width: 30%;
     height: 70%;
 }
