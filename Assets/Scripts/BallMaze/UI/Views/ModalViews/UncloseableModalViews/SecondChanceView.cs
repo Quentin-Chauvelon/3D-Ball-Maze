@@ -22,10 +22,10 @@ namespace BallMaze.UI
 
         // Visual Elements
         private RadialProgress _secondChanceRadialProgress;
-        private Button _secondChanceButton;
-        private Button _defaultLevelsListButton;
-        private Button _homeButton;
-        private Button _tryAgainButton;
+        private MainImageButton _secondChanceButton;
+        private MainImageButton _defaultLevelsListButton;
+        private MainImageButton _homeButton;
+        private MainImageButton _tryAgainButton;
 
         private int PULSE_ANIMATION_INTERVAL = 700;
         private const bool IS_RADIAL_PROGRESS_ENABLED = false;
@@ -40,10 +40,10 @@ namespace BallMaze.UI
         protected override void SetVisualElements()
         {
             _secondChanceRadialProgress = _root.Q<RadialProgress>("second-chance__radial-progress");
-            _secondChanceButton = _root.Q<Button>("second-chance__second-chance-button");
-            _defaultLevelsListButton = _root.Q<Button>("second-chance__default-levels-list-button");
-            _homeButton = _root.Q<Button>("second-chance__home-button");
-            _tryAgainButton = _root.Q<Button>("second-chance__try-again-button");
+            _secondChanceButton = _root.Q<MainImageButton>("second-chance__second-chance-button");
+            _defaultLevelsListButton = _root.Q<MainImageButton>("second-chance__default-levels-list-button");
+            _homeButton = _root.Q<MainImageButton>("second-chance__home-button");
+            _tryAgainButton = _root.Q<MainImageButton>("second-chance__try-again-button");
 
             LevelEvents.LevelModeUpdated += (levelType) => { SwitchLevelTypeSource(levelType); };
         }
@@ -51,7 +51,7 @@ namespace BallMaze.UI
 
         protected override void RegisterButtonCallbacks()
         {
-            _secondChanceButton.clicked += () =>
+            _secondChanceButton.Button.clicked += () =>
             {
                 LevelManager.Instance.UseSecondChance();
 
@@ -61,7 +61,7 @@ namespace BallMaze.UI
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
-            _defaultLevelsListButton.clicked += () =>
+            _defaultLevelsListButton.Button.clicked += () =>
             {
                 switch (LevelManager.Instance.levelType)
                 {
@@ -80,13 +80,13 @@ namespace BallMaze.UI
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
-            _homeButton.clicked += () =>
+            _homeButton.Button.clicked += () =>
             {
                 UIManager.Instance.Show(UIViewType.MainMenu);
                 UIManager.Instance.Hide(UIViewType.SecondChance);
             };
 
-            _tryAgainButton.clicked += () =>
+            _tryAgainButton.Button.clicked += () =>
             {
                 LevelManager.Instance.ResetLevel();
 
