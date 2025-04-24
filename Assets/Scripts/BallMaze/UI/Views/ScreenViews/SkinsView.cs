@@ -20,9 +20,9 @@ namespace BallMaze.UI
         private VisualElement _skinsScrollViewContainer;
         private Label _skinTextureLoading;
         private Label _skinTextureLoadingError;
-        private Button _buyButton;
-        private Button _equipButton;
-        private Label _buyButtonPriceLabel;
+        private MainTextButton _buyButton;
+        private MainTextButton _equipButton;
+        // private Label _buyButtonPriceLabel;
 
         // GameObject on which the skins are applied to preview them
         private GameObject _previewBall;
@@ -49,7 +49,7 @@ namespace BallMaze.UI
 
         private bool firstTimeOpened = true;
 
-        private const int NUMBER_OF_ITEMS_PER_ROW = 4;
+        private const int NUMBER_OF_ITEMS_PER_ROW = 3;
 
         private const int SKIN_ITEM_IMAGE_MARGIN_PERCENT = 15;
         private const int SKINS_ITEMS_CONTAINER_PADDING_PERCENT = 2;
@@ -69,16 +69,16 @@ namespace BallMaze.UI
             _skinsScrollViewContainer = _root.Q<VisualElement>("skins__skins-vertical-container");
             _skinTextureLoading = _root.Q<Label>("skins__skin-texture-loading-label");
             _skinTextureLoadingError = _root.Q<Label>("skins__skin-texture-loading-error-label");
-            _buyButton = _root.Q<Button>("skins__buy-button");
-            _equipButton = _root.Q<Button>("skins__equip-button");
-            _buyButtonPriceLabel = _buyButton.Q<Label>("skins__skin-price");
+            _buyButton = _root.Q<MainTextButton>("skins__buy-button");
+            _equipButton = _root.Q<MainTextButton>("skins__equip-button");
+            // _buyButtonPriceLabel = _buyButton.Q<Label>("skins__skin-price");
 
             // Bind clicks to the category buttons
-            _root.Q<Button>("skins__category-common").clicked += () => { PopulateCategory(SkinCategory.Common); };
-            _root.Q<Button>("skins__category-rare").clicked += () => { PopulateCategory(SkinCategory.Rare); };
-            _root.Q<Button>("skins__category-epic").clicked += () => { PopulateCategory(SkinCategory.Epic); };
-            _root.Q<Button>("skins__category-unique").clicked += () => { PopulateCategory(SkinCategory.Unique); };
-            _root.Q<Button>("skins__category-flags").clicked += () => { PopulateCategory(SkinCategory.Flags); };
+            _root.Q<MainTextButton>("skins__category-common").Button.clicked += () => { PopulateCategory(SkinCategory.Common); };
+            _root.Q<MainTextButton>("skins__category-rare").Button.clicked += () => { PopulateCategory(SkinCategory.Rare); };
+            _root.Q<MainTextButton>("skins__category-epic").Button.clicked += () => { PopulateCategory(SkinCategory.Epic); };
+            _root.Q<MainTextButton>("skins__category-unique").Button.clicked += () => { PopulateCategory(SkinCategory.Unique); };
+            // _root.Q<MainTextButton>("skins__category-flags").Button.clicked += () => { PopulateCategory(SkinCategory.Flags); };
 
             // Update the size of the children when the size of the container changes
             _skinsContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
@@ -86,7 +86,7 @@ namespace BallMaze.UI
             _skinItemTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("SkinItemTemplate");
             _skinItemTemplateHandle.Completed += SkinItemTemplateHandleCompleted;
 
-            _buyButton.clicked += () =>
+            _buyButton.Button.clicked += () =>
             {
                 if (PlayerManager.Instance.SkinManager.BuySkin(_selectedSkinId))
                 {
@@ -101,7 +101,7 @@ namespace BallMaze.UI
                 }
             };
 
-            _equipButton.clicked += () =>
+            _equipButton.Button.clicked += () =>
             {
                 EquipSkin(_selectedSkinId);
             };
@@ -237,6 +237,7 @@ namespace BallMaze.UI
         private void UpdateCard(VisualElement card, Skin skin)
         {
             ButtonWithValue cardBackground = card.Q<ButtonWithValue>("skins__skin-item-background");
+            card.Q<Label>("skins__skin-item-name").text = skin.name;
 
             // If the image is already cached, use it, otherwise load it from adressables
             if (_skinImages.ContainsKey(skin.id))
@@ -390,7 +391,7 @@ namespace BallMaze.UI
             _skinTextureLoading.style.display = DisplayStyle.None;
             _skinTextureLoadingError.style.display = DisplayStyle.None;
 
-            _buyButtonPriceLabel.text = skin.price.ToString();
+            // _buyButtonPriceLabel.text = skin.price.ToString();
 
             // Update the buy button based on the player's coins
             if (PlayerManager.Instance.CoinsManager.HasEnoughCoins(skin.price))
@@ -530,7 +531,7 @@ namespace BallMaze.UI
                 // sometimes the 4th item is wrapped to the following row, leaving one less item for each row
                 float itemSize = (containerWidth - SKINS_ITEMS_CONTAINER_PADDING_PERCENT * 2 - itemMargin * (NUMBER_OF_ITEMS_PER_ROW * 2)) / NUMBER_OF_ITEMS_PER_ROW - 3;
 
-                item.style.width = itemSize;
+                item.style.width = itemSize - 20;
 
                 // Set the margin of each item
                 item.style.marginTop = itemMargin;

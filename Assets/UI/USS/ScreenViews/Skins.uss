@@ -9,11 +9,10 @@
 }
 
 .skins__skin-call-to-action {
-    display: none; /* Hidden by default */
-    width: 40%;
-    -unity-font-style: bold;
-    font-size: 50px;
-    color: rgb(0, 0, 0);
+    display: flex; /* Hidden by default */
+    /* width: 40%; */
+    /* -unity-font-style: bold; */
+    /* font-size: 30px; */
 }
 
 
@@ -36,9 +35,9 @@
 
 
 .coin-image {
-    background-image: url('project://database/Assets/Joystick%20Pack/Sprites/All%20Axis%20Backgrounds/AllAxis_Ridged.png?fileID=2800000&guid=54628aafa20f64b40ae661038ee7abf0&type=3#AllAxis_Ridged');
+    background-image: url('project://database/Assets/UI/Textures/Common/Coin_Border.png?fileID=2800000&amp;guid=f6c253b4572ea3c4c958de546b74fd1a&amp;type=3#Coin_Border');
     -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: rgb(255, 236, 0);
+    min-width: 50px;
 }
 
 
@@ -46,15 +45,16 @@
 
 .skins__skin-item {
     margin: 0;
-    padding: 0;
+    padding: 30px 0px 40px 0px;
 }
 
 /* Set the image size, and thus the whole card size */
 .skins__skin-item > #skins__skin-item-image {
-    min-width: 350px;
-    max-width: 350px;
-    min-height: 350px;
-    max-height: 350px;
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    margin: 20px 0 10px 0;
 }
 
 .skins__skin-item > #skins__skin-item-name {
@@ -72,8 +72,7 @@
 /* Same margin for the price container and the owned label so that card stays the same height */
 .skins__skin-item > #skins__skin-price-container,
 .skins__skin-item > #skins__skin-item-owned {
-    margin: 4% 0;
-    color: rgb(50, 168, 70);
+    color: rgb(50, 190, 73);
 }
 
 
@@ -103,9 +102,9 @@
 .skins__skin-item.skin-locked > #skins__skin-item-owned {
     display: none;
 }
-/* .skins__skin-item.skin-locked > #skins__skin-locked-tint {
+.skins__skin-item.skin-locked > #skins__skin-locked-tint {
     display: flex;
-} */
+}
 
 /* Skin card unlocked */
 .skins__skin-item.skin-unlocked > #skins__skin-lock-image {
@@ -117,9 +116,9 @@
 .skins__skin-item.skin-unlocked > #skins__skin-item-owned {
     display: flex;
 }
-/* .skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
+.skins__skin-item.skin-unlocked > #skins__skin-locked-tint {
     display: none;
-} */
+}
 
 
 /* SELECTED CARD */
@@ -134,5 +133,5 @@
     background-color: var(--equip-color);
 }
 .equipped > #skins__skin-item-owned {
-    color: #FFF;
+    /* color:rgb(58, 126, 182); */
 }

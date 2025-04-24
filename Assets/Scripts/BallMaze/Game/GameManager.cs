@@ -22,6 +22,7 @@ namespace BallMaze
         ModeSelection,
         LevelSelection,
         DailyLevelsSelection,
+        Skins,
         Playing
     }
 
@@ -268,6 +269,9 @@ namespace BallMaze
                     break;
                 case UIViewType.DailyLevels:
                     _gameState = GameState.DailyLevelsSelection;
+                    break;
+                case UIViewType.Skins:
+                    _gameState = GameState.Skins;
                     break;
                 case UIViewType.Playing:
                     _gameState = GameState.Playing;
